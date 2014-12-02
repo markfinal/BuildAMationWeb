@@ -3,20 +3,35 @@
         BuildAMation
     </title>
     <link rel="stylesheet" type="text/css" href="styles/bam.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+		$(function() {
+		$('#home').click(function() {
+			$('#content').load('content/introduction.html');
+		});
+		$('#install').click(function() {
+			$('#content').load('content/installmono.html');
+		});
+    	});
+    </script>
 </head>
 <body>
-    <div id="page">
-        <div id="content">
-            <p>Currently under construction</p>
-        </div>
-        <div id="footer">
+	<div id="page">
+		<div id="header">
+			<p>BuildAMation website under construction</p>
+		</div>
+      <div id="content">
+      </div>
+      <div id="footer">
             Footer
-        </div>
-        <div id="nav">
-            <ul>
-                <li>Home</li>
-                <li>Contact</li>
-            </ul>
-        </div>
+      </div>
+      <div id="nav">
+			<ul>
+				<li id="home">Home</li>
+            <li id="install">Install</li>
+            <li>Contact</li>
+            <li>License</li>
+         </ul>
+      </div>
     </div>
 </body>
