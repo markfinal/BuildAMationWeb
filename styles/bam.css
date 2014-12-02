@@ -1,0 +1,25 @@
+body {
+    background-color: #123456;
+}
+
+#page {
+    margin: 10px 100px;
+    background-color: #654321;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+#nav ul {
+    background-color: red;
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+
+#nav li {
+    display: inline;
+}
