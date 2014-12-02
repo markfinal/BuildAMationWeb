@@ -39,3 +39,8 @@ $(function() {
 		window.alert("License details not yet available");
 	});
 });
+
+/* run after the page has loaded */
+$(document).ready(function(){
+	$('#home').trigger('click');
+});
