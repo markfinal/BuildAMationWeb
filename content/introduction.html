@@ -1,9 +1,6 @@
-<html>
-<head>
-</head>
-<body>
-	<p>
-		<span class="BAM">BuildAMation</span> is an open source (LGPL) build system, using the .NET framework for Windows, and Mono for Linux and OSX. At the heart of BuildAMation is a core library, that defines an extensible declarative scripting language to be used in packages, which provide build rules, or descriptions of files to build and how they related to other files.
-	</p>
-</body>
-</html>
+<h1>BuildAMation</h1>
+<p>BuildAMation (aka BAM) is an open source (LGPL) build system, using the .NET framework for Windows, and Mono for Linux and OSX. The objective for BuildAMation is to allow developers to write a <em>single</em>, platform agnostic, description of what needs to be built, and BAM will translate that into a set of build instructions for the target platform. BuildAMation can be thought of as a pure build system, but also a project generator.</p>
+<h2>What does it provide?</h2>
+<p>At the heart of BuildAMation is a core library, that defines an extensible declarative scripting language, and the infrastructure required to execute builds.</p>
+<p><b>Packages</b> are extensions to the core, providing the workflow for defining rules for running <em>compilers</em> to transform source files, and how files are related in order to build a dependency tree.</p>
+<p><b>Builders</b> define the target output for running BuildAMation. Depending on the platform and available support, this can be either a native command line build, or generation of a project such as VisualStudio, Xcode or QtCreator.</p>

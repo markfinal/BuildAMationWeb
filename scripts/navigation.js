@@ -24,7 +24,10 @@ function rebuildTOC() {
 
 $(function() {
 	$('#home').click(function() {
-		$('#content').load('content/introduction.html');
+		$('#content').load('content/introduction.html', function() {
+			ToC = rebuildTOC();
+			$('#content').prepend(ToC);
+		});
 	});
 	$('#install').click(function() {
 		$('#content').load('content/installmono.html', function() {
