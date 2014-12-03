@@ -1,4 +1,4 @@
-function rebuildTOC() {
+function rebuildToC() {
 	var ToC =
 		"<div class='table-of-contents'>" +
 		"<h2>On this page:</h2>" +
@@ -23,7 +23,7 @@ function rebuildTOC() {
 }
 
 function updateContentWithToC() {
-	ToC = rebuildTOC();
+	ToC = rebuildToC();
 	$('#content').prepend(ToC);
 }
 
