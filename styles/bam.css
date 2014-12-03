@@ -31,7 +31,7 @@ body {
     background-color: #334499; /* blueish */
     list-style-type:none; /* remove the bullet points */
     margin:0;
-    padding:0;
+    padding:10px;
 }
 
 #nav li {
