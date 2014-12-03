@@ -25,6 +25,7 @@ body {
 }
 
 #content {
+	padding: 10px;
 	padding-bottom: 50px; /* height of the footer */
 }
 
