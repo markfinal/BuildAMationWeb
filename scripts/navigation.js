@@ -29,6 +29,12 @@ $(function() {
 			$('#content').prepend(ToC);
 		});
 	});
+	$('#prerequisites').click(function() {
+		$('#content').load('content/installmono.html', function() {
+			ToC = rebuildTOC();
+			$('#content').prepend(ToC);
+		});
+	});
 	$('#install').click(function() {
 		$('#content').load('content/installmono.html', function() {
 			ToC = rebuildTOC();
