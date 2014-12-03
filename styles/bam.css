@@ -9,25 +9,33 @@ div {
 }
 
 body {
+    margin: 10px 100px;
     background-color: #333333; /* grey */
+    height: 95%;
 }
 
 #page {
-    margin: 10px 100px;
     background-color: #CCCC77; /* tanned */
+    position: relative;
+    min-height: 100%;
 }
 
 #header {
 	background-color: #888844;
 }
 
+#content {
+	padding-bottom: 50px; /* height of the footer */
+}
+
 #footer {
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 100px;
+    height: 50px;
     width: 100%;
     text-align: center;
+    background-color: #660000;
 }
 
 #nav ul {
