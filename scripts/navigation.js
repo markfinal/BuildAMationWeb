@@ -32,7 +32,7 @@ $(function() {
 		$('#content').load('content/introduction.html', updateContentWithToC);
 	});
 	$('#prerequisites').click(function() {
-		$('#content').load('content/installmono.html', updateContentWithToC);
+		$('#content').load('content/prerequisites.html', updateContentWithToC);
 	});
 	$('#install').click(function() {
 		$('#content').load('content/installbam.html', updateContentWithToC);
