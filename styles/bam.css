@@ -1,3 +1,4 @@
+/*
 div {
 	border-width: 1px;
 	border-spacing: 1px;
@@ -6,6 +7,11 @@ div {
 	border-collapse: collapse;
 	border-left: 0px;
 	border-right: 0px;
+}
+*/
+
+p.header {
+	margin-bottom: 0px;
 }
 
 body {
