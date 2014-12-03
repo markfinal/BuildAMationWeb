@@ -27,31 +27,30 @@ function updateContentWithToC() {
 	$('#content').prepend(ToC);
 }
 
-$(function() {
-	$('#home').click(function() {
-		$('#content').load('content/introduction.html', updateContentWithToC);
+function readyFn() {
+	$('#nav').load('content/navigation.html', function() {
+		/* these have to reside in the callback, or they are not found - would have to use the 'on' JQuery function with a selector? */
+		$('#home').click(function() {
+			$('#content').load('content/introduction.html', updateContentWithToC);
+		});
+		$('#prerequisites').click(function() {
+			$('#content').load('content/prerequisites.html', updateContentWithToC);
+		});
+		$('#install').click(function() {
+			$('#content').load('content/installbam.html', updateContentWithToC);
+		});
+		$('#userguide').click(function() {
+			$('#content').load('content/userguide.html', updateContentWithToC);
+		});
+		$('#contact').click(function() {
+			window.alert("Contact details not yet available");
+		});
+		$('#license').click(function() {
+			window.alert("License details not yet available");
+		});
+		$('#home').trigger('click');
 	});
-	$('#prerequisites').click(function() {
-		$('#content').load('content/prerequisites.html', updateContentWithToC);
-	});
-	$('#install').click(function() {
-		$('#content').load('content/installbam.html', updateContentWithToC);
-	});
-	$('#userguide').click(function() {
-		$('#content').load('content/userguide.html', updateContentWithToC);
-	});
-	$('#contact').click(function() {
-		window.alert("Contact details not yet available");
-	});
-	$('#license').click(function() {
-		window.alert("License details not yet available");
-	});
-});
+	/* console.log("Document loaded"); */
+}
 
-/* run after the page has loaded */
-$(document).ready(function(){
-	/*
-	$('#nav').load('content/navigation.html', ... do trigger ... );
-	*/
-	$('#home').trigger('click');
-});
+$(document).ready(readyFn);
