@@ -14,7 +14,7 @@ body {
 
 #page {
     margin: 10px 100px;
-    background-color: #654321; /* brownish */
+    background-color: #CCCC77; /* tanned */
 }
 
 #footer {
@@ -24,7 +24,7 @@ body {
 }
 
 #nav ul {
-    background-color: red;
+    background-color: #334499; /* blueish */
     list-style-type:none; /* remove the bullet points */
     margin:0;
     padding:0;
