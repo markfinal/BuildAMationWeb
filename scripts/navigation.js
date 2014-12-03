@@ -37,6 +37,9 @@ $(function() {
 	$('#install').click(function() {
 		$('#content').load('content/installbam.html', updateContentWithToC);
 	});
+	$('#userguide').click(function() {
+		$('#content').load('content/userguide.html', updateContentWithToC);
+	});
 	$('#contact').click(function() {
 		window.alert("Contact details not yet available");
 	});
