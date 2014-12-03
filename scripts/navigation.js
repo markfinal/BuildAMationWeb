@@ -22,24 +22,20 @@ function rebuildTOC() {
 	return ToC;
 }
 
+function updateContentWithToC() {
+	ToC = rebuildTOC();
+	$('#content').prepend(ToC);
+}
+
 $(function() {
 	$('#home').click(function() {
-		$('#content').load('content/introduction.html', function() {
-			ToC = rebuildTOC();
-			$('#content').prepend(ToC);
-		});
+		$('#content').load('content/introduction.html', updateContentWithToC);
 	});
 	$('#prerequisites').click(function() {
-		$('#content').load('content/installmono.html', function() {
-			ToC = rebuildTOC();
-			$('#content').prepend(ToC);
-		});
+		$('#content').load('content/installmono.html', updateContentWithToC);
 	});
 	$('#install').click(function() {
-		$('#content').load('content/installmono.html', function() {
-			ToC = rebuildTOC();
-			$('#content').prepend(ToC);
-		});
+		$('#content').load('content/installbam.html', updateContentWithToC);
 	});
 	$('#contact').click(function() {
 		window.alert("Contact details not yet available");
