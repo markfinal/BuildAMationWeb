@@ -17,6 +17,10 @@ body {
     background-color: #CCCC77; /* tanned */
 }
 
+#header {
+	background-color: #888844;
+}
+
 #footer {
     position: absolute;
     bottom: 0;
