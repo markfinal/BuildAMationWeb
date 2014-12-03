@@ -50,5 +50,8 @@ $(function() {
 
 /* run after the page has loaded */
 $(document).ready(function(){
+	/*
+	$('#nav').load('content/navigation.html', ... do trigger ... );
+	*/
 	$('#home').trigger('click');
 });
