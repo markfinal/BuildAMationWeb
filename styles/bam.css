@@ -29,13 +29,14 @@ body {
 
 #nav ul {
     background-color: #334499; /* blueish */
-    list-style-type:none; /* remove the bullet points */
-    margin:0;
-    padding:10px;
+    list-style-type: none; /* remove the bullet points */
+    margin: 0;
+    padding: 10px;
 }
 
 #nav li {
     display: inline; /* make the list horizontal */
+    padding: 20px;
 }
 
 .table-of-contents {
