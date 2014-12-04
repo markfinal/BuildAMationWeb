@@ -23,15 +23,7 @@ function rebuildToC() {
 }
 
 function updateContentWithToC() {
-	if (false)
-	{
-		ToC = rebuildToC();
-		$('#content').prepend(ToC);
-	}
-	else
-	{
-		$('#toc').toc();
-	}
+	$('.toc').toc();
 }
 
 function readyFn() {

@@ -1,3 +1,48 @@
+.header {
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	overflow: hidden;
+	height: 86px;
+}
+
+.header p {
+	text-align: center;
+}
+
+.footer {
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+	overflow: hidden;
+	height: 51px;
+	text-align: center;
+}
+
+.header .navigation ul {
+	list-style-type: none;
+	text-align: center;
+}
+
+.header .navigation li {
+	display: inline;
+	padding: 20px;
+}
+
+.content {
+	overflow: auto;
+	margin-top: 86px;
+	height: 80%;
+	margin-left: 200px;
+}
+
+.toc {
+	position: fixed;
+	left: 0;
+	top: 86px;
+	width: 200px;
+}
+
 /*
 div {
 	border-width: 1px;
@@ -10,18 +55,19 @@ div {
 }
 */
 
+/*
 p.header {
 	margin-bottom: 0px;
 }
 
 body {
     margin: 10px 100px;
-    background-color: #333333; /* grey */
+    background-color: #333333; // hello
     height: 95%;
 }
 
 #page {
-    background-color: #CCCC77; /* tanned */
+    background-color: #CCCC77; // tanned
     position: relative;
     min-height: 100%;
 }
@@ -32,7 +78,7 @@ body {
 
 #content {
 	padding: 10px;
-	padding-bottom: 50px; /* height of the footer */
+	padding-bottom: 50px; // height of the footer
 }
 
 #footer {
@@ -46,15 +92,15 @@ body {
 }
 
 #nav ul {
-    background-color: #334499; /* blueish */
-    list-style-type: none; /* remove the bullet points */
+    background-color: #334499; // blueish
+    list-style-type: none; // remove the bullet points
     margin: 0;
     padding: 10px;
     text-align: center;
 }
 
 #nav li {
-    display: inline; /* make the list horizontal */
+    display: inline; // make the list horizontal
     padding: 20px;
 }
 
@@ -81,8 +127,8 @@ body {
 }
 
 #toc {
-    /*top: 0px;
-    left: 0px;*/
+    //top: 0px;
+    //left: 0px;
     float: left;
     height: 100%;
     background: #333;
@@ -124,3 +170,4 @@ body {
 .clear {
 	clear: both;
 }
+*/
