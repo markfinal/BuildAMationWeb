@@ -10,7 +10,7 @@ function updateContentWithToC() {
 	});
 }
 
-function readyFn() {
+function setupNavigation() {
 	$('#nav').load('content/navigation.html', function() {
 		/* these have to reside in the callback, or they are not found - would have to use the 'on' JQuery function with a selector? */
 		$('#home').click(function() {
@@ -33,6 +33,10 @@ function readyFn() {
 		});
 		$('#home').trigger('click');
 	});
+}
+
+function readyFn() {
+	setupNavigation();
 	/* console.log("Document loaded"); */
 }
 
