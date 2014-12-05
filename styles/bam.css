@@ -4,29 +4,37 @@
 	left: 0px;
 	width: 100%;
 	overflow: hidden;
-	height: 86px;
+	height: 38px;
 	background-color: #888844;
 	margin: 0px 0px;
 }
 
 .header p {
 	text-align: center;
+	margin: 0px 0px;
 }
 
 .footer {
 	position: fixed;
 	bottom: 0px;
+	left: 0px;
 	width: 100%;
 	overflow: hidden;
-	height: 51px;
-	text-align: center;
+	height: 18px;
 	background-color: #660000;
+	margin: 0px 0px;
+}
+
+.footer p {
+	text-align: center;
+	margin: 0px 0px;
 }
 
 .header .navigation ul {
 	list-style-type: none;
 	text-align: center;
 	background-color: #334499;
+	margin: 0px 0px;
 }
 
 .header .navigation li {
@@ -36,22 +44,28 @@
 
 .content {
 	overflow: auto;
-	margin-top: 86px;
-	height: 80%;
-	margin-left: 200px;
+	position: fixed;
+	top: 38px;
+	left: 200px;
+	height: 100%;
+	width: 100%;
+	margin-bottom: 51px;
 	background-color: #CCCC77;
 }
 
 #toc {
 	position: fixed;
 	left: 0;
-	top: 86px;
+	top: 38px;
 	width: 200px;
 	background: #333;
-	box-shadow: inset -5px 0 5px 0px #000;
+	//box-shadow: inset -5px 0 5px 0px #000;
 	padding-top: 20px;
 	color: #fff;
 	height: 100%;
+	margin: 0px 0px;
+	margin-bottom: 51px;
+	padding-right: 0px;
 }
 
 #toc ul {
