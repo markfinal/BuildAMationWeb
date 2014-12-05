@@ -27,7 +27,7 @@ function updateContentWithToC() {
 	{
 		'container': '.content',
 		'scrollableSelector': '.content',
-		//'smoothScrolling': false, // smooth scroller didn't work on my layout
+		'smoothScrolling': false, // smooth scroller flips between anchors on my layout
 		'anchorName': function(i, heading, prefix) {
 			return prefix+i; // use a unique number, rather than heading names which can be duplicated
 		},
