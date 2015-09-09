@@ -14,28 +14,28 @@
 <H2>Installation</H2>
 <H3>Prerequisites</H3>
 <H4>Windows</H4>
-<ol>
+<ul>
 <li>Windows 7, 8 or 8.1.</li>
 <li>.NET framework 4 (includes C# compiler)</li>
 <li>VisualStudio 2013 (Express)</li>
 <li>TODO: MSDN download for .NET framework</lI>
-</ol>
+</ul>
 <H4>Apple OSX</H4>
-<ol>
+<ul>
 <li>OSX 10.8 (Mountain Lion), 10.9 (Mavericks), 10.10 (Yosemite)</li>
 <li>Mono 4.0+</li>
 <li>Xamarin Studio 5.9+</li>
 <li>Xcode 4, 5, or 6.</li>
 <li>TODO: mono-project.org website</li>
-</ol>
+</ul>
 <H4>Linux</H4>
-<ol>
+<ul>
 <li>Ubuntu 14+ or CentOS7+</li>
 <li>Mono 4.0+</li>
 <li>Xamarin Studio 5.9+</li>
 <li>gcc/g++ 4.8</li>
 <li>TODO: mono-project.org website</li>
-</ol>
+</ul>
 <H2>Key definitions</H2>
 <H3>Package</H3>
 <p>A package is a folder on disk, identified by a 'bam' subdirectory, an XML file in 'bam', and one or more files in a Script subfolder. A package defines classes or functions that implements modules.</p>
@@ -43,6 +43,7 @@
 <p>A package definition file is an XML file, implementing the schema provided with Bam, defining the specific packages required in a build, Bam assemblies required, any additional .NET packages, and other compilation options. The first package definition file read is from the master package, and is allowed to define 'default' packages which can be used to resolve duplicate package requests.</p>
 <H3>Module</H3>
 <p>Modules are the build constructs of Bam. They are classes (sealed to be buildable, abstract/unsealed to define functionality), but there is no explicit instantiation of these classes. This is dealt with in the Bam core assembly. Modules can define how they are evaluated to determine whether they need building or not. Modules also define policies, dependent on the build mode, of how to execute when they do require building.</p>
+<p>The C# scripts define classes within a namespace named after the containing package.</p>
 <H3>Tool</H3>
 <p>Tools are a type of module, but can be passed to build mode policies to be executed when building other modules. This does mean that tools can be procedurally generated as part of a build. Equally prebuilt tools, such as C/C++ compilers, can be used.</p>
 <H3>Settings</H3>
@@ -52,19 +53,50 @@
 <H3>Tokenized String</H3>
 <p>Bam defines strings with markup called TokenizedStrings. These use specical syntax to identify tokens in the strings, so that parameterization is possible. The tokens are evaluated from macros from multiple sources; the main dependency graph (for global macros), per module, and custom macros.</p>
 <H2>Running Bam</H2>
+<p>Change the current directory to the package to be built (the master package).</p>
+<H3>To create a debuggable project</H3>
+<p>bam --createdebugproject</p>
+<H3>To build in mode M</H3>
+<p>bam -b=M</p>
 <H2>Structure of a package</H2>
-Package can be any folder on disk, identified by:
-Requires 'bam' subfolder.
-Requires package definition XML file in 'bam'.
-Requires at least one .cs script in Scripts subfolder of 'bam'.
-Package definition XML - schema - example
-Package repositories - package/tests folders
-Build mode folders
-Settings and settings interfaces
-Tools
+A package can be any folder on disk, usually containing source code. Identifying a Bam package is through additional files. This allows Bam to integrate into most existing projects. The steps to identify a Bam package are:
+<ol>
+<li>Package directory contains a subdirectory called 'bam'.</li>
+<li>A single .xml file exists in the bam folder, and follows the Bam schema.</li>
+<li>A Scripts folder exists in the bam folder, and contains one or more .cs files, containing module scripts.</li>
+<li>Optional: Sibling folders to Scripts, named after the build modes supported.</li>
+</ol>
+TODO: example
 <H2>Writing a module</H2>
-Simple program example
-sealed class, derived from
+Let's consider an example package called TestPackage. We will assume that dependent packages have already been defined in the package definition file for now.
+<H3>A simple program</H3>
+Define a module called MyProgram, which is a C (not C++) console application, with one source file, in the package directory called main.c.
+<pre>
+namespace TestPackage
+{
+  sealed class MyProgram :
+    C.V2.ConsoleApplicaion
+  {
+     protected override void
+     Init(
+       Bam.Core.V2.Module parent)
+     {
+        base.Init(parent);
+        this.CreateCContainer("$(pkgroot)/main.c");
+     }
+  }
+}
+</pre>
+<H4>Points of interest</H4>
+<ul>
+<li>The namespace of the module is the name of the package it is in, TestPackage.</li>
+<li>The name of the module is MyProgram, which is the name of the class.</li>
+<li>The class is sealed, which is an indication to Bam that you want to build this.</li>
+<li>MyProgram derives from C.V2.ConsoleApplication. This is a class from the C package, which defines the necessary infrastructure for compiling and linking a C console application.</li>
+<li>The Init function is overridden from the base class. Init is used to define most of the properties of the module. The constructor is not used.</li>
+<li>The Init function of the parent class is called first. Chaining the hierarchy in this way ensures that all properties of the infrastructure are always setup.</li>
+<li>A method of the base class, CreateCContainer, is invoked, passing a TokenizedString. The underlying implementation evaluates the parameterized string, and creates additional modules, behind the scene, for each source file. In this case, there is only one, the file main.c in the package directory.</li>
+</ul>
 <H2>Advanced</H2>
 Referenced modules (could these be sealed?)
 Structure of graph
