@@ -3,5 +3,61 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-Under construction
+<H1>BuildAMation</H1>
+<H2>What is BuildAMation?</H2>
+<p>BuildAMation (Bam) is a build system and project generator written in C#, targetting at least version 4.0 (requires support for LINQ and lambda expressions). It consists of a core assembly (Bam.Core.dll) that implements generic data structures and a dependency graph generation and evaluation algorithms. Specific implementation to compile and link code for programming languages, such as C and C++, specific toolchains, and other useful features, are provided in packages that extend the core infrastructure.</p>
+<p>Bam can be used on Microsoft Windows (7+), Apple OSX (10.8+), and some Linux distributions (e.g. Ubuntu 14 and CentOS 7). OSX and Linux support for C# is provided through mono currently.</p>
+<p>Bam packages contain C# code written in a declarative perspective. Therefore evaluation of the code is out of order from reading the scripts top-down. Packages can either provide new data structures/algorithms, or can use such definitions to describe how code can be built. Collections of packages can be grouped together logically into repositories. Each package requires a definition file (in XML) which defines all of it's dependencies.</p>
+<p>Such algorithms provided by packages are build modes. By default, Bam provides four modes: Native, MakeFile, VSSolution, Xcode.</p>
+<p>A command line tool, bam, is provided to execute packages. This also contains support to create a project for both VisualStudio or Xamarin Studio to debug package builds.</p>
+<H2>Installation</H2>
+<H3>Prerequisites</H3>
+<H4>Windows</H4>
+<ol>
+<li>Windows 7, 8 or 8.1.</li>
+<li>.NET framework 4 (includes C# compiler)</li>
+<li>VisualStudio 2013 (Express)</li>
+<li>TODO: MSDN download for .NET framework</lI>
+</ol>
+<H4>Apple OSX</H4>
+<ol>
+<li>OSX 10.8 (Mountain Lion), 10.9 (Mavericks), 10.10 (Yosemite)</li>
+<li>Mono 4.0+</li>
+<li>Xamarin Studio 5.9+</li>
+<li>Xcode 4, 5, or 6.</li>
+<li>TODO: mono-project.org website</li>
+</ol>
+<H4>Linux</H4>
+<ol>
+<li>Ubuntu 14+ or CentOS7+</li>
+<li>Mono 4.0+</li>
+<li>Xamarin Studio 5.9+</li>
+<li>gcc/g++ 4.8</li>
+<li>TODO: mono-project.org website</li>
+</ol>
+<H2>Key definitions</H2>
+Package
+Module
+Settings
+Build mode
+Tokenized strings
+Macros
+<H2>Running Bam</H2>
+<H2>Structure of a package</H2>
+Package can be any folder on disk, identified by:
+Requires 'bam' subfolder.
+Requires package definition XML file in 'bam'.
+Requires at least one .cs script in Scripts subfolder of 'bam'.
+Package definition XML - schema - example
+Package repositories - package/tests folders
+Build mode folders
+Settings and settings interfaces
+Tools
+<H2>Writing a module</H2>
+Simple program example
+sealed class, derived from
+<H2>Advanced</H2>
+Referenced modules (could these be sealed?)
+Structure of graph
+<H3>Writing a build mode extension</H3>
 </body>
