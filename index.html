@@ -1,42 +1,110 @@
 <head>
 <title>BuildAMation</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<style>
+    body {background-color: #006600;}
+ h1{
+     font-family: 'Droid Serif', Georgia, Times, serif; 
+	 font-size: 16pt;
+ }
+ h2 {
+	 font-family: 'Droid Serif', Georgia, Times, serif;
+	 font-size: 14pt;
+ }
+ h3{
+	 font-family: 'Droid Serif', Georgia, Times, serif;
+	 font-size: 13pt;
+ }
+ h4{
+	 font-family: 'Droid Serif', Georgia, Times, serif;
+	 font-size: 12pt;
+ }
+ p{
+     font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+	 font-size: 12pt;
+ }
+ ul{
+     font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+	 font-size: 12pt;
+ }
+ li{
+     font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+	 font-size: 12pt;
+ }
+ div{
+     font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+	 font-size: 12pt;
+ }
+ #bootstrap-overrides 
+ p{
+	 font-size:inherit;
+ }
+ #bootstrap-overrides 
+ ul{
+	 font-size:inherit;
+ }
+  #bootstrap-overrides 
+ li{
+	 font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+	 font-size:10pt;
+ }
+ </style>
 </head>
 <body>
-<H1>BuildAMation</H1>
-<H2>What is BuildAMation?</H2>
+ <div class="container">
+	   <div class="jumbotron" id="bootstrap-overrides">
+    <a name="Top1"><img src="BAM.jpg" alt="BAM" align=right style="width:100px;height:100px;"></a>
+	<h1 align="center">BuildAMation</h1>
+	
+	        <a href="#whatis">What is BuildAMation?</a><BR>
+	        <a href="#installation">Installation</a><BR>
+	        <a href="#keydefs">Key Definitions</a><BR>
+			<a href="#running">Running Bam</a><BR>
+			<a href="#structure">Structure of Package</a><BR>
+			<a href="#writing">Writing a Module</a><BR>
+			<a href="#advanced">Advanced</a><BR><BR>
+
+<a name="whatis"></a><H2>What is BuildAMation?</H2>
 <p>BuildAMation (Bam) is a build system and project generator written in C#, targetting at least version 4.0 (requires support for LINQ and lambda expressions). Familiarity with the C# language is assumed in this documentation.</p>
 <p>Bam consists of a core assembly (Bam.Core.dll) that implements generic data structures and a dependency graph generation and evaluation algorithms. Specific implementation to compile and link code for programming languages, such as C and C++, specific toolchains, and other useful features, are provided in packages that extend the core infrastructure.</p>
 <p>Bam can be used on Microsoft Windows (7+), Apple OSX (10.8+), and some Linux distributions (e.g. Ubuntu 14 and CentOS 7). OSX and Linux support for C# is provided through mono currently.</p>
 <p>Bam packages contain C# code written in a declarative perspective. Therefore evaluation of the code is out of order from reading the scripts top-down. Packages can either provide new data structures/algorithms, or can use such definitions to describe how code can be built. Collections of packages can be grouped together logically into repositories. Each package requires a definition file (in XML) which defines all of it's dependencies.</p>
 <p>Such algorithms provided by packages are build modes. By default, Bam provides four modes: Native, MakeFile, VSSolution, Xcode.</p>
 <p>A command line tool, bam, is provided to execute packages. To build a package, change into the package directory, and run bam. That package is known as the master package. This also contains support to create a project for both VisualStudio or Xamarin Studio to debug package builds.</p>
-<H2>Installation</H2>
+<a name="installation"></a><H2>Installation</H2>
 <H3>Prerequisites</H3>
-<H4>Windows</H4>
-<ul>
-<li>Windows 7, 8 or 8.1.</li>
-<li>.NET framework 4 (includes C# compiler)</li>
-<li>VisualStudio 2013 (Express)</li>
-<li>TODO: MSDN download for .NET framework</lI>
-</ul>
-<H4>Apple OSX</H4>
-<ul>
-<li>OSX 10.8 (Mountain Lion), 10.9 (Mavericks), 10.10 (Yosemite)</li>
-<li>Mono 4.0+</li>
-<li>Xamarin Studio 5.9+</li>
-<li>Xcode 4, 5, or 6.</li>
-<li>TODO: mono-project.org website</li>
-</ul>
-<H4>Linux</H4>
-<ul>
-<li>Ubuntu 14+ or CentOS7+</li>
-<li>Mono 4.0+</li>
-<li>Xamarin Studio 5.9+</li>
-<li>gcc/g++ 4.8</li>
-<li>TODO: mono-project.org website</li>
-</ul>
-<H2>Key definitions</H2>
+  <div class="row" id="bootstrap-overrides">
+    <div class="col-sm-4" id="bootstrap-overrides">
+      <h3>Windows</h3>
+	  	<ul>
+			<li>Windows 7, 8 or 8.1.</li>
+			<li>.NET framework 4 (includes C# compiler)</li>
+			<li>VisualStudio 2013 (Express)</li>
+			<li>TODO: MSDN download for .NET framework</lI>
+		</ul>
+    </div>
+    <div class="col-sm-4">
+      <h3>Apple OSX</h3>
+	  		<li>OSX 10.8 (Mountain Lion), 10.9 (Mavericks), 10.10 (Yosemite)</li>
+			<li>Mono 4.0+</li>
+			<li>Xamarin Studio 5.9+</li>
+			<li>Xcode 4, 5, or 6.</li>
+			<li>TODO: mono-project.org website</li>
+    </div>
+    <div class="col-sm-4">
+      <h3>Linux</h3>
+	  		<li>Ubuntu 14+ or CentOS7+</li>
+			<li>Mono 4.0+</li>
+			<li>Xamarin Studio 5.9+</li>
+			<li>gcc/g++ 4.8</li>
+			<li>TODO: mono-project.org website</li>
+    </div>
+  </div>
+  
+
+ <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
+<a name="keydefs"></a><H2>Key definitions</H2>
 <H3>Package</H3>
 <p>A package is a folder on disk, identified by a 'bam' subdirectory, an XML file in 'bam', and one or more files in a Script subfolder. A package defines classes or functions that implements modules.</p>
 <H3>Package definition file</H3>
@@ -53,23 +121,25 @@
 <p>The Bam build mode is the name of the policy to execute packages against. The core infrastructure does not have any dependency on specific build modes. Instead, implementations are discovered dynamically through reflection in the packages that are included in a build.</p>
 <H3>Tokenized String</H3>
 <p>Bam defines strings with markup called TokenizedStrings. These use specical syntax to identify tokens in the strings, so that parameterization is possible. The tokens are evaluated from macros from multiple sources; the main dependency graph (for global macros), per module, and custom macros.</p>
-<H2>Running Bam</H2>
+ <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
+<a name="running"></a><H2>Running Bam</H2>
 <p>Change the current directory to the package to be built (the master package).</p>
 <H3>To create a debuggable project</H3>
-<p>bam --createdebugproject</p>
+<pre>bam --createdebugproject</pre>
 <H3>To build in mode M</H3>
-<p>bam -b=M</p>
-<H2>Structure of a package</H2>
-A package can be any folder on disk, usually containing source code. Identifying a Bam package is through additional files. This allows Bam to integrate into most existing projects. The steps to identify a Bam package are:
+<pre>bam -b=M</pre>
+<a name="structure"></a><H2>Structure of a package</H2>
+<p>A package can be any folder on disk, usually containing source code. Identifying a Bam package is through additional files. This allows Bam to integrate into most existing projects. The steps to identify a Bam package are:
 <ol>
-<li>Package directory contains a subdirectory called 'bam'.</li>
-<li>A single .xml file exists in the bam folder, and follows the Bam schema.</li>
-<li>A Scripts folder exists in the bam folder, and contains one or more .cs files, containing module scripts.</li>
-<li>Optional: Sibling folders to Scripts, named after the build modes supported.</li>
+<li><p>Package directory contains a subdirectory called 'bam'.</p></li>
+<li><p>A single .xml file exists in the bam folder, and follows the Bam schema.</p></li>
+<li><p>A Scripts folder exists in the bam folder, and contains one or more .cs files, containing module scripts.</p></li>
+<li><p>Optional: Sibling folders to Scripts, named after the build modes supported.</p></li>
 </ol>
-TODO: example
-<H2>Writing a module</H2>
-Let's consider an example package called TestPackage. We will assume that dependent packages have already been defined in the package definition file for now.
+<p>TODO: example</p>
+ <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
+<a name="writing"></a><H2>Writing a module</H2>
+<p>Let's consider an example package called TestPackage. We will assume that dependent packages have already been defined in the package definition file for now.</p>
 <H3>A simple program</H3>
 <p>Define a module called MyProgram, which is a C (not C++) console application, with one source file, in the package directory called main.c.</p>
 <pre>
@@ -111,12 +181,12 @@ namespace TestPackage
        Bam.Core.V2.Module parent)
      {
         base.Init(parent);
-        var sources = this.CreateCContainer("$(pkgroot)/main.c");
-        sources.PrivatePatch(settings =>
+        <mark>var sources =</mark> this.CreateCContainer("$(pkgroot)/main.c");
+        <mark>sources.PrivatePatch(settings =>
           {
              var compiler = settings as C.V2.ICommonCompilerOptions;
              compiler.PreprocessorDefinitions.Add("CUSTOM_DEFINE");
-          });
+          });</mark>
      }
   }
 }
@@ -161,10 +231,15 @@ namespace TestPackage
 <li>PublicPatch is the function called. But note that this is now applied on this, rather then sources. The reason for this is that a dependency is made onto the module MyStaticLibrary, rather than on any source contained within it.</li>
 <li>Note the conditional on the cast of the settings. There's no meta data of where to direct public patches, so they are applied to a module's hierarchy of modules.</li>
 </ul>
-<H2>Advanced</H2>
-TODO
+<a name="advanced"></a><H2>Advanced</H2>
+<p>TODO
 Referenced modules (could these be sealed?)
-Structure of graph
+Structure of graph</p>
 <H3>Writing a build mode extension</H3>
-TODO
+<p>TODO</p>
+<BR>
+<p>Contact details: <a href=mailto:markfinal@hotmail.com>markfinal@hotmail.com</a>
+	 <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
+  </div>
+</div>
 </body>
