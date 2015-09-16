@@ -70,7 +70,7 @@
 <a name="where"></a><H2>Where to get BuildAMation?</H2>
 <p>BuildAMation is open source software available from <a href="https://github.com/markfinal/BuildAMation">github</a>. You are free to fork the code, or download prebuilt releases. Prebuilt distributions function on all supported platforms.</p>
 <H3>Current release</H3>
-<p>The current release of BuildAMation is 0.90 alpha 1</a>
+<p>The current release of BuildAMation is 1.0 alpha 1</a>
 <a name="whatis"></a><H2>What is BuildAMation?</H2>
 <p>BuildAMation (Bam) is a build system and project generator written in C#, targetting at least version 4.0 (requires support for LINQ and lambda expressions). Familiarity with the C# language is assumed in this documentation.</p>
 <p>Bam consists of a core assembly (Bam.Core.dll) that implements generic data structures and dependency graph generation and evaluation algorithms. The specifics of compiling and linking code for programming languages, such as C and C++, toolchains on platforms (VisualC, Xcode, Gcc, etc), and other useful tasks to perform during a build of a software product, are provided in packages that extend the core infrastructure.</p>
@@ -80,6 +80,7 @@
 <p>A command line tool, bam, is provided to execute packages. To build a package, run bam in its directory. That package is known as the <b>master package</b>. bam also contains support to create a project for both VisualStudio or Xamarin Studio to debug package builds.</p>
 <a name="installation"></a><H2>Installation</H2>
 <H3>Prerequisites</H3>
+<p>These are the systems that have been used during testing.</p>
   <div class="row" id="bootstrap-overrides">
     <div class="col-sm-4" id="bootstrap-overrides">
       <h3>Windows</h3>
@@ -98,7 +99,7 @@
     </div>
     <div class="col-sm-4">
       <h3>Linux</h3>
-            <li>Ubuntu 14+ (may work on CentOS7+)</li>
+            <li>Ubuntu 14 (some success on CentOS7 as well)</li>
             <li>Mono 4.0+</li>
             <li>Xamarin Studio 5.9+</li>
             <li>gcc/g++ 4.8</li>
@@ -201,7 +202,7 @@ The path to the project will be output to the console. Open this in either Visua
 namespace TestPackage
 {
   sealed class MyProgram :
-    C.ConsoleApplicaion
+    C.ConsoleApplication
   {
      protected override void
      Init(
@@ -234,7 +235,7 @@ The result will be an executable in the build directory of the package.</p>
 namespace TestPackage
 {
   sealed class MyProgram :
-    C.ConsoleApplicaion
+    C.ConsoleApplication
   {
      protected override void
      Init(
