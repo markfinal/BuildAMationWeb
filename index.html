@@ -303,6 +303,7 @@ namespace TestPackage
 <li>The name of the class is now MyStaticLibrary as it represents a new module.</li>
 <li>The base class has now changed to C.StaticLibrary to indicate what sort of module it is.</li>
 <li>PublicPatch is the function called. But note that this is now applied on this, rather then sources. The reason for this is that a dependency is made onto the module MyStaticLibrary, rather than on any source contained within it.</li>
+<li>Note also that PublicPatch lambdas also take two arguments; settings as before, and now appliedTo. The latter is the module on which the patch is being applied to. This may or may not be useful; this is usually the more useful reference, as in the example, to get the package directory of the source package, as opposed to using appliedTo which would get a different package directory.</li>
 <li>Note the conditional on the cast of the settings. There's no meta data of where to direct public patches, so they are applied to a module's hierarchy of modules.</li>
 </ul>
 <!--
