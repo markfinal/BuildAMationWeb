@@ -65,6 +65,7 @@
             <a href="#structure">Structure of Package</a><BR>
             <a href="#writing">Writing a Module</a><BR>
             <!--<a href="#advanced">Advanced</a><BR><BR>-->
+            <a href="#otherrepos">Additional package repositories</a><BR>
             <a href="#contact">Contact</a><BR>
 
 <a name="where"></a><H2>Where to get BuildAMation?</H2>
@@ -126,7 +127,7 @@ Some tests have particular requirements, but most will build out of the box.</p>
 <H3>Package</H3>
 <p>A package is a folder on disk, identified by a 'bam' subdirectory, an XML file under 'bam', and one or more files in a Script subfolder. A package defines classes or functions that implements modules.</p>
 <H3>Package repository</H3>
-<p>Bam defines a collection of packages to be a package repository. There is a default package repository provided with the Bam binary, and on github. There can be any number of repositories that you can download and use together to build up the required set of packages to build your software.</p>
+<p>Bam defines a collection of packages to be a package repository. There is a default package repository provided with the Bam binary, and on github. There can be any number of repositories that you can download and use together to build up the required set of packages to build your software. A package repository consists of a <b>packages</b> folder, and optionally a <b>tests</b> folder, each containing Bam packages.</p>
 <H3>Package definition file</H3>
 <p>A package definition file is an XML file, implementing the schema provided with Bam, defining the package's name (and optionally version), the dependent packages required in a build, package repositories to search, Bam assemblies to reference, any additional .NET packages, and other compilation options. The first package definition file read is from the <b>master package</b>, and is allowed to define 'default' packages which can be used to resolve duplicate package requests.</p>
 <H3>Module</H3>
@@ -314,6 +315,15 @@ Structure of graph</p>
 <H3>Writing a build mode extension</H3>
 <p>TODO</p>
 -->
+<a name="otherrepos"></a><H2>Additional Package Repositories</H2>
+<p>Although Bam has a default package repository with functionality to get you started, there are other software packages and tools that exist that would benefit from being included as a Bam package. Some additional package repositories exist, that offer the Bam build scripts for you to include in your own software builds.<p>
+<ul>
+<li><a href="https://github.com/markfinal/bam-qt">bam-qt</a> - Qt 4.8.5 and Qt 5.3.2, including the moc tool.</li>
+<li><a href="https://github.com/markfinal/bam-graphicssdk">bam-graphicssdk</a> - Direct3D, OpenGL, GLEW</li>
+<li><a href="https://github.com/markfinal/bam-zeromq">bam-zeromq</a> - ZeroMQ library build, and test</li>
+<li><a href="https://github.com/markfinal/bam-xml">bam-xml</a> - TinyXML2 library build</li>
+</ul>
+<p>It is encouraged that anyone can provide and publish a package repository.</p>
 <BR>
 <a name="contact"></a><H2>Contact</H2>
 <p>If you would like to contact me about BuildAMation, please email me on the address below. I am happy to provide advice to free software developers where my time allows.</p>
