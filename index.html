@@ -174,7 +174,7 @@ bam --makepackage --pkgname=TestPackage
 </pre>
 This will create the bam folder, the package definition file, and a script file that just contains the TestPackage namespace.</p>
 <H3>Add dependencies</H3>
-<p>We are intending to build some C code, so we will need some dependencies. Still in the TestPackage directory, type
+<p>We intend to build some C code, so we need to pull in package dependencies that provide this support. Still in the TestPackage directory, type
 <pre>
 bam --adddependent --pkgname=C
 bam --adddependent --pkgname=NativeBuilder
