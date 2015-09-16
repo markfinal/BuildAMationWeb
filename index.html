@@ -155,6 +155,9 @@ Some tests have particular requirements, but most will build out of the box.</p>
 <H3>Build using a particular mode</H3>
 <pre>bam -b=mode</pre>
 where mode is Native, MakeFile, VSSolution or Xcode.
+<H3>More help</H3>
+<p>There is built-in help in the Core assembly, as well as in packages offering command line options. The following command can be run in a package directory (in which case the packages used are inspected), or outside (in which case only the Core options are shown)</p>
+<pre>bam --help</pre>
 <a name="structure"></a><H2>Structure of a package</H2>
 <p>A package can be any folder on disk, usually containing source code. Identifying a Bam package is through additional files. This allows Bam to integrate into most existing projects. The visual steps to identify a Bam package are:
 <ol>
