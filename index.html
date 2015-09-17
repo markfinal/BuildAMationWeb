@@ -79,6 +79,12 @@
 <p>Bam packages contain C# declarative propositions in the form of classes, which each represent a 'module' to build. Evaluation of the modules is out of order from reading the scripts top-down. Packages can either provide new data structures/algorithms, or can use such definitions to describe how code can be built. Collections of packages can be grouped together logically into repositories. Each package requires a definition file (in XML) which defines all of it's dependencies.</p>
 <p>Such algorithms provided by packages are build modes. By default, Bam provides four modes: Native (command line), MakeFile, VSSolution, Xcode.</p>
 <p>A command line tool, bam, is provided to execute packages. To build a package, run bam in its directory. That package is known as the <b>master package</b>. bam also contains support to create a project for both VisualStudio or Xamarin Studio to debug package builds.</p>
+<H3>Competition</H3>
+<p>The competitors to Bam that I know of are:</p>
+<ul>
+<li><a href="http://www.cmake.org/">CMake</li>
+<li><a href="https://waf.io/">Waf</li>
+</ul>
 <a name="installation"></a><H2>Installation</H2>
 <H3>Prerequisites</H3>
 <p>These are the systems that have been used during testing.</p>
@@ -113,7 +119,7 @@
 or on Windows cmd prompt, run
 <pre>env.bat</pre>
 This will install Bam onto your PATH, and will show the details of the version of Bam on the console</p>
-<p>From source, you can build Bam from the solution file, and run the tool through the IDE. This is useful if the core assembly needs to be updated. However, the general approach to using Bam is identical to that in the binary distribution.</p>
+<p>From source, you can build Bam from the solution file, and run the tool through the IDE. This is useful if the core assembly needs to be updated. However, the general approach to using Bam is identical to that in the binary distribution. Note if you have compiled a debug version of the Core, then pass 'Debug' as an argument to the shell scripts mentioned above - the default is to use a 'Release' configuration.</p>
 <H3>Trying Bam out</H3>
 <p>The quickest way to try out Bam is to build the test cases. There is a test harness provided that uses Python 2. Change to the tests folder and type
 <pre>python runtests.py -c debug</pre>
