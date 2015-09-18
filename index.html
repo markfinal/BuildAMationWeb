@@ -234,7 +234,7 @@ namespace TestPackage
 
         if (this.Linker is VisualCCommon.LinkerBase)
         {
-            this.LinkAgainst<WindowsSDK.WindowsSDK>();
+            this.LinkAgainst&lt;WindowsSDK.WindowsSDK&gt;();
         }
      }
   }
@@ -278,7 +278,7 @@ namespace TestPackage
 
         if (this.Linker is VisualCCommon.LinkerBase)
         {
-            this.LinkAgainst<WindowsSDK.WindowsSDK>();
+            this.LinkAgainst&lt;WindowsSDK.WindowsSDK&gt;();
         }
      }
   }
@@ -395,7 +395,7 @@ namespace TestPackage
 
             if (this.Linker is VisualCCommon.LinkerBase)
             {
-                this.LinkAgainst<WindowsSDK.WindowsSDK>();
+                this.LinkAgainst&lt;WindowsSDK.WindowsSDK&gt;();
             }
 
             <mark>this.CompileAndLinkAgainst&lt;MyStaticLibrary&gt;(sources);</mark>
