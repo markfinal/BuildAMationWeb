@@ -312,7 +312,7 @@ extern void printme(const char *string);
 #endif /* LIBRARY_H */
 </pre>
 <pre>
-#include <stdio.h>
+#include &lt;stdio.h&gt;
 
 void printme(const char *string)
 {
@@ -365,7 +365,7 @@ namespace TestPackage
 <H3>Adding a dependency</H3>
 <p>Now change the program, so that it makes use of the library, e.g. change main.c to </p>
 <pre>
-#include <stdio.h>
+#include &lt;stdio.h&gt;
 <mark>#include "library.h"</mark>
 
 int main()
