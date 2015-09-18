@@ -140,7 +140,7 @@ Some tests have particular requirements, but most will build out of the box.</p>
 <p>Modules are the first class citizens of what Bam uses to build software. They are classes (sealed to be buildable, abstract/unsealed to define functionality) defined in package scripts, but there is no explicit instantiation of these classes. This is dealt with in the Bam core assembly. Modules have methods that evaluate whether the code they reference is out of date. Modules also define policies, dependent on the build mode, of how to execute when they do require building.</p>
 <p>The C# scripts define classes within a namespace, which is named after the name in the package definition file. Bam uses this name to search for modules within that package.</p>
 <p>Almost everything is a module in the Bam world. So almost everything is buildable.</p>
-<p>Dependencies are stated at the module level in package scripts. The basic module itself is only aware of two axiomatic principles - I depend on a module (it will use it's ouput), or I require this module to be up-to-date (it will use it's output at runtime). Packages extend this by adding semantic meaning atop of the axioms by way of specific module functions, e.g. a C program must compile and link against a C static library, is coded in terms of the axioms.</p>
+<p>Dependencies are stated at the module level in package scripts. The basic module itself is only aware of two axiomatic principles - I depend on a module to be built before me, or I require this module to be present and up-to-date. Packages extend this by adding semantic meaning atop of the axioms by way of specific module functions, e.g. a C program must compile and link against a C static library, is coded in terms of the axioms.</p>
 <H3>Tool</H3>
 <p>Tools are a type of module, but can be referenced by build mode policies to be executed by other modules. This does mean that tools can be procedurally generated as part of a build. Equally prebuilt tools, such as C/C++ compilers, can be used.</p>
 <H3>Settings</H3>
@@ -242,14 +242,14 @@ namespace TestPackage
 </pre>
 <H4>Points of interest</H4>
 <ul>
-<li>The namespace of the module is the name of the package it resides in, TestPackage.</li>
-<li>The name of the module is MyProgram, which is the name of the class.</li>
+<li>The namespace of the module is the name of the package it resides in, <em>TestPackage</em>.</li>
+<li>The name of the module is <em>MyProgram</em>, which is the name of the class.</li>
 <li>The class is sealed, which is an indication to Bam that you want to build this.</li>
-<li>MyProgram derives from C.ConsoleApplication. This is a class from the C package, which defines the necessary infrastructure for compiling and linking a C console application.</li>
-<li>The Init function is overridden from the base class. Init is used to define the properties of the module. The constructor is generally not used.</li>
+<li>MyProgram derives from <em>C.ConsoleApplication</em>. This is a class from the C package (using the convention of package name as namespace), which defines the necessary infrastructure for compiling and linking a C console application.</li>
+<li>The <em>Init</em> function is overridden from the base class. Init is used to define the properties of the module. The constructor is generally not used.</li>
 <li>The Init function of the parent class is called first. Chaining the hierarchy in this way ensures that all properties of the infrastructure are always setup.</li>
-<li>A method of the base class, CreateCSourceContainer, is invoked, passing string which is internally converted to a TokenizedString. The underlying implementation evaluates the parameterized string and, for this function, creates additional modules, behind the scene, for each source file. Wildcards can be used in the path to evaluate to more than one file. In this case, there is only one, the file main.c in the package directory.</li>
-<li>The call to this.LinkAgainst is a special case for building on Windows and VisualC, because the import libraries for system DLLs can only be found in the WindowsSDK. Without this, there is a linker error that kernel32.lib cannot be found.</li>
+<li>A method of the base class, <em>CreateCSourceContainer</em>, is invoked, passing string which is internally converted to a <em>TokenizedString</em>. The underlying implementation evaluates the parameterized string and, for this function, creates additional modules, behind the scene, for each source file. Wildcards can be used in the path to evaluate to more than one file. In this case, there is only one, the file main.c in the package directory.</li>
+<li>The call to <em>LinkAgainst</em> is a generic function on the C.ConsoleApplication class, and required for building on Windows and VisualC, because the import libraries for system DLLs can only be found in the WindowsSDK. Without this, there is a linker error that kernel32.lib cannot be found. By calling this function, the Bam core requires that an instance of the module specified as the type argument exists, and is a non-build requirement of the program.</li>
 </ul>
 Now try to build the package
 <pre>
@@ -289,7 +289,7 @@ namespace TestPackage
 <li>The return value of CreateCSourceContainer is now stored in a local variable. This is a container of all modules representing the compilation of source files. In this example, there is just one. Adding patches on the container affects <em>all</em> of the source files it contains.</li>
 <li>Applying a private patch takes a lamba expression with a single argument, which is the settings object for the module on which it's applied.</li>
 <li>Settings can then be cast into the interfaces which make up the module's settings class. For a private patch, as you know the module type it is applied to, you can guarantee which interfaces can be used. However, some tool specific interfaces won't be applicable to all uses, e.g. Gcc specific settings on a Windows build, so you may have check whether the interface is valid.</li>
-<li>The C.ICommonCompilerSettings interface contains a property, PreprocessorDefines, allowing the module writer to manage preprocessor definitions in the build.</li>
+<li>The <em>C.ICommonCompilerSettings</em> interface contains a property, <em>PreprocessorDefines</em>, allowing the module writer to manage preprocessor definitions in the build.</li>
 </ul>
 Now try to build the package
 <pre>
@@ -355,12 +355,12 @@ namespace TestPackage
 </pre>
 <H4>Points of interest</H4>
 <ul>
-<li>The name of the new module is MyStaticLibrary.</li>
-<li>The base class of this new module is C.StaticLibrary to indicate that it is a static library.</li>
-<li>PublicPatch is the function called. But note that this is now applied on <em>this</em>, rather then sources. The reason for this is that any dependency is made on the module MyStaticLibrary, rather than on any source contained within it.</li>
-<li>Note also that PublicPatch lambdas take two arguments; settings as before, and now appliedTo. The latter is the module on which the patch is being applied to. It may be useful to know which module the patch is being applied to; however, as in the example, <em>this</em> is usually the more useful module, to get the package directory of the source package, as opposed to using appliedTo which would get a different package directory.</li>
+<li>The name of the new module is <em>MyStaticLibrary</em>.</li>
+<li>The base class of this new module is <em>C.StaticLibrary</em> to indicate that it is a static library.</li>
+<li><em>PublicPatch</em> is the function called. But note that the function is now applied on <em>this</em>, rather then sources. The reason for this is that any dependency is made on the module MyStaticLibrary, rather than on any source contained within it.</li>
+<li>Note also that PublicPatch lambdas take two arguments; <em>settings</em> as before, and now also <em>appliedTo</em>. The latter is the module on which the patch is being applied to. It may be useful to know which module the patch is being applied to; however, as in the example, <em>this</em> is usually the more useful module, to get the package directory of the source package, as opposed to using appliedTo which would get a different package directory.</li>
 <li>Note the conditional on the cast of the settings. There's no meta data of where to direct public patches, so they are applied to a module's hierarchy of <em>child modules</em>, so can be applied equally to a link or compilation step.</li>
-<li>The patch is stored in a lambda variable in MyStaticLibrary called includePaths. It's type is from the Bam core, Module.PublicPatchDelegate. It is stored this way because it is being applied to both sources and this, but as a private patch and a public patch, respectively. It is always possible to specialize a public patch into a private patch, but not vice versa. <b>This syntax is subject to review, in order to simplify it</b>.
+<li>The patch is stored in a lambda variable in MyStaticLibrary called <em>includePaths</em>. It's type is from the Bam core, <em>Module.PublicPatchDelegate</em>. It is stored this way because it is being applied to both sources and <em>this</em>, but as a private patch and a public patch, respectively. It is always possible to specialize a public patch into a private patch, but not vice versa. <b>This syntax is subject to review, in order to simplify it</b>.
 </ul>
 <H3>Adding a dependency</H3>
 <p>Now change the program, so that it makes use of the library, e.g. change main.c to </p>
@@ -411,8 +411,8 @@ namespace TestPackage
 </pre>
 <H4>Points of interest</H4>
 <ul>
-<li>CompileAndLinkAgainst is a generic function, that takes the dependent module type to specialize it, which Bam Core uses to set up low-level dependencies. As the function is called on <em>this</em>, and <em>this</em> is a program, this means a link dependeny is set up. Bam Core is not aware of such a term as a link dependency, but it does know that the program depends on the static library to be up to date before the program can be up to date. Also, the function takes as an argument, the modules that compilation also have a dependency (as the function name suggests). A dependency is not required for compilation. However, any public patches from the dependent must be applied.</li>
-<li>There are similar functions exposed on the C module base classes, such as just link dependencies, or compilation only (for header only libraries).</li>
+<li><em>CompileAndLinkAgainst</em> is a generic function, that takes the dependent module type to specialize it, which Bam Core uses to set up low-level dependencies. As the function is called on <em>this</em>, and <em>this</em> is a program, this means a link dependency is set up. Bam Core is not aware of such a term as a link dependency, but it does know that the program depends on the static library to be up to date before the program can be up to date. Also, the function takes as an argument, the modules that compilation also have a dependency (as the function name suggests). A dependency is not required for compilation. However, any public patches from the dependent must be applied.</li>
+<li>There are similar functions exposed on the C module base classes, such as <em>LinkAgainst</em> seen earlier, or compilation only (for header only libraries).</li>
 </ul>
 <!--
 <a name="advanced"></a><H2>Advanced</H2>
