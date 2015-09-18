@@ -414,6 +414,25 @@ namespace TestPackage
 <li><em>CompileAndLinkAgainst</em> is a generic function, that takes the dependent module type to specialize it, which Bam Core uses to set up low-level dependencies. As the function is called on <em>this</em>, and <em>this</em> is a program, this means a link dependency is set up. Bam Core is not aware of such a term as a link dependency, but it does know that the program depends on the static library to be up to date before the program can be up to date. Also, the function takes as an argument, the modules that compilation also have a dependency (as the function name suggests). A dependency is not required for compilation. However, any public patches from the dependent must be applied.</li>
 <li>There are similar functions exposed on the C module base classes, such as <em>LinkAgainst</em> seen earlier, or compilation only (for header only libraries).</li>
 </ul>
+<p>Build the package once again, and you should see in the compiler console output that include paths are now included on both the program source and the library source.</p>
+<H3>Trying other build modes</H3>
+<p>In the examples above, we have used the Native build mode, to run command line builds of the package. Bam supports other types of build modes, applicable to different platforms. All the generated files are put into the build root, but each build mode will write to the console where the files can be found.</p>
+<H4>Windows</H4>
+<p>Generate a VisualStudio solution by running</p>
+<pre>
+bam -b=VSSolution -c
+</pre>
+<H4>Linux (and OSX)</H4>
+<p>Generate a MakeFile by running</p>
+<pre>
+bam -b=MakeFile -c
+</pre>
+<p>The Makefile generated uses GNU make syntax, and not NMake that VisualStudio supports.</p>
+<H4>OSX</H4>
+<p>Generate an Xcode workspace by running</p>
+<pre>
+bam -b=Xcode -c
+</pre>
 <!--
 <a name="advanced"></a><H2>Advanced</H2>
 <p>TODO
