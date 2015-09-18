@@ -78,6 +78,7 @@
 <p>Bam can be used on Microsoft Windows (7+), Apple OSX (10.8+), and some Linux distributions (e.g. Ubuntu 14 and CentOS 7). OSX and Linux support for C# is provided through <a href="http://www.mono-project.com/">Mono</a> currently.</p>
 <p>Bam packages contain C# declarative propositions in the form of classes, which each represent a 'module' to build. Evaluation of the modules is out of order from reading the scripts top-down. Packages can either provide new data structures/algorithms, or can use such definitions to describe how code can be built. Collections of packages can be grouped together logically into repositories. Each package requires a definition file (in XML) which defines all of it's dependencies.</p>
 <p>Such algorithms provided by packages are build modes. By default, Bam provides four modes: Native (command line), MakeFile, VSSolution, Xcode.</p>
+<p>Bam benefits from the strongly typed nature of C#. In a declarative scripting language, where instances of modules do not exist in those scripts (generally), references to modules are often made by type, and used in generics. Where possible, interfaces are used to abstract away niggly details. For example, compiler settings are abstracted in a suitably named C# property in an interface, and each compiler implementation understands how to translate the value of that property into it's syntax, either on the command line, or in a project script.</p>
 <p>A command line tool, bam, is provided to execute packages. To build a package, run bam in its directory. That package is known as the <b>master package</b>. bam also contains support to create a project for both VisualStudio or Xamarin Studio to debug package builds.</p>
 <H3>Competition</H3>
 <p>The competitors to Bam that I know of are:</p>
@@ -429,6 +430,25 @@ bam -b=MakeFile -c
 <pre>
 bam -b=Xcode -c
 </pre>
+<H3>C++ code</H3>
+<p>The examples above all build C code. However, the C package understands more derivatives of the C language than just this. It understands C++, ObjectiveC and ObjectiveC++. Bam uses the type of the module to determine which language it is using. For example, as shown above, a C program uses the base type
+<pre>
+C.ConsoleApplication
+</pre>
+For a program that uses C++ code, and requires the C++ linker, this would be
+<pre>
+C.Cxx.ConsoleApplication
+</pre>
+Similarly, for source code, instead of
+<pre>
+this.CreateCSourceContainer()
+</pre>
+use
+<pre>
+this.CreateCxxSourceContainer()
+</pre>
+in order to use the C++ compiler for the toolchain.</p>
+<p>It is also possible, and sometimes required, to create multiple source containers, from different languages. Ensure that you always link with the correct module type in order to use the right linker for your code.</p>
 <!--
 <a name="advanced"></a><H2>Advanced</H2>
 <p>TODO
