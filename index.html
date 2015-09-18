@@ -218,7 +218,7 @@ The path to the project will be output to the console. Open this in either Visua
 <p>You can browse the dependencies added, and the sources within them in the IDE. Debugging this project will also run Bam.</p>
 <p>But for now, open up TestPackage.cs from within the TestPackage package in the solution explorer.</p>
 <H3>A simple program</H3>
-<p>In the script file created, define a module called MyProgram, which is a C (not C++) console application, with one source file, in the package directory called main.c.</p>
+<p>In the script file created, define a module called MyProgram, which is a C (not C++) console application, with one source file, in the package directory called main.c. We will revisit a C++ source file later.</p>
 <pre>
 namespace TestPackage
 {
@@ -290,7 +290,25 @@ bam -b=Native -c
 </pre>
 However, if you inspect the command line output, you will see that CUSTOM_DEFINE is now passed as a preprocessor definition.</p>
 <H3>Public patch</H3>
-<p>Public patches are applied both to the build of the module they are applied to, and any dependents. A common case for this kind of patch is for a C library (static or dynamic) that has headers, and must expose an include search path to any other module that uses the library. Here's an example of a static library, assuming library.c is present in the package directory and contains suitable code, and library.h is in an include folder in the package directory.</p>
+<p>Public patches are applied both to the build of the module they are applied to, and any dependents. A common case for this kind of patch is for a C library (static or dynamic) that has headers, and must expose an include search path to any other module that uses the library.</p>
+<p>Here's an example of a static library, assuming library.c is present in the package directory and contains suitable code, and library.h is in an include folder in the package directory, e.g.</p>
+<pre>
+#ifndef LIBRARY_H
+#define LIBRARY_H
+
+extern void printme(const char *string);
+
+#endif /* LIBRARY_H */
+</pre>
+<pre>
+#include <stdio.h>
+
+void printme(const char *string)
+{
+    printf("%s", string);
+}
+</pre>
+<p>Here is the modified package script to include the build of the library</p>
 <pre>
 namespace TestPackage
 {
@@ -301,24 +319,27 @@ namespace TestPackage
   }
 
   <mark>sealed class MyStaticLibrary :
-    C.StaticLibrary
-  {
-     protected override void
-     Init(
-       Bam.Core.Module parent)
-     {
-        base.Init(parent);
-        var sources = this.CreateCSourceContainer("$(packagedir)/library.c");
-        this.PublicPatch((settings, appliedTo) =>
-          {
-             var compiler = settings as C.ICommonCompilerSettings;
-             if (null != compiler)
-             {
-                compiler.IncludePaths.Add(Bam.Core.TokenizedString.Create("$(packagedir)/include", this));
-             }
-          });
-     }
-  }</mark>
+      C.StaticLibrary
+    {
+        protected override void
+        Init(
+            Bam.Core.Module parent)
+        {
+            base.Init(parent);
+            var sources = this.CreateCSourceContainer("$(packagedir)/library.c");
+            sources.PrivatePatch(settings => this.includePaths(settings, this));
+            this.PublicPatch((settings, appliedTo) => this.includePaths(settings, this));
+        }
+
+        private Bam.Core.Module.PublicPatchDelegate includePaths = (settings, appliedTo) =>
+            {
+                var compiler = settings as C.ICommonCompilerSettings;
+                if (null != compiler)
+                {
+                    compiler.IncludePaths.Add(Bam.Core.TokenizedString.Create("$(packagedir)/include", appliedTo));
+                }
+            };
+    }</mark>
 }
 </pre>
 <H4>Points of interest</H4>
@@ -327,7 +348,55 @@ namespace TestPackage
 <li>The base class of this new module is C.StaticLibrary to indicate that it is a static library.</li>
 <li>PublicPatch is the function called. But note that this is now applied on <em>this</em>, rather then sources. The reason for this is that any dependency is made on the module MyStaticLibrary, rather than on any source contained within it.</li>
 <li>Note also that PublicPatch lambdas take two arguments; settings as before, and now appliedTo. The latter is the module on which the patch is being applied to. It may be useful to know which module the patch is being applied to; however, as in the example, <em>this</em> is usually the more useful module, to get the package directory of the source package, as opposed to using appliedTo which would get a different package directory.</li>
-<li>Note the conditional on the cast of the settings. There's no meta data of where to direct public patches, so they are applied to a module's hierarchy of modules, so can be applied equally to a link or compilation step.</li>
+<li>Note the conditional on the cast of the settings. There's no meta data of where to direct public patches, so they are applied to a module's hierarchy of <em>child modules</em>, so can be applied equally to a link or compilation step.</li>
+<li>The patch is stored in a lambda variable in MyStaticLibrary called includePaths. It's type is from the Bam core, Module.PublicPatchDelegate. It is stored this way because it is being applied to both sources and this, but as a private patch and a public patch, respectively. It is always possible to specialize a public patch into a private patch, but not vice versa. <b>This syntax is subject to review, in order to simplify it</b>.
+</ul>
+<H3>Adding a dependency</H3>
+<p>Now change the program, so that it makes use of the library, e.g. change main.c to </p>
+<pre>
+#include <stdio.h>
+<mark>#include "library.h"</mark>
+
+int main()
+{
+    <mark>printme("Hello world\n");</mark>
+    return 0;
+}
+</pre>
+<p>This requires the program to depend on the static library for both compilation (#include'ing the header) and for link (linking the function code). The C.ConsoleApplication module has a useful function to indicate how to do this.</p>
+<pre>
+namespace TestPackage
+{
+    sealed class MyProgram :
+      C.ConsoleApplication
+    {
+        protected override void
+        Init(
+            Bam.Core.Module parent)
+        {
+            base.Init(parent);
+            var sources = this.CreateCSourceContainer("$(packagedir)/main.c");
+            sources.PrivatePatch(settings =>
+            {
+                var compiler = settings as C.ICommonCompilerSettings;
+                compiler.PreprocessorDefines.Add("CUSTOM_DEFINE");
+            });
+
+            <mark>this.CompileAndLinkAgainst&lt;MyStaticLibrary&gt;(sources);</mark>
+        }
+    }
+
+    sealed class MyStaticLibrary :
+      C.StaticLibrary
+    {
+      ...
+    }
+}
+</pre>
+<H4>Points of interest</H4>
+<ul>
+<li>CompileAndLinkAgainst is a generic function, that takes the dependent module type to specialize it, which Bam Core uses to set up low-level dependencies. As the function is called on <em>this</em>, and <em>this</em> is a program, this means a link dependeny is set up. Bam Core is not aware of such a term as a link dependency, but it does know that the program depends on the static library to be up to date before the program can be up to date. Also, the function takes as an argument, the modules that compilation also have a dependency (as the function name suggests). A dependency is not required for compilation. However, any public patches from the dependent must be applied.</li>
+<li>There are similar functions exposed on the C module base classes, such as just link dependencies, or compilation only (for header only libraries).</li>
 </ul>
 <!--
 <a name="advanced"></a><H2>Advanced</H2>
