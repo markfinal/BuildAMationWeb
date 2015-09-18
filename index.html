@@ -71,7 +71,7 @@
 <a name="where"></a><H2>Where to get BuildAMation?</H2>
 <p>BuildAMation is open source software, using the BSD 3-clause license, available from <a href="https://github.com/markfinal/BuildAMation">github</a>. You are free to fork the code, or download prebuilt releases. Prebuilt distributions function on all supported platforms.</p>
 <H3>Current release</H3>
-<p>The current release of BuildAMation is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0a1">1.0 alpha 1</a>.</p>
+<p>The current release of BuildAMation is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0a2">1.0 alpha 2</a>.</p>
 <a name="whatis"></a><H2>What is BuildAMation?</H2>
 <p>BuildAMation (Bam) is a build system and project generator written in C#, targetting at least version 4.0 (requires support for LINQ and lambda expressions). Familiarity with the C# language is assumed in this documentation.</p>
 <p>Bam consists of a core assembly (Bam.Core.dll) that implements generic data structures and dependency graph generation and evaluation algorithms. The specifics of compiling and linking code for programming languages, such as C and C++, toolchains on platforms (VisualC, Xcode, Gcc, etc), and other useful tasks to perform during a build of a software product, are provided in packages that extend the core infrastructure.</p>
@@ -337,19 +337,16 @@ namespace TestPackage
             Bam.Core.Module parent)
         {
             base.Init(parent);
-            var sources = this.CreateCSourceContainer("$(packagedir)/library.c");
-            sources.PrivatePatch(settings => this.includePaths(settings, this));
-            this.PublicPatch((settings, appliedTo) => this.includePaths(settings, this));
-        }
-
-        private Bam.Core.Module.PublicPatchDelegate includePaths = (settings, appliedTo) =>
-            {
-                var compiler = settings as C.ICommonCompilerSettings;
-                if (null != compiler)
+            this.CreateCSourceContainer("$(packagedir)/library.c");
+            this.PublicPatch((settings, appliedTo) =>
                 {
-                    compiler.IncludePaths.Add(Bam.Core.TokenizedString.Create("$(packagedir)/include", appliedTo));
-                }
-            };
+                    var compiler = settings as C.ICommonCompilerSettings;
+                    if (null != compiler)
+                    {
+                        compiler.IncludePaths.AddUnique(Bam.Core.TokenizedString.Create("$(packagedir)/include", this));
+                    }
+                });
+        }
     }</mark>
 }
 </pre>
@@ -357,10 +354,9 @@ namespace TestPackage
 <ul>
 <li>The name of the new module is <em>MyStaticLibrary</em>.</li>
 <li>The base class of this new module is <em>C.StaticLibrary</em> to indicate that it is a static library.</li>
-<li><em>PublicPatch</em> is the function called. But note that the function is now applied on <em>this</em>, rather then sources. The reason for this is that any dependency is made on the module MyStaticLibrary, rather than on any source contained within it.</li>
+<li><em>PublicPatch</em> is the function called. But note that the function is now applied on <em>this</em>, rather then sources. The reason for this is that any dependency is written in terms of the module MyStaticLibrary, rather than on any source contained within it. Although the <em>public</em> patch is applied to <em>this</em>, because the C source container is <em>encapsulated</em> within MyStaticLibrary, the patch is applied to the source automatically.</li>
 <li>Note also that PublicPatch lambdas take two arguments; <em>settings</em> as before, and now also <em>appliedTo</em>. The latter is the module on which the patch is being applied to. It may be useful to know which module the patch is being applied to; however, as in the example, <em>this</em> is usually the more useful module, to get the package directory of the source package, as opposed to using appliedTo which would get a different package directory.</li>
 <li>Note the conditional on the cast of the settings. There's no meta data of where to direct public patches, so they are applied to a module's hierarchy of <em>child modules</em>, so can be applied equally to a link or compilation step.</li>
-<li>The patch is stored in a lambda variable in MyStaticLibrary called <em>includePaths</em>. It's type is from the Bam core, <em>Module.PublicPatchDelegate</em>. It is stored this way because it is being applied to both sources and <em>this</em>, but as a private patch and a public patch, respectively. It is always possible to specialize a public patch into a private patch, but not vice versa. <b>This syntax is subject to review, in order to simplify it</b>.
 </ul>
 <H3>Adding a dependency</H3>
 <p>Now change the program, so that it makes use of the library, e.g. change main.c to </p>
