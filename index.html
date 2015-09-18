@@ -231,6 +231,11 @@ namespace TestPackage
      {
         base.Init(parent);
         this.CreateCSourceContainer("$(packagedir)/main.c");
+
+        if (this.Linker is VisualCCommon.LinkerBase)
+        {
+            this.LinkAgainst<WindowsSDK.WindowsSDK>();
+        }
      }
   }
 }
@@ -244,6 +249,7 @@ namespace TestPackage
 <li>The Init function is overridden from the base class. Init is used to define the properties of the module. The constructor is generally not used.</li>
 <li>The Init function of the parent class is called first. Chaining the hierarchy in this way ensures that all properties of the infrastructure are always setup.</li>
 <li>A method of the base class, CreateCSourceContainer, is invoked, passing string which is internally converted to a TokenizedString. The underlying implementation evaluates the parameterized string and, for this function, creates additional modules, behind the scene, for each source file. Wildcards can be used in the path to evaluate to more than one file. In this case, there is only one, the file main.c in the package directory.</li>
+<li>The call to this.LinkAgainst is a special case for building on Windows and VisualC, because the import libraries for system DLLs can only be found in the WindowsSDK. Without this, there is a linker error that kernel32.lib cannot be found.</li>
 </ul>
 Now try to build the package
 <pre>
@@ -269,6 +275,11 @@ namespace TestPackage
              var compiler = settings as C.ICommonCompilerSettings;
              compiler.PreprocessorDefines.Add("CUSTOM_DEFINE");
           });</mark>
+
+        if (this.Linker is VisualCCommon.LinkerBase)
+        {
+            this.LinkAgainst<WindowsSDK.WindowsSDK>();
+        }
      }
   }
 }
@@ -381,6 +392,11 @@ namespace TestPackage
                 var compiler = settings as C.ICommonCompilerSettings;
                 compiler.PreprocessorDefines.Add("CUSTOM_DEFINE");
             });
+
+            if (this.Linker is VisualCCommon.LinkerBase)
+            {
+                this.LinkAgainst<WindowsSDK.WindowsSDK>();
+            }
 
             <mark>this.CompileAndLinkAgainst&lt;MyStaticLibrary&gt;(sources);</mark>
         }
