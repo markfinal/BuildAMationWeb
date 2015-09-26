@@ -72,7 +72,7 @@
 <a name="where"></a><H2>Where to get BuildAMation?</H2>
 <p>BuildAMation is open source software, using the BSD 3-clause license, available from <a href="https://github.com/markfinal/BuildAMation">github</a>. You are free to fork the code, or download prebuilt releases. Prebuilt distributions function on all supported platforms.</p>
 <H3>Current release</H3>
-<p>The current release of BuildAMation is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0a3">1.0 alpha 3</a>.</p>
+<p>The current release of BuildAMation is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0a4">1.0 alpha 4</a>.</p>
 <a name="whatis"></a><H2>What is BuildAMation?</H2>
 <p>BuildAMation (Bam) is a build system and project generator written in C#, targetting at least version 4.0 (requires support for <a href="https://msdn.microsoft.com/en-us/library/vstudio/bb397926.aspx">LINQ</a> and <a href="https://msdn.microsoft.com/en-gb/library/bb397687.aspx">lambda expressions</a>). Familiarity with the <a href="https://msdn.microsoft.com/en-us/library/vstudio/a72418yk.aspx">C# language</a> is assumed in this documentation.</p>
 <p>Bam consists of a core assembly (Bam.Core.dll) that implements generic data structures and dependency graph generation and evaluation algorithms. The specifics of compiling and linking code for programming languages, such as C and C++, toolchains on platforms (VisualC, Xcode, Gcc, etc), and other useful tasks to perform during a build of a software product, are provided in packages that extend the core infrastructure.</p>
@@ -80,7 +80,7 @@
 <p>Bam packages contain C# declarative propositions in the form of classes, which each represent a 'module' to build. Evaluation of the modules is out of order from reading the scripts top-down. Packages can either provide new data structures/algorithms, or can use such definitions to describe how code can be built. Collections of packages can be grouped together logically into repositories. Each package requires a definition file (in XML) which defines all of it's dependencies.</p>
 <p>Such algorithms provided by packages are build modes. By default, Bam provides four modes: Native (command line), MakeFile, VSSolution, Xcode.</p>
 <p>Bam benefits from the strongly typed nature of C#. In a declarative scripting language, where instances of modules do not exist in those scripts (generally), references to modules are often made by type, and used in generics. Where possible, interfaces are used to abstract away niggly details. For example, compiler settings are abstracted in a suitably named C# property in an interface, and each compiler implementation understands how to translate the value of that property into it's syntax, either on the command line, or in a project script.</p>
-<p>A command line tool, bam, is provided to execute packages. To build a package, run bam in its directory. That package is known as the <b>master package</b>. bam also contains support to create a project for both VisualStudio or Xamarin Studio to debug package builds.</p>
+<p>A command line tool, bam, is provided to execute packages. To build a package, run bam in its directory. That package is known as the <em>master package</em>. bam also contains support to create a project for both VisualStudio or Xamarin Studio to debug package builds.</p>
 <H3>Competition</H3>
 <p>The competitors to Bam that I know of are:</p>
 <ul>
@@ -94,21 +94,27 @@
     <div class="col-sm-4" id="bootstrap-overrides">
       <h3>Windows</h3>
           <ul>
-            <li>Windows 7, 8 or 8.1.</li>
+            <li>Windows 7</li>
+            <li>Windows 8</li>
+            <li>Windows 8.1</li>
             <li>.NET framework 4 (includes C# compiler)</li>
             <li>VisualStudio 2013 (Express)</li>
         </ul>
     </div>
     <div class="col-sm-4">
       <h3>Apple OSX</h3>
-            <li>OSX 10.8 (Mountain Lion), 10.9 (Mavericks), 10.10 (Yosemite)</li>
+            <li>OSX 10.8 (Mountain Lion)</li>
+            <li>OSX 10.9 (Mavericks)</li>
+            <li>OSX 10.10 (Yosemite)</li>
             <li>Mono 4.0+</li>
             <li>Xamarin Studio 5.9+</li>
             <li>Xcode 4, 5, or 6.</li>
     </div>
     <div class="col-sm-4">
       <h3>Linux</h3>
-            <li>Ubuntu 14 and CentOS 7</li>
+            <li>Ubuntu 14</li>
+            <li>CentOS 7</li>
+            <li>CentOS 6</li>
             <li>Mono 4.0+</li>
             <li>Xamarin Studio 5.9+</li>
             <li>gcc/g++ 4.8</li>
@@ -117,6 +123,7 @@
 <p>Install <a href="http://www.microsoft.com/en-us/download/details.aspx?id=48131">VisualStudio 2013 Express, Update 5</a>, from Microsoft.</p>
 <p>Install Mono for <a href="http://www.mono-project.com/download/#download-mac">OSX</a> or <a href="http://www.mono-project.com/download/#download-lin">Linux</a> (Xamarin packages recommended).</p>
 <p>Install Xamarin Studio from <a href="http://www.monodevelop.com/download/">the MonoDevelop</a> site. (MonoDevelop was the previous name for Xamarin Studio.)</p>
+<p>To install GCC 4.8 on CentOS 6, search the web for <b>testing-devtools-2-centos-6</b>.</p>
 <H3>Setting up your environment</H3>
 <p>From a binary distribution, open a terminal to the extracted files, and on Linux or OSX (or Windows MSYS), run
 <pre>source env.sh</pre>
@@ -471,8 +478,8 @@ Structure of graph</p>
 <p>It is encouraged that anyone can provide and publish a package repository.</p>
 <BR>
 <a name="contact"></a><H2>Contact</H2>
-<p>If you would like to contact me about BuildAMation, please email me on the address below. I am happy to provide advice to free software developers where my time allows.</p>
-<p>For any commercial use, please contact me to discuss further.</p>
+<p>If you would like to contact me about BuildAMation, please email me on the address below. I am happy to provide advice to developers on open source or perssonal project, where my time allows.</p>
+<p>You are free to use Bam for any commercial projects. For support/consultancy enquiries, please contact me to discuss.</p>
 <p>Contact details: <a href=mailto:markfinal@hotmail.com>markfinal@hotmail.com</a>
      <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
   </div>
