@@ -72,15 +72,15 @@
 <a name="where"></a><H2>Where to get BuildAMation?</H2>
 <p>BuildAMation is open source software, using the BSD 3-clause license, available from <a href="https://github.com/markfinal/BuildAMation">github</a>. You are free to fork the code, or download prebuilt releases. Prebuilt distributions function on all supported platforms.</p>
 <H3>Current release</H3>
-<p>The current release of BuildAMation is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0a4">1.0 alpha 4</a>.</p>
+<p>The current release of BuildAMation is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0a5">1.0 alpha 5</a>.</p>
 <a name="whatis"></a><H2>What is BuildAMation?</H2>
 <p>BuildAMation (Bam) is a build system and project generator written in C#, targetting at least version 4.0 (requires support for <a href="https://msdn.microsoft.com/en-us/library/vstudio/bb397926.aspx">LINQ</a> and <a href="https://msdn.microsoft.com/en-gb/library/bb397687.aspx">lambda expressions</a>). Familiarity with the <a href="https://msdn.microsoft.com/en-us/library/vstudio/a72418yk.aspx">C# language</a> is assumed in this documentation.</p>
-<p>Bam consists of a core assembly (Bam.Core.dll) that implements generic data structures and dependency graph generation and evaluation algorithms. The specifics of compiling and linking code for programming languages, such as C and C++, toolchains on platforms (VisualC, Xcode, Gcc, etc), and other useful tasks to perform during a build of a software product, are provided in packages that extend the core infrastructure.</p>
+<p>Bam consists of a core assembly (Bam.Core.dll) that implements generic data structures and dependency graph generation and evaluation algorithms. The specifics of compiling and linking code for programming languages, such as C and C++, toolchains on platforms (VisualC, Xcode, Gcc, etc), and other useful tasks to perform during a build of a software product, are provided in packages that extend the core infrastructure using domain specific syntax.</p>
 <p>Bam can be used on Microsoft Windows (7+), Apple OSX (10.8+), and some Linux distributions (e.g. Ubuntu 14 and CentOS 7). OSX and Linux support for C# is provided through <a href="http://www.mono-project.com/">Mono</a> currently.</p>
-<p>Bam packages contain C# declarative propositions in the form of classes, which each represent a 'module' to build. Evaluation of the modules is out of order from reading the scripts top-down. Packages can either provide new data structures/algorithms, or can use such definitions to describe how code can be built. Collections of packages can be grouped together logically into repositories. Each package requires a definition file (in XML) which defines all of it's dependencies.</p>
-<p>Such algorithms provided by packages are build modes. By default, Bam provides four modes: Native (command line), MakeFile, VSSolution, Xcode.</p>
-<p>Bam benefits from the strongly typed nature of C#. In a declarative scripting language, where instances of modules do not exist in those scripts (generally), references to modules are often made by type, and used in generics. Where possible, interfaces are used to abstract away niggly details. For example, compiler settings are abstracted in a suitably named C# property in an interface, and each compiler implementation understands how to translate the value of that property into it's syntax, either on the command line, or in a project script.</p>
-<p>A command line tool, bam, is provided to execute packages. To build a package, run bam in its directory. That package is known as the <em>master package</em>. bam also contains support to create a project for both VisualStudio or Xamarin Studio to debug package builds.</p>
+<p>Bam packages contain C# declarative propositions in the form of classes, which each represent a 'module' to build. Evaluation of the modules is out of order; thus package scripts are not imperatively evaluated. Packages can either provide new data structures/algorithms, or can use such definitions to describe how code can be built. Each package requires a definition file (in XML) which defines all of it's dependencies. Collections of packages can be grouped together logically into repositories.</p>
+<p>Examples of algorithms provided by packages are the build modes. By default, Bam provides four modes: Native (command line), MakeFile, VSSolution, Xcode, the latter two of which are project generators.</p>
+<p>Bam benefits from the strongly typed nature of C#. In a declarative scripting language, where concrete instances of modules do not exist, references to modules are made by type, and used in generics, in order to get a handle on related modules. Where possible, interfaces are used to abstract away build options that would otherwise require the user to be fluent in many different tools. For example, compiler settings are abstracted in a suitably named C# property in an interface, and each compiler implementation understands how to translate the value of that property into it's syntax, either on the command line, or in a project script.</p>
+<p>A command line tool, bam, is provided to execute packages. To build a package, run bam in that package's directory. That package is known as the <em>master package</em>. bam also contains support to create a project for both VisualStudio or Xamarin Studio to debug package builds.</p>
 <H3>Competition</H3>
 <p>The competitors to Bam that I know of are:</p>
 <ul>
@@ -103,18 +103,19 @@
     </div>
     <div class="col-sm-4">
       <h3>Apple OSX</h3>
-            <li>OSX 10.8 (Mountain Lion)</li>
+            <li>OSX 10.8 (Mountain Lion) <em>Requires modifying Xamarin Studio to build from source</em></li>
             <li>OSX 10.9 (Mavericks)</li>
             <li>OSX 10.10 (Yosemite)</li>
+            <li>OSX 10.11 (El Capitan)</li>
             <li>Mono 4.0+</li>
             <li>Xamarin Studio 5.9+</li>
-            <li>Xcode 4, 5, or 6.</li>
+            <li>Xcode 4, 5, 6 or 7</li>
     </div>
     <div class="col-sm-4">
       <h3>Linux</h3>
             <li>Ubuntu 14</li>
-            <li>CentOS 7</li>
             <li>CentOS 6</li>
+            <li>CentOS 7</li>
             <li>Mono 4.0+</li>
             <li>Xamarin Studio 5.9+</li>
             <li>gcc/g++ 4.8</li>
@@ -165,18 +166,22 @@ Some tests have particular requirements, but most will build out of the box.</p>
 <li>Xcode - generate Xcode projects and a workspace for the build</li>
 </ul>
 <H3>Tokenized String</H3>
-<p>Bam defines strings with markup called TokenizedStrings. These use specical syntax to identify tokens in the strings, so that parameterization is possible. The tokens are evaluated from macros from multiple sources; the main dependency graph (for global macros), per module, and custom macros.</p>
+<p>Bam defines strings with markup as TokenizedStrings. These use specical syntax to identify tokens in the strings, so that parameterization is possible. The tokens are evaluated from macros from multiple sources; the main dependency graph (for global macros), per module, a list of other TokenizedStrings, and custom macros. Simple TokenizedStrings, with no markup, just literal text, are known as verbatim. TokenizedStrings are parsed just prior to the dependency graph execution. This allows dynamic strings to be constructed, but altered as package script is executed. The parameterized source is terse, and references to macros offer an additional level of semantics.</p>
  <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
 <a name="running"></a><H2>Running Bam</H2>
 <p>Change the current directory to the package to be built (the master package).</p>
 <H3>To create a debuggable project</H3>
 <pre>bam --createdebugproject</pre>
+or
+<pre>bam -p</pre>
 <H3>Build using a particular mode</H3>
 <pre>bam -b=mode</pre>
 where mode is Native, MakeFile, VSSolution or Xcode.
 <H3>More help</H3>
-<p>There is built-in help in the Core assembly, as well as in packages offering command line options. The following command can be run in a package directory (in which case the packages used are inspected), or outside (in which case only the Core options are shown)</p>
+<p>There is built-in help in the Core assembly, as well as in packages offering command line options. The following command can be run in a package directory (in which case the packages used are inspected for additional options), or outside (in which case only the Core options are shown)</p>
 <pre>bam --help</pre>
+or
+<pre>bam -h</pre>
 <a name="structure"></a><H2>Structure of a package</H2>
 <p>A package can be any folder on disk, usually containing source code. Identifying a Bam package is through additional files. This allows Bam to integrate into most existing projects. The visual steps to identify a Bam package are:
 <ol>
@@ -354,7 +359,7 @@ namespace TestPackage
                     var compiler = settings as C.ICommonCompilerSettings;
                     if (null != compiler)
                     {
-                        compiler.IncludePaths.AddUnique(Bam.Core.TokenizedString.Create("$(packagedir)/include", this));
+                        compiler.IncludePaths.AddUnique(this.CreateTokenizedString("$(packagedir)/include"));
                     }
                 });
         }
@@ -368,6 +373,7 @@ namespace TestPackage
 <li><em>PublicPatch</em> is the function called. But note that the function is now applied on <em>this</em>, rather then sources. The reason for this is that any dependency is written in terms of the module MyStaticLibrary, rather than on any source contained within it. Although the <em>public</em> patch is applied to <em>this</em>, because the C source container is <em>encapsulated</em> within MyStaticLibrary, the patch is applied to the source automatically.</li>
 <li>Note also that PublicPatch lambdas take two arguments; <em>settings</em> as before, and now also <em>appliedTo</em>. The latter is the module on which the patch is being applied to. It may be useful to know which module the patch is being applied to; however, as in the example, <em>this</em> is usually the more useful module, to get the package directory of the source package, as opposed to using appliedTo which would get a different package directory.</li>
 <li>Note the conditional on the cast of the settings. There's no meta data of where to direct public patches, so they are applied to a module's hierarchy of <em>child modules</em>, so can be applied equally to a link or compilation step.</li>
+<li>The use of the <em>Module</em> utility member function <em>CreateTokenizedString</em>, creates a <em>TokenizedString</em> that is tied to that module's macros for expansion, i.e. <em>$(packagedir)</em> will evaluate to the package directory of the module MyStaticLibrary.</li>
 </ul>
 <H3>Adding a dependency</H3>
 <p>Now change the program, so that it makes use of the library, e.g. change main.c to </p>
