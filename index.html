@@ -70,17 +70,25 @@
             <a href="#contact">Contact</a><BR>
 
 <a name="where"></a><H2>Where to get BuildAMation?</H2>
-<p>BuildAMation is open source software, using the BSD 3-clause license, available from <a href="https://github.com/markfinal/BuildAMation">github</a>. You are free to fork the code, or download prebuilt releases. Prebuilt distributions function on all supported platforms.</p>
+<p>BuildAMation is open source software, using the <a href="https://github.com/markfinal/BuildAMation/blob/master/License.md">BSD 3-clause license</a>, available from <a href="https://github.com/markfinal/BuildAMation">github</a>. You are free to fork the code to modify and build it yourself, or download prebuilt releases. The binaries provided in the prebuilt releases should be compatible on all applicable platforms.</p>
 <H3>Current release</H3>
-<p>The current release of BuildAMation is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0a5">1.0 alpha 5</a>.</p>
+<p>The current release of BuildAMation is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0.0b1">1.0.0 beta 1</a>.</p>
 <a name="whatis"></a><H2>What is BuildAMation?</H2>
-<p>BuildAMation (Bam) is a build system and project generator written in C#, targetting at least version 4.0 (requires support for <a href="https://msdn.microsoft.com/en-us/library/vstudio/bb397926.aspx">LINQ</a> and <a href="https://msdn.microsoft.com/en-gb/library/bb397687.aspx">lambda expressions</a>). Familiarity with the <a href="https://msdn.microsoft.com/en-us/library/vstudio/a72418yk.aspx">C# language</a> is assumed in this documentation.</p>
-<p>Bam consists of a core assembly (Bam.Core.dll) that implements generic data structures and dependency graph generation and evaluation algorithms. The specifics of compiling and linking code for programming languages, such as C and C++, toolchains on platforms (VisualC, Xcode, Gcc, etc), and other useful tasks to perform during a build of a software product, are provided in packages that extend the core infrastructure using domain specific syntax.</p>
-<p>Bam can be used on Microsoft Windows (7+), Apple OSX (10.8+), and some Linux distributions (e.g. Ubuntu 14 and CentOS 7). OSX and Linux support for C# is provided through <a href="http://www.mono-project.com/">Mono</a> currently.</p>
-<p>Bam packages contain C# declarative propositions in the form of classes, which each represent a 'module' to build. Evaluation of the modules is out of order; thus package scripts are not imperatively evaluated. Packages can either provide new data structures/algorithms, or can use such definitions to describe how code can be built. Each package requires a definition file (in XML) which defines all of it's dependencies. Collections of packages can be grouped together logically into repositories.</p>
-<p>Examples of algorithms provided by packages are the build modes. By default, Bam provides four modes: Native (command line), MakeFile, VSSolution, Xcode, the latter two of which are project generators.</p>
-<p>Bam benefits from the strongly typed nature of C#. In a declarative scripting language, where concrete instances of modules do not exist, references to modules are made by type, and used in generics, in order to get a handle on related modules. Where possible, interfaces are used to abstract away build options that would otherwise require the user to be fluent in many different tools. For example, compiler settings are abstracted in a suitably named C# property in an interface, and each compiler implementation understands how to translate the value of that property into it's syntax, either on the command line, or in a project script.</p>
-<p>A command line tool, bam, is provided to execute packages. To build a package, run bam in that package's directory. That package is known as the <em>master package</em>. bam also contains support to create a project for both VisualStudio or Xamarin Studio to debug package builds.</p>
+<p>BuildAMation (Bam) is a <em>build system</em> and <em>project generator</em> written in C#, requiring at least .NET framework 4.0 (requires support for <a href="https://msdn.microsoft.com/en-us/library/vstudio/bb397926.aspx">LINQ</a> and <a href="https://msdn.microsoft.com/en-gb/library/bb397687.aspx">lambda expressions</a>). Some familiarity with the <a href="https://msdn.microsoft.com/en-us/library/vstudio/a72418yk.aspx">C# language</a> is assumed in this documentation and for using Bam.</p>
+<p>Bam can be used on Microsoft Windows, Apple OSX, and some Linux distributions. OSX and Linux support for C# is provided through <a href="http://www.mono-project.com/">Mono</a> currently.</p>
+<p>Bam consists of a core assembly (Bam.Core.dll) that implements data agnostic algorithms for dependency evaluation. The specifics of compiling and linking code for programming languages, such as C and C++, toolchains (VisualC, Xcode, Gcc, etc) are provided in packages that build upon the core infrastructure using a domain specific syntax that is declarative in nature.</p>
+<p>Bam packages contain declarative propositions called <b>modules</b>, in the form of C# classes. Evaluation of the modules is out of order, following dependencies set up between them; thus package scripts are not imperatively evaluated. Packages can either provide new abstract data structures and algorithms to extend Bam into new areas, or can implement concrete modules that, when evaluated, actually build code. Every package requires a <b>definition file</b> (in XML) which defines all of its dependencies. Collections of packages can be grouped together logically into <b>repositories</b>.</p>
+<p>Examples of the data structures provided by packages are <code>C.DynamicLibrary</code> and <code>C.StaticLibrary</code>, which are the base classes used to build a dynamic or static library in the C programming language. The namespace of the classes defines the package in which they belong.</p>
+<p>Examples of algorithms provided by packages are the build modes. The default package repository in Bam provides four modes: Native (command line), MakeFile, VSSolution, and Xcode.</p>
+<p>Bam benefits from the strongly typed nature of C#. In a declarative scripting language, where concrete instances of modules do not exist in user space, a dependency on a module is made by the type of the module, as a generic type parameter. Many utility functions exist that accept a module type as a generic argument. Interfaces are used to abstract away build settings that would otherwise require the user to be fluent in how to invoke many different tools to achieve the same desired effect. For example, each compiler flag is abstracted in a suitably named C# property in an interface, and each compiler implementation (in different packages) understands how to translate the value of that property, either as a command line switch, or as some field in a project script.</p>
+<p>A command line tool, bam.exe, is provided to execute packages (a shell script is provided to wrap this on OSX and Linux). To build a package, run bam in that package's directory. That package is known as the <em>master package</em>. bam also contains support to create a project for both VisualStudio or Xamarin Studio to edit scripts or debug package builds.</p>
+<H3>What BuildAMation <em>is not</em></H3>
+<p>Bam can perform many tasks to build code, but does not do the following:</p>
+<ul>
+  <li>Will not detect changes to build settings between runs (c.f. default SCons behaviour). To rebuild with new settings, you will need to change source code, or delete/clean already built files</li>
+  <li>Does not provide named settings for all compiler, linker and librarian options available.</li>
+  <li>Does not provide packages for all versions of all toolchains.</li>
+</ul>
 <H3>Competition</H3>
 <p>The competitors to Bam that I know of are:</p>
 <ul>
@@ -98,7 +106,8 @@
             <li>Windows 8</li>
             <li>Windows 8.1</li>
             <li>.NET framework 4 (includes C# compiler)</li>
-            <li>VisualStudio 2013 (Express)</li>
+            <li>VisualStudio 2013 (Express Edition)</li>
+            <li>VisualStudio 2015 (Community Edition) (<em>Not extensively tested</em>)</li>
         </ul>
     </div>
     <div class="col-sm-4">
@@ -121,52 +130,91 @@
             <li>gcc/g++ 4.8</li>
     </div>
   </div>
+<H4>Useful links</H4>
 <p>Install <a href="http://www.microsoft.com/en-us/download/details.aspx?id=48131">VisualStudio 2013 Express, Update 5</a>, from Microsoft.</p>
 <p>Install Mono for <a href="http://www.mono-project.com/download/#download-mac">OSX</a> or <a href="http://www.mono-project.com/download/#download-lin">Linux</a> (Xamarin packages recommended).</p>
-<p>Install Xamarin Studio from <a href="http://www.monodevelop.com/download/">the MonoDevelop</a> site. (MonoDevelop was the previous name for Xamarin Studio.)</p>
+<p>Install Xamarin Studio from the <a href="http://www.monodevelop.com/download/">MonoDevelop</a> site. (MonoDevelop was the previous name for Xamarin Studio.)</p>
 <p>To install GCC 4.8 on CentOS 6, search the web for <b>testing-devtools-2-centos-6</b>.</p>
 <H3>Setting up your environment</H3>
-<p>From a binary distribution, open a terminal to the extracted files, and on Linux or OSX (or Windows MSYS), run
+<p>From a binary distribution, open a terminal to the extracted files, and on Linux or OSX (or Windows msys), run
 <pre>source env.sh</pre>
-or on Windows cmd prompt, run
+or on a Windows cmd prompt, run
 <pre>env.bat</pre>
-This will install Bam onto your PATH, and will show the details of the version of Bam on the console</p>
-<p>From source, you can build Bam from the solution file, and run the tool through the IDE. This is useful if the core assembly needs to be updated. However, the general approach to using Bam is identical to that in the binary distribution. Note if you have compiled a debug version of the Core, then pass 'Debug' as an argument to the shell scripts mentioned above - the default is to use a 'Release' configuration.</p>
+This will install Bam onto your PATH, and will show the details of the version of Bam on the console, for example:</p>
+<pre>
+BuildAMation (Bam) v1.0.0b1 (c) Mark Final, 2010-2015. Licensed under BSD 3-clause. See License file.
+Using C# compiler v4.0 with assemblies in /Users/mark/Downloads/BuildAMation-1.0.0b1/bin/Release
+</pre>
+<p>From source, you can compile Bam using the provided solution file, and run the tool through the IDE. This is useful if the core assembly needs to be updated. However, the general approach to using Bam is identical to that in the binary distribution. Note if you have compiled a debug version of the Core, then pass 'Debug' as an argument to the shell scripts mentioned above - the default is to use a 'Release' configuration.</p>
 <H3>Trying Bam out</H3>
-<p>The quickest way to try out Bam is to build the test cases. There is a test harness provided that uses Python 2. Change to the tests folder and type
+<p>The quickest way to try out Bam is to build the test cases. There is a test harness provided that uses <a href="https://www.python.org/downloads/">Python</a> 2 (2.7 assumed). Change to the tests folder and type
 <pre>python runtests.py -c debug</pre>
-which will build all applicable tests on your platform using the Native build mode. See the help available from that Python script for more options.</p>
-<p>Alternatively, change to one of the individual tests, and type the full Bam command line
+which will build all applicable tests on your platform using the Native build mode. Pass <code>--help</code> to that Python script to see more options.</p>
+<p>Alternatively, change to one of the individual test package directories, and type the full Bam command line
 <pre>bam -b=Native</pre>
 Some tests have particular requirements, but most will build out of the box.</p>
 
  <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
 <a name="keydefs"></a><H2>Key definitions</H2>
 <H3>Package</H3>
-<p>A package is a folder on disk, identified by a 'bam' subdirectory, an XML file under 'bam', and one or more files in a Script subfolder. A package defines classes or functions that implements modules.</p>
+<p>A package is a folder on disk, identified by a 'bam' subdirectory, an <code>.xml</code> file under 'bam', and containing one or more <code>.cs</code> files in a Script subfolder. A package defines classes and functions that implement modules.</p>
 <H3>Package repository</H3>
-<p>Bam defines a collection of packages to be a package repository. There is a default package repository provided with the Bam binary, and on github. There can be any number of repositories that you can download and use together to build up the required set of packages to build your software. A package repository consists of a <b>packages</b> folder, and optionally a <b>tests</b> folder, each containing Bam packages.</p>
+<p>Bam defines a collection of packages to be a package repository. There is a default package repository provided with the Bam binary distribution, and also in the source on github. Any number of repositories can be downloaded and use together to concatenate the set of packages required to build your software. A package repository consists of a <b>packages</b> folder, and optionally a <b>tests</b> folder, each containing Bam packages.</p>
 <H3>Package definition file</H3>
-<p>A package definition file is an XML file, implementing the schema provided with Bam, defining the package's name (and optionally version), the dependent packages required in a build, package repositories to search, Bam assemblies to reference, any additional .NET packages, and other compilation options. The first package definition file read is from the <b>master package</b>, and is allowed to define 'default' packages which can be used to resolve duplicate package requests.</p>
+<p>A package definition file is an XML file, implementing the schema provided with Bam, defining
+<ul>
+<li>the package's name (and optionally version),</li>
+<li>the dependent packages required in a build,</li>
+<li>package repositories to search,</li>
+<li>Bam assemblies to reference (including a minimum version),</<strong></strong>li>
+<li>any additional .NET packages,</li>
+<li>and other compilation options.</li>
+</ul>
+The first package definition file read is from the <b>master package</b>, and is allowed to define 'default' packages which can be used to resolve packages that have multiple versions specified (usually toolchain packages).</p>
 <H3>Module</H3>
-<p>Modules are the first class citizens of what Bam uses to build software. They are classes (sealed to be buildable, abstract/unsealed to define functionality) defined in package scripts, but there is no explicit instantiation of these classes. This is dealt with in the Bam core assembly. Modules have methods that evaluate whether the code they reference is out of date. Modules also define policies, dependent on the build mode, of how to execute when they do require building.</p>
-<p>The C# scripts define classes within a namespace, which is named after the name in the package definition file. Bam uses this name to search for modules within that package.</p>
+<p>Modules are the first class citizens of what Bam uses to build software. They are classes (sealed to be buildable, abstract/unsealed to define functionality) defined in package scripts, but there is no explicit instantiation of these classes in those scripts. The Bam core assembly deals with instantiating and ordering modules. Modules have methods that evaluate whether the code they reference is out of date. Modules also define policies, dependent on the build mode, of how to execute when they do require building.</p>
+<p>The C# scripts define classes within a namespace, and the namespace is the package name. Bam uses this convention to search for modules within a specific package.</p>
 <p>Almost everything is a module in the Bam world. So almost everything is buildable.</p>
-<p>Dependencies are stated at the module level in package scripts. The basic module itself is only aware of two axiomatic principles - I depend on a module to be built before me, or I require this module to be present and up-to-date. Packages extend this by adding semantic meaning atop of the axioms by way of specific module functions, e.g. a C program must compile and link against a C static library, is coded in terms of the axioms.</p>
+<p>Dependencies are stated at the module level in package scripts. The basic module class is only aware of two axiomatic principles:
+<ol>
+<li>I depend on a module to be built before me, or</li>
+<li>I require this module to be present and up-to-date, but do not need it to build.</li>
+</ol>
+Packages add semantic meaning atop of the axioms by way of providing specific methods on their modules, e.g. a C program must compile and link against a C static library, is coded in terms of the axioms, and is called <code>CompileAndLinkAgainst</code>.</p>
 <H3>Tool</H3>
-<p>Tools are a type of module, but can be referenced by build mode policies to be executed by other modules. This does mean that tools can be procedurally generated as part of a build. Equally prebuilt tools, such as C/C++ compilers, can be used.</p>
+<p>Tools are a type of module, but can be referenced in when executing build mode policies of other modules. This means that tools can be procedurally generated as part of a build. Equally, prebuilt tools, such as C/C++ compilers, appear in the same guise - Bam just requires them to exist on disk already.</p>
+<H3>Configuration</H3>
+<p>There are three build configurations in the Bam core assembly:
+<ol>
+<li>Debug</li>
+<li>Optimized</li>
+<li>Profile</li>
+</ol>
+The meaning of each configuration depends on how packages define their default settings, but which can equally be overridden by the user. Out of the box, C code builds will be debug symbols and no optimizations for debug; no debug symbols and full optimizations for optimized; and debug symbols and full optimizations for profile. Bam builds can operate in one or more of these. Thus, if the package scripts build a C executable; if Bam is executed in two configurations, there will be two different versions of that executable at the end of a successful Native build. Equally, if one of the project generation build modes is chosen, a project will be generated with two configurations.</p>
 <H3>Settings</H3>
-<p>Settings are classes closely associated with tools, which implement one or more <b>settings interface</b>. Each tool generically defines the settings that can be assigned (through interfaces). Each module has a copy of the settings for its tool, so that the execution of the tool can be tailored for that module. Settings have defaults, but each module can override any default by applying a <b>patch</b>. Additionally, the defaults can be modified prior to patching via a <b>site policy</b>, e.g. say your software must build as C++11, while the default Bam compilation mode is C++98, the site policy allows this to be changed for your software. A patch is implemented in terms of a lambda function. Bam defines two types of patches, public and private. Private, as the name suggests, is applied just to the build of the module. Public patches get applied both to the build of the module, and any module that has defined a dependency on it.</p>
+<p>Settings are classes closely associated with tools, which implement one or more <b>settings interface</b>, which just define properties. Each tool is associated with a Settings class. Each Settings class concatenates interfaces (through inheritence) to create a unique collection of properties. Each module has an instance of the settings for its tool, so that the execution of the tool can be tailored for that module.</p>
+<p>Settings have defaults, but each module can override any default by applying a <b>patch</b>. Additionally, the defaults can be modified prior to patching via a <b>site policy</b>, e.g. say your software must build against the C++11 standard, while the default Bam compilation mode is C++98, the site policy allows this to be changed for your software in one place.</p>
+<p>A patch is implemented in terms of a lambda function. Bam defines two types of patches, public and private. Private, as the name suggests, is applied just to the build of the module. Public patches get applied both to the build of the module, and any module that has defined a dependency on it.</p>
 <H3>Build mode</H3>
 <p>The Bam build mode is the name of the policy to execute packages against. The core infrastructure does not have any dependency on specific build modes. Instead, implementations are discovered dynamically through reflection in the packages that are included in a build. Those build modes available are:</p>
 <ul>
-<li>Native - a command line build, that can use all available cores, and has implicit dependency checking for C compilation</li>
+<li>Native - a command line build, that can use all available cores, and has implicit dependency checking for C compilation (i.e. can detect changes in #include'd headers)</li>
 <li>MakeFile - generate a MakeFile for the build</li>
 <li>VSSolution - generate VisualStudio projects and a solution for the build</li>
 <li>Xcode - generate Xcode projects and a workspace for the build</li>
 </ul>
 <H3>Tokenized String</H3>
-<p>Bam defines strings with markup as TokenizedStrings. These use specical syntax to identify tokens in the strings, so that parameterization is possible. The tokens are evaluated from macros from multiple sources; the main dependency graph (for global macros), per module, a list of other TokenizedStrings, and custom macros. Simple TokenizedStrings, with no markup, just literal text, are known as verbatim. TokenizedStrings are parsed just prior to the dependency graph execution. This allows dynamic strings to be constructed, but altered as package script is executed. The parameterized source is terse, and references to macros offer an additional level of semantics.</p>
+<p>Bam defines strings with markup as TokenizedStrings. These use specical syntax to identify tokens in the strings, so that parameterization is possible. The tokens are evaluated from macros from multiple sources:
+<ul>
+<li>the main dependency graph (for global macros),</li>
+<li>the module the string is associated with,</li>
+<li>a list of other TokenizedStrings,</li>
+<li>the local environment variables, and</li>
+<li>custom macros.</li>
+</ul>
+Simple TokenizedStrings, with no markup, just literal text, are known as verbatim. Some TokenizedStrings can be inlined into others (useful for modules and tools that refer to each others macros).</p>
+<p>In addition to macro replacement, simple functions can be used, e.g. get the basename of a file. This allows for a more powerful construction syntax.</p>
+<p>TokenizedStrings are parsed just prior to the dependency graph execution. This allows dynamic strings to be constructed, but altered as package scripts are executed. The parameterized source is terse, and references to macros offer an additional level of semantics.</p>
  <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
 <a name="running"></a><H2>Running Bam</H2>
 <p>Change the current directory to the package to be built (the master package).</p>
@@ -178,22 +226,22 @@ or
 <pre>bam -b=mode</pre>
 where mode is Native, MakeFile, VSSolution or Xcode.
 <H3>More help</H3>
-<p>There is built-in help in the Core assembly, as well as in packages offering command line options. The following command can be run in a package directory (in which case the packages used are inspected for additional options), or outside (in which case only the Core options are shown)</p>
+<p>There is built-in help in the Core assembly, as well as in packages offering command line options. The following command can be run in a package directory (in which case the packages used are inspected for additional options), or from any other directory (in which case only the Core options are shown)</p>
 <pre>bam --help</pre>
 or
 <pre>bam -h</pre>
 <a name="structure"></a><H2>Structure of a package</H2>
-<p>A package can be any folder on disk, usually containing source code. Identifying a Bam package is through additional files. This allows Bam to integrate into most existing projects. The visual steps to identify a Bam package are:
+<p>A package can be any folder on disk, but usually containing source code. Identifying a Bam package is through inspection of files in specific locations within that folder. This allows Bam to integrate into most existing projects. The visual steps to identify a Bam package are:
 <ol>
 <li><p>Package directory contains a subdirectory called 'bam'.</p></li>
 <li><p>A single .xml file exists in the bam folder, and follows the Bam schema.</p></li>
 <li><p>A Scripts folder exists in the bam folder, and contains one or more .cs files, containing module scripts.</p></li>
 <li><p>Optional: Sibling folders to Scripts, named after the build modes supported.</p></li>
 </ol>
-<p>See any of the packages in the Bam distribution for an example.</p>
+<p>See any of the packages in the Bam distribution as examples.</p>
  <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
 <a name="writing"></a><H2>Writing a module</H2>
-<p>Let's consider an example package called TestPackage. Suppose we have a directory 'TestPackage' containing a single source file main.c to build. We will assume that main.c contains some sensible C code to make an executable program, e.g. at least a main function. Note that for the benefit of this example, it s important to be C code, not C++, for example:</p>
+<p>Let's consider an example package called TestPackage. Suppose we have a directory 'TestPackage' containing a single source file main.c to build. We will assume that main.c contains some sensible C code to make an executable program, e.g. at least a main function. Note that for the benefit of this example, it's important to be C code, not C++, for example:</p>
 <pre>
 #include &lt;stdio.h&gt;
 
