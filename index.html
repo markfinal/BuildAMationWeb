@@ -471,7 +471,7 @@ int main()
     return 0;
 }
 </pre>
-<p>Building the package now will result in a compilation failure, similar to this:</p>
+<p>Building the package now will result in a compilation failure. This is because Bam detects that the timestamp on the source file is now newer than it's corresponding object file and rebuilds it. The failure will be similar to this:</p>
 <pre>
 /private/tmp/TestPackage/main.c:2:10: fatal error: 'library.h' file not found
 #include "library.h"
@@ -523,8 +523,10 @@ namespace TestPackage
 <li>As CompileAndLinkAgainst is called on <code>this</code>, and <code>this</code> is a program, a link dependency is set up. Bam Core is not aware of the mean of a link dependency, but it does know that the program depends on the static library to be up to date before the program can be up to date. However the C package does know that a link dependency means the static library needs to be passed as an argument to the linker for the program, once it is up-to-date.</li>
 <li>Also, CompileAndLinkAgainst takes (one or more) arguments, which are the modules which compile (i.e. object files) that have a requirement on the dependent module, as the function name suggests. A module dependency in the Bam sense is not actually required for compilation. However, any public patches from the dependent must be applied in order to use the public patch from the static library containing the include search path.</li>
 <li>There are similar functions exposed on the C module base classes, such as <code>LinkAgainst</code> seen earlier, or compilation only (for header only libraries).</li>
+<li>Do note that this is an example of Bam building out of order. MyStaticLibrary is listed <em>after</em> MyProgram in the package source, and yet, MyStaticLibrary needs to be up-to-date first, for MyProgram to link.</li>
 </ul>
 <p>Build the package once again, and you should see in the compiler console output that include paths are now included on both the program source and the library source, and the program links and will run.</p>
+<p>Run a clean build to satisfy yourself that the static library is compiled and archived first.</p>
 <H3>Trying other build modes</H3>
 <p>In the examples above, we have used the Native build mode to run command line builds of the package. Bam supports other types of build modes, applicable to different platforms. All the generated files are put into the build root, but each build mode will write to the console where the files can be found.</p>
 <H4>Windows</H4>
