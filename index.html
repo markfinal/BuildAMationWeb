@@ -204,6 +204,8 @@ The meaning of each configuration depends on how packages define their default s
 <li>VSSolution - generate VisualStudio projects and a solution for the build</li>
 <li>Xcode - generate Xcode projects and a workspace for the build</li>
 </ul>
+<H3>Macros</H3>
+<p>Modules have a dictionary of named macros. The key to the dictionary is a string. The value associated with each key is a TokenizedString, described below.</p>
 <H3>Tokenized String</H3>
 <p>Bam defines strings with markup as TokenizedStrings. These use specical syntax to identify tokens in the strings, so that parameterization is possible. The tokens are evaluated from macros from multiple sources:
 <ul>
@@ -213,10 +215,31 @@ The meaning of each configuration depends on how packages define their default s
 <li>the local environment variables, and</li>
 <li>custom macros.</li>
 </ul>
-Simple TokenizedStrings, with no markup, just literal text, are known as verbatim. Some TokenizedStrings can be inlined into others (useful for modules and tools that refer to each others macros).</p>
-<p>In addition to macro replacement, simple functions can be used, e.g. get the basename of a file. This allows for a more powerful construction syntax.</p>
-<p>TokenizedStrings are parsed just prior to the dependency graph execution. This allows dynamic strings to be constructed, but altered as package scripts are executed. The parameterized source is terse, and references to macros offer an additional level of semantics.</p>
- <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
+</p>
+<p>A simple example of a TokenizedString is
+<pre>
+$(buildroot)
+</pre>
+which will look for the macro named <em>buildroot</em> in its sources, and if found, replaces the token with its value.</p>
+<p>Simple TokenizedStrings, with no markup, just literal text, are known as verbatim. Some TokenizedStrings can be inlined into others (useful for modules and tools that refer to each others macros).</p>
+<p>After macro replacement is complete, simple functions can be applied, e.g. get the basename of a file. This allows for a more powerful construction syntax. For example:
+<pre>
+@basename(~/mark/dev/foobar.txt)
+</pre>
+will return <code>foobar</code>, while
+<pre>
+@dir(~/mark/dev/foobar.txt)
+</pre>
+will return <code>~/mark/dev</code>.
+</p>
+<p>There is also support for functions to run prior to macro replacement. For example:
+<pre>
+$(MajorVersion).$(MinorVersion)#valid(.$(PatchVersion))
+</pre>
+runs the <code>valid</code> function to determine if its expression is a valid TokenizedString; if not, the whole function call is removed; if it is, only the expression remains.</p>
+<p>All TokenizedStrings are parsed just prior to the dependency graph execution. This allows dynamic strings to be constructed, but altered as package scripts are executed. The parameterized source is terse, and references to macros offer an additional level of semantics.</p>
+<p>Note that any TokenizedStrings created during dependency graph execution, will need to be manually parsed, using the <code>Parse()</code> method.</p>
+<a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
 <a name="running"></a><H2>Running Bam</H2>
 <p>Change the current directory to the package to be built (the master package).</p>
 <H3>To create a debuggable project</H3>
