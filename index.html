@@ -86,9 +86,10 @@
 <H3>What BuildAMation <em>is not</em></H3>
 <p>Bam can perform many tasks to build code, but does not do the following:</p>
 <ul>
-  <li>Will not detect changes to build settings between runs (c.f. default SCons behaviour). To rebuild with new settings, you will need to change source code, or delete/clean already built files</li>
-  <li>Does not provide named settings for all compiler, linker and librarian options available.</li>
-  <li>Does not provide packages for all versions of all toolchains.</li>
+  <li>Does <b>not</b> provide any <a href="http://www.gnu.org/software/autoconf/manual/autoconf.html">autoconf</a> mechanism out of the box, to build different variants based on what files are on the development box, but modules can be written to achieve something similar.</li>
+  <li>Will <b>not</b> detect changes to build settings between runs (c.f. default SCons behaviour). To rebuild with new settings, you will need to change source code, or delete/clean already built files.</li>
+  <li>Does <b>not</b> provide named settings for all compiler, linker and librarian options available. However, most Settings classes do implement the <code>C.IAdditionalSettings</code> interface, which allows arbitrary switches to be passed to tools.</li>
+  <li>Does <b>not</b> provide packages for all versions of all toolchains. I've chosen what I think is a reasonable set of C and C++ compilers on each platform to test against to build modern software. If you want to use a different toolchain, a package can be made for it.</li>
 </ul>
 <H3>Competition</H3>
 <p>The competitors to Bam that I know of are:</p>
