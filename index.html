@@ -1,5 +1,5 @@
 <head>
-<title>BuildAMation - build system and project generator</title>
+<title>BuildAMation - build system and providedject generator</title>
 <meta name="description" content="BuildAMation is a build system and project generator for C and C++ desktop applications, with an extensible architecture. It is written in C#, and works on Windows, Linux and Apple OSX. Build modes supported are a multithreaded native command line build, VisualStudio solution generation, Xcode workspace generation, and MakeFile generation. Packages extend the core infrastructure, and packages can be logically grouped into package repositories.">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -179,7 +179,7 @@ which will build all applicable tests on your platform using the Native build mo
 <pre>bam -b=Native</pre>
 Some tests have particular requirements, but most will build out of the box.</p>
 
- <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
+ <a href="#Top1"><img src="TOP.png" alt="Top of Page" align=right></a>
 <a name="keydefs"></a><H2>Key definitions</H2>
 <H3>Package</H3>
 <p>A package is a folder on disk, identified by a 'bam' subdirectory, an <code>.xml</code> file under 'bam', and containing one or more <code>.cs</code> files in a Script subfolder. A package defines classes and functions that implement modules.</p>
@@ -263,7 +263,7 @@ $(MajorVersion).$(MinorVersion)#valid(.$(PatchVersion))
 runs the <code>valid</code> function to determine if its expression is a valid TokenizedString; if not, the whole function call is removed; if it is, only the expression remains.</p>
 <p>All TokenizedStrings are parsed just prior to the dependency graph execution. This allows dynamic strings to be constructed, but altered as package scripts are executed. The parameterized source is terse, and references to macros offer an additional level of semantics.</p>
 <p>Note that any TokenizedStrings created during dependency graph execution, will need to be manually parsed, using the <code>Parse()</code> method.</p>
-<a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
+<a href="#Top1"><img src="TOP.png" alt="Top of Page" align=right></a>
 <a name="running"></a><H2>Running Bam</H2>
 <p>Change the current directory to the package to be built (the master package).</p>
 <H3>To create a debuggable project</H3>
@@ -287,7 +287,7 @@ or
 <li><p>Optional: Sibling folders to Scripts, named after the build modes supported.</p></li>
 </ol>
 <p>See any of the packages in the Bam distribution as examples.</p>
- <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
+ <a href="#Top1"><img src="TOP.png" alt="Top of Page" align=right></a>
 <a name="writing"></a><H2>Writing a module</H2>
 <p>Let's consider an example package called TestPackage. Suppose we have a directory 'TestPackage' containing a single source file main.c to build. We will assume that main.c contains some sensible C code to make an executable program, e.g. at least a main function. Note that for the benefit of this example, it's important to be C code, not C++, for example:</p>
 <pre>
@@ -748,7 +748,7 @@ Structure of graph</p>
 <p>If you would like to contact me about BuildAMation, please email me on the address below. I am happy to provide advice to developers using Bam to build open source or personal projects, where my time allows.</p>
 <p>You are free to use Bam for any commercial projects. For support/consultancy enquiries, please contact me to discuss.</p>
 <p>Contact details: <a href=mailto:markfinal@hotmail.com>markfinal@hotmail.com</a>
-     <a href="#Top1"><img src="TOP.jpg" alt="Top of Page" align=right></a>
+     <a href="#Top1"><img src="TOP.png" alt="Top of Page" align=right></a>
   </div>
 </div>
 </body>
