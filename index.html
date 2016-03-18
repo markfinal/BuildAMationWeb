@@ -116,8 +116,8 @@ Look no further... <b>BAM!</b><br>
 <a name="where"></a><H2>Where to get BuildAMation?</H2>
 <p>BuildAMation is open source software, using the <a href="https://github.com/markfinal/BuildAMation/blob/master/License.md">BSD 3-clause license</a>, available from <a href="https://github.com/markfinal/BuildAMation">github</a>. You are free to fork the code to modify and build it yourself, or download prebuilt releases. The binaries provided in the prebuilt releases should be compatible on all applicable platforms, satisfying the requirements below.</p>
 <H3>Current releases</H3>
-<p>The latest stable release is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0.0">v1.0.0</a>. Released on 28-Dec-2015.</p>
-<p>The latest beta release is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0.1b3">v1.0.1 beta 3</a>. Released on 16-Feb-2016.</p>
+<p>The latest stable release is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0.0">v1.0.0</a>. Released on 28th December 2015.</p>
+<p>The latest beta release is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0.1b4">v1.0.1 beta 4</a>. Released on 18th March 2016.</p>
 <a name="whatis"></a><H2>What is BuildAMation?</H2>
 <p>BuildAMation (Bam) is a <em>build system</em> and <em>project generator</em> written in C#, requiring at least .NET framework 4.0 (requires support for <a href="https://msdn.microsoft.com/en-us/library/vstudio/bb397926.aspx">LINQ</a> and <a href="https://msdn.microsoft.com/en-gb/library/bb397687.aspx">lambda expressions</a>). Some familiarity with the <a href="https://msdn.microsoft.com/en-us/library/vstudio/a72418yk.aspx">C# language</a> is assumed in this documentation and for using Bam.</p>
 <p>Bam can be used on Microsoft Windows, Apple OSX, and some Linux distributions. OSX and Linux support for C# is provided through <a href="http://www.mono-project.com/">Mono</a> currently.</p>
@@ -143,45 +143,55 @@ Look no further... <b>BAM!</b><br>
 </ul>
 <a name="installation"></a><H2>Installation</H2>
 <H3>Prerequisites</H3>
-<p>These are the systems that have been used during testing.</p>
+<p>These are the systems that have been used during testing, with <em>*</em> indicating the current development configuration.</p>
   <div class="row" id="bootstrap-overrides">
     <div class="col-sm-4" id="bootstrap-overrides">
       <h3>Windows</h3>
           <ul>
             <li>Windows 7</li>
             <li>Windows 8</li>
-            <li>Windows 8.1</li>
+            <li>Windows 8.1 <em>*</em></li>
             <li>Windows 10</li>
             <li>.NET framework 4 (includes C# compiler)</li>
-            <li>VisualStudio 2013 (Express Edition)</li>
             <li>VisualStudio 2015 (Community Edition)</li>
+            <li>VisualStudio 2013 (Express Edition) <em>*</em></li>
+            <li>VisualStudio 2012 (Express Edition)</li>
+            <li>VisualStudio 2010 (Express Edition) <em>Only 32-bit compiler, no redistributable, no solution folders</em></li>
         </ul>
     </div>
     <div class="col-sm-4">
       <h3>Apple OSX</h3>
             <li>OSX 10.8 (Mountain Lion)</li>
             <li>OSX 10.9 (Mavericks)</li>
-            <li>OSX 10.10 (Yosemite)</li>
+            <li>OSX 10.10 (Yosemite) <em>*</em></li>
             <li>OSX 10.11 (El Capitan)</li>
             <li>Mono 4.0+</li>
             <li>Xamarin Studio 5.8+ <em>Requires 10.9 or above for latest version; locked to 5.8.3 for 10.8 and below.</em></li>
-            <li>Xcode 4, 5, 6 or 7</li>
+            <li>Xcode 7</li>
+            <li>Xcode 6 <em>*</em></li>
+            <li>Xcode 5</li>
+            <li>Xcode 4</li>
     </div>
     <div class="col-sm-4">
       <h3>Linux</h3>
-            <li>Ubuntu 14</li>
+            <li>Ubuntu 14 <em>*</em></li>
             <li>CentOS 6</li>
             <li>CentOS 7</li>
             <li>Mono 4.0+</li>
             <li>Xamarin Studio 5.8+</li>
-            <li>gcc/g++ 4.8</li>
+            <li>gcc/g++ 4.8 <em>*</em></li>
     </div>
   </div>
 <H4>Useful links</H4>
-<p>Install <a href="http://www.microsoft.com/en-us/download/details.aspx?id=48131">VisualStudio 2013 Express, Update 5</a>, from Microsoft.</p>
+<H5>Windows Development environment</H5>
 <p>Install <a href="https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx">VisualStudio 2015 Community</a>, from Microsoft.</p>
+<p>Install <a href="http://www.microsoft.com/en-us/download/details.aspx?id=48131">VisualStudio 2013 Express, Update 5</a>, from Microsoft.</p>
+<p>Install <a href="https://www.microsoft.com/en-gb/download/details.aspx?id=34673">VisualStudio 2012 Express</a>, from Microsoft.</p>
+<p>Install <a href="http://download.microsoft.com/download/1/E/5/1E5F1C0A-0D5B-426A-A603-1798B951DDAE/VS2010Express1.iso">VisualStudio 2010 Express<a>, and <a href="https://www.microsoft.com/en-gb/download/details.aspx?id=23691">service pack 1</a>, from Microsoft.</p>
+<H5>Linux or OSX Mono</H5>
 <p>Install Mono for <a href="http://www.mono-project.com/download/#download-mac">OSX</a> or <a href="http://www.mono-project.com/download/#download-lin">Linux</a> (Xamarin packages recommended).</p>
 <p>Install Xamarin Studio from the <a href="http://www.monodevelop.com/download/">MonoDevelop</a> site. (MonoDevelop was the previous name for Xamarin Studio.)</p>
+<H5>GCC on Linux</H5>
 <p>To install GCC 4.8 on CentOS 6, search the web for <b>testing-devtools-2-centos-6</b>.</p>
 <H3>Setting up your environment</H3>
 <p>From a binary distribution, open a terminal to the extracted files, and on Linux or OSX (or Windows msys), run
@@ -190,9 +200,9 @@ or on a Windows cmd prompt, run
 <pre>env.bat</pre>
 This will install Bam onto your PATH, and will show the details of the version of Bam on the console, for example:</p>
 <pre>
-BuildAMation (Bam) v1.0.1b3 (c) Mark Final, 2010-2016. Licensed under BSD 3-clause. See License.md.
+BuildAMation (Bam) v1.0.1b4 (c) Mark Final, 2010-2016. Licensed under BSD 3-clause. See License.md.
 Parts of this software are licensed under the Microsoft Limited Public License (MS-PL). See MS-PL.md.
-Using C# compiler v4.0 with assemblies in /tmp/BuildAMation-1.0.1b3/bin/Release
+Using C# compiler v4.0 with assemblies in /tmp/BuildAMation-1.0.1b4/bin/Release
 </pre>
 <p>From source, you can compile Bam using the provided solution file, and run the tool through the IDE. This is useful if the core assembly needs to be updated. However, the general approach to using Bam is identical to that in the binary distribution. Note if you have compiled a debug version of the Core, then pass 'Debug' as an argument to the shell scripts mentioned above - the default is to use a 'Release' configuration.</p>
 <H3>Trying Bam out</H3>
@@ -221,6 +231,7 @@ Some tests have particular requirements, but most will build out of the box.</p>
 <li>and other compilation options.</li>
 </ul>
 The first package definition file read is from the <b>master package</b>, and is allowed to define 'default' packages which can be used to resolve packages that have multiple versions specified (usually toolchain packages).</p>
+<p>For example, suppose VisualC packages with versions 14.0 and 13.0 have been specified in package definition files. Without any <em>default</em> specification, Bam will issue an error that it cannot solve the package version ambiguity. With a <em>default</em> specification on the version of the VisualC package you wish to use, no error will be issued. If you want to override the default specification on the command line, pass <code>--VisualC.version=13.0</code>, say, to use version 13.0. This works for all packages, with a command line syntax of <code>--packagename.version=someversion</code>.
 <H3>Module</H3>
 <p>Modules are the first class citizens of what Bam uses to build software. They are classes (sealed to be buildable, abstract/unsealed to define functionality) defined in package scripts, but there is no explicit instantiation of these classes in those scripts. The Bam core assembly deals with instantiating and ordering modules. Modules have methods that evaluate whether the code they reference is out of date. Modules also define policies, dependent on the build mode, of how to execute when they do require building.</p>
 <p>The C# scripts define classes within a namespace, and the namespace is the package name. Bam uses this convention to search for modules within a specific package.</p>
