@@ -695,86 +695,101 @@ in order to use the C++ compiler for the toolchain.</p>
 Collation works on the principle that there is a built file that is the main binary. This is placed in a directory structure, whether that be in the directory root, or, say, on OSX, placed in an application bundle structure, e.g. <code>product.app/Contents/MacOSX</code>. All subsequent files collated are then written relative to that main binary, by options to each file. There is no fixed structure imposed by Bam. This allows for files to be placed next to the main binary, or in subdirectories next to it, or even back up and into other folders, such as collating frameworks for OSX application bundles.</p>
 <p>An example of a full set of collation, debug symbols and stripped binaries can be seen below, taken from the bam-qt repository tests, where <code>Qt5Application</code> is the main program (and thus main binary for collation). On OSX, this creates an application bundle. On Windows, in non-debug configurations, the runtime libraries are included.</p>
 <pre>
-    sealed class Qt5Test1Runtime :
-        Publisher.Collation
+sealed class Qt5Test1Runtime :
+    Publisher.Collation
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
     {
-        protected override void
-        Init(
-            Bam.Core.Module parent)
-        {
-            base.Init(parent);
+        base.Init(parent);
 
-            var app = this.Include&lt;Qt5Application&gt;(C.ConsoleApplication.Key, EPublishingType.WindowedApplication);
-            if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.OSX))
+        var app = this.Include<Qt5Application>(C.ConsoleApplication.Key, EPublishingType.WindowedApplication);
+        if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.OSX))
+        {
+            var qtPackage = Bam.Core.Graph.Instance.Packages.Where(item => item.Name == "Qt").First();
+            var qtVersionSplit = qtPackage.Version.Split('.');
+            var updateInstallName = (System.Convert.ToInt32(qtVersionSplit[1]) < 5); // < Qt5.5 requires install name updates
+
+            this.IncludeFramework<Qt.CoreFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+            this.IncludeFramework<Qt.WidgetsFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+            this.IncludeFramework<Qt.GuiFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+
+            // required by the platform plugin
+            this.IncludeFramework<Qt.PrintSupportFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+#if D_PACKAGE_QT_5_5_1 || D_PACKAGE_QT_5_6_0
+            this.IncludeFramework<Qt.DBusFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+#endif
+
+            this.Include<Qt.PlatformPlugin>(C.Plugin.Key, "../Plugins/qtplugins/platforms", app);
+            this.IncludeFile(this.CreateTokenizedString("$(packagedir)/resources/osx/qt.conf"), "../Resources", app);
+        }
+        else
+        {
+            this.Include<Qt.Core>(C.DynamicLibrary.Key, ".", app);
+            this.Include<Qt.Widgets>(C.DynamicLibrary.Key, ".", app);
+            this.Include<Qt.Gui>(C.DynamicLibrary.Key, ".", app);
+            this.Include<QtCommon.ICUIN>(C.DynamicLibrary.Key, ".", app);
+            this.Include<QtCommon.ICUUC>(C.DynamicLibrary.Key, ".", app);
+            this.Include<QtCommon.ICUDT>(C.DynamicLibrary.Key, ".", app);
+
+            this.IncludeFile(this.CreateTokenizedString("$(packagedir)/resources/qt.conf"), ".", app);
+            var platformPlugin = this.Include<Qt.PlatformPlugin>(C.Plugin.Key, "qtplugins/platforms", app);
+            if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.Linux))
             {
-                this.IncludeFramework&lt;Qt.CoreFramework&gt;("../Frameworks", app);
-                this.IncludeFramework&lt;Qt.WidgetsFramework&gt;("../Frameworks", app);
-                this.IncludeFramework&lt;Qt.GuiFramework&gt;("../Frameworks", app);
-                this.IncludeFramework&lt;Qt.PrintSupportFramework&gt;("../Frameworks", app);
+                this.ChangeRPath(platformPlugin, "$ORIGIN/../..");
+                this.Include<Qt.DBus>(C.DynamicLibrary.Key, ".", app); // for qxcb plugin
 
-                this.Include&lt;Qt.PlatformPlugin&gt;(C.Plugin.Key, "../Plugins/qtplugins/platforms", app);
-                this.IncludeFile(this.CreateTokenizedString("$(packagedir)/resources/osx/qt.conf"), "../Resources", app);
+#if D_PACKAGE_QT_5_5_1 || D_PACKAGE_QT_5_6_0
+                this.Include<Qt.XcbQpa>(C.DynamicLibrary.Key, ".", app);
+#endif
             }
-            else
+
+            if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.Windows) &&
+                this.BuildEnvironment.Configuration != EConfiguration.Debug &&
+                (app.SourceModule as Qt5Application).Linker is VisualCCommon.LinkerBase)
             {
-                this.Include&lt;Qt.Core&gt;(C.DynamicLibrary.Key, ".", app);
-                this.Include&lt;Qt.Widgets&gt;(C.DynamicLibrary.Key, ".", app);
-                this.Include&lt;Qt.Gui&gt;(C.DynamicLibrary.Key, ".", app);
-                this.Include&lt;QtCommon.ICUIN&gt;(C.DynamicLibrary.Key, ".", app);
-                this.Include&lt;QtCommon.ICUUC&gt;(C.DynamicLibrary.Key, ".", app);
-                this.Include&lt;QtCommon.ICUDT&gt;(C.DynamicLibrary.Key, ".", app);
-
-                this.IncludeFile(this.CreateTokenizedString("$(packagedir)/resources/qt.conf"), ".", app);
-                var platformPlugin = this.Include&lt;Qt.PlatformPlugin&gt;(C.Plugin.Key, "qtplugins/platforms", app);
-                if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.Linux))
+                var visualCRuntimeLibrary = Bam.Core.Graph.Instance.PackageMetaData<VisualCCommon.IRuntimeLibraryPathMeta>("VisualC");
+                foreach (var libpath in visualCRuntimeLibrary.CRuntimePaths((app.SourceModule as C.CModule).BitDepth))
                 {
-                    this.ChangeRPath(platformPlugin, "$ORIGIN/../..");
-                    this.Include&lt;Qt.DBus&gt;(C.DynamicLibrary.Key, ".", app); // for qxcb plugin
+                    this.IncludeFile(libpath, ".", app);
                 }
-
-                if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.Windows) &&
-                    this.BuildEnvironment.Configuration != EConfiguration.Debug &&
-                    (app.SourceModule as Qt5Application).Linker is VisualCCommon.LinkerBase)
+                foreach (var libpath in visualCRuntimeLibrary.CxxRuntimePaths((app.SourceModule as C.CModule).BitDepth))
                 {
-                    var visualCRuntimeLibrary = Bam.Core.Graph.Instance.PackageMetaData&lt;VisualCCommon.IRuntimeLibraryPathMeta&gt;("VisualC");
-                    foreach (var libpath in visualCRuntimeLibrary.CRuntimePaths((app.SourceModule as C.CModule).BitDepth))
-                    {
-                        this.IncludeFile(libpath, ".", app);
-                    }
-                    foreach (var libpath in visualCRuntimeLibrary.CxxRuntimePaths((app.SourceModule as C.CModule).BitDepth))
-                    {
-                        this.IncludeFile(libpath, ".", app);
-                    }
+                    this.IncludeFile(libpath, ".", app);
                 }
             }
         }
     }
+}
 
-    sealed class Qt5Test1DebugSymbols :
-        Publisher.DebugSymbolCollation
+[Bam.Core.ConfigurationFilter(Bam.Core.EConfiguration.NotDebug)]
+sealed class Qt5Test1DebugSymbols :
+    Publisher.DebugSymbolCollation
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
     {
-        protected override void
-        Init(
-            Bam.Core.Module parent)
-        {
-            base.Init(parent);
+        base.Init(parent);
 
-            this.CreateSymbolsFrom&lt;Qt5Test1Runtime&gt;();
-        }
+        this.CreateSymbolsFrom<Qt5Test1Runtime>();
     }
+}
 
-    sealed class Qt5Test1Stripped :
-        Publisher.StrippedBinaryCollation
+[Bam.Core.ConfigurationFilter(Bam.Core.EConfiguration.NotDebug)]
+sealed class Qt5Test1Stripped :
+    Publisher.StrippedBinaryCollation
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
     {
-        protected override void
-        Init(
-            Bam.Core.Module parent)
-        {
-            base.Init(parent);
+        base.Init(parent);
 
-            this.StripBinariesFrom&lt;Qt5Test1Runtime, Qt5Test1DebugSymbols&gt;();
-        }
+        this.StripBinariesFrom<Qt5Test1Runtime, Qt5Test1DebugSymbols>();
     }
+}
 </pre>
 <p>The result of executing these modules is three directories, with almost identical contents, representing a debuggable standalone distribution, all the debug symbols from the binaries, and a stripped standable distribution.</p>
 <p>If a stripped distribution needs to be debugging, the contents of the debug symbol directory can just be copied on top of it, and the stripped binaries will then work in a debugging (assuming source is available on disk).</p>
