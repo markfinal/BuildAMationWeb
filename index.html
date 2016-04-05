@@ -388,23 +388,23 @@ DotNet assemblies:
 
 Dependent packages (* = default version):
 Package Name                                                      From Repository
-    C                                            /tmp/BuildAMation-1.0.1b3/packages
-        CommandLineProcessor                     /tmp/BuildAMation-1.0.1b3/packages
-    Clang-Xcode6                                 /tmp/BuildAMation-1.0.1b3/packages
-        ClangCommon                              /tmp/BuildAMation-1.0.1b3/packages
-        XcodeBuilder                             /tmp/BuildAMation-1.0.1b3/packages
-            XcodeProjectProcessor                /tmp/BuildAMation-1.0.1b3/packages
-    Gcc-4.8                                      /tmp/BuildAMation-1.0.1b3/packages
-        GccCommon                                /tmp/BuildAMation-1.0.1b3/packages
-    MakeFileBuilder                              /tmp/BuildAMation-1.0.1b3/packages
-    NativeBuilder                                /tmp/BuildAMation-1.0.1b3/packages
-        CommandLineProcessor                     /tmp/BuildAMation-1.0.1b3/packages
-    VisualC-12.0                                 /tmp/BuildAMation-1.0.1b3/packages
-        VisualCCommon                            /tmp/BuildAMation-1.0.1b3/packages
-            VisualStudioProcessor                /tmp/BuildAMation-1.0.1b3/packages
-        WindowsSDK-8.1                           /tmp/BuildAMation-1.0.1b3/packages
-    VSSolutionBuilder                            /tmp/BuildAMation-1.0.1b3/packages
-        VisualStudioProcessor                    /tmp/BuildAMation-1.0.1b3/packages
+    C                                            /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        CommandLineProcessor                     /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    Clang-Xcode6                                 /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        ClangCommon                              /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        XcodeBuilder                             /Users/mark/Downloads/BuildAMation-1.0.1/packages
+            XcodeProjectProcessor                /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    Gcc-4.8                                      /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        GccCommon                                /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    MakeFileBuilder                              /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    NativeBuilder                                /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        CommandLineProcessor                     /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    VisualC-12.0                                 /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        VisualCCommon                            /Users/mark/Downloads/BuildAMation-1.0.1/packages
+            VisualStudioProcessor                /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        WindowsSDK-8.1                           /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    VSSolutionBuilder                            /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        VisualStudioProcessor                    /Users/mark/Downloads/BuildAMation-1.0.1/packages
 </pre>
 <p>Note that you may see other packages listed in the output that you didn't include. This is because package definitions are evaluated recursively, and depending on package A will bring in all of A's dependents. For example, the VisualC-12.0 package is dependent upon both VisualCCommon and the WindowsSDK-8.1, neither of which were specified on the command line while setting up the test package.</p>
 <H3>Create a debuggable project</H3>
