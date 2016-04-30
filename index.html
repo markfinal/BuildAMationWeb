@@ -14,6 +14,9 @@
 <meta itemprop="description" content="BuildAMation: build system and project generator">
 <meta itemprop="image" content="buildamation.com/BAM.png">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/agate.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 <style>
     body {background-color: #006600;}
  h1{
@@ -203,9 +206,9 @@ Look no further... <b>BAM!</b><br>
 <p>To install GCC 4.8 on CentOS 6, search the web for <b>testing-devtools-2-centos-6</b>.</p>
 <H3>Setting up your environment</H3>
 <p>From a binary distribution, open a terminal to the extracted files, and on Linux or OSX (or Windows msys), run
-<pre>source env.sh</pre>
+<pre><code class="bash">source env.sh</code></pre>
 or on a Windows cmd prompt, run
-<pre>env.bat</pre>
+<pre><code class="bash">env.bat</code></pre>
 This will install Bam onto your PATH, and will show the details of the version of Bam on the console, for example:</p>
 <pre>
 BuildAMation (Bam) v1.0.1 (c) Mark Final, 2010-2016. Licensed under BSD 3-clause. See License.md.
@@ -215,10 +218,10 @@ Using C# compiler v4.0 with assemblies in /Users/mark/Downloads/BuildAMation-1.0
 <p>From source, you can compile Bam using the provided solution file, and run the tool through the IDE. This is useful if the core assembly needs to be updated. However, the general approach to using Bam is identical to that in the binary distribution. Note if you have compiled a debug version of the Core, then pass 'Debug' as an argument to the shell scripts mentioned above - the default is to use a 'Release' configuration.</p>
 <H3>Trying Bam out</H3>
 <p>The quickest way to try out Bam is to build the test cases. There is a test harness provided that uses <a href="https://www.python.org/downloads/">Python</a> 2 (2.7 assumed). Change to the tests folder and type
-<pre>python runtests.py -c debug</pre>
+<pre><code class="bash">python runtests.py -c debug</code></pre>
 which will build all applicable tests on your platform using the Native build mode. Pass <code>--help</code> to that Python script to see more options.</p>
 <p>Alternatively, change to one of the individual test package directories, and type the full Bam command line
-<pre>bam -b=Native</pre>
+<pre><code class="bash">bam -b=Native</code></pre>
 Some tests have particular requirements, but most will build out of the box.</p>
 <p>Running tests will give you a high level overview of how Bam works, but to get to the interesting details, you need to have some hands on experience. Below, is a <a href="#writing">guided example</a> to follow.</p>
 
@@ -313,17 +316,17 @@ runs the <code>valid</code> function to determine if its expression is a valid T
 <a name="running"></a><H2>Running Bam</H2>
 <p>Change the current directory to the package to be built (the master package).</p>
 <H3>To create a debuggable project</H3>
-<pre>bam --createdebugproject</pre>
+<pre><code class="bash">bam --createdebugproject</code></pre>
 or
-<pre>bam -p</pre>
+<pre><code class="bash">bam -p</code></pre>
 <H3>Build using a particular mode</H3>
-<pre>bam -b=mode</pre>
+<pre><code class="bash">bam -b=mode</code></pre>
 where mode is Native, MakeFile, VSSolution or Xcode.
 <H3>More help</H3>
 <p>There is built-in help in the Core assembly, as well as in packages offering command line options. The following command can be run in a package directory (in which case the packages used are inspected for additional options), or from any other directory (in which case only the Core options are shown)</p>
-<pre>bam --help</pre>
+<pre><code class="bash">bam --help</code></pre>
 or
-<pre>bam -h</pre>
+<pre><code class="bash">bam -h</code></pre>
 <a name="structure"></a><H2>Structure of a package</H2>
 <p>A package can be any folder on disk, but usually containing source code. Identifying a Bam package is through inspection of files in specific locations within that folder. This allows Bam to integrate into most existing projects. The visual steps to identify a Bam package are:
 <ol>
@@ -336,7 +339,7 @@ or
  <a href="#Top1"><img src="TOP.png" alt="Top of Page" align=right></a>
 <a name="writing"></a><H2>Writing a module</H2>
 <p>Let's consider an example package called TestPackage. Suppose we have a directory 'TestPackage' containing a single source file main.c to build. We will assume that main.c contains some sensible C code to make an executable program, e.g. at least a main function. Note that for the benefit of this example, it's important to be C code, not C++, for example:</p>
-<pre>
+<pre><code>
 #include &lt;stdio.h&gt;
 
 int main()
@@ -344,16 +347,16 @@ int main()
     printf("Hello world\n");
     return 0;
 }
-</pre>
+</code></pre>
 <H3>Make a package</H3>
 <p>Making a package is the first step to using Bam. Change into the TestPackage directory, and type
-<pre>
+<pre><code class="bash">
 bam --makepackage --pkgname=TestPackage
-</pre>
+</code></pre>
 This will create the bam folder, the package definition file, and a script file that just contains the TestPackage namespace.</p>
 <H3>Add dependencies</H3>
 <p>We intend to build some C code, so we need to pull in package dependencies that provide this support. Still in the TestPackage directory, type
-<pre>
+<pre><code class="bash">
 bam --adddependent --pkgname=C
 bam --adddependent --pkgname=NativeBuilder
 bam --adddependent --pkgname=VSSolutionBuilder
@@ -362,11 +365,11 @@ bam --adddependent --pkgname=XcodeBuilder
 bam --adddependent --pkgname=VisualC --pkgversion=12.0
 bam --adddependent --pkgname=Gcc --pkgversion=4.8
 bam --adddependent --pkgname=Clang --pkgversion=Xcode6
-</pre>
+</code></pre>
 These commands have modified the package definition file. To view what it contains, run this command
-<pre>
+<pre><code class="bash">
 bam --showdefinition
-</pre>
+</code></pre>
 Here is what you should see from running this command:
 <pre>
 Definition of package 'TestPackage'
@@ -409,9 +412,9 @@ Package Name                                                      From Repositor
 <p>Note that you may see other packages listed in the output that you didn't include. This is because package definitions are evaluated recursively, and depending on package A will bring in all of A's dependents. For example, the VisualC-12.0 package is dependent upon both VisualCCommon and the WindowsSDK-8.1, neither of which were specified on the command line while setting up the test package.</p>
 <H3>Create a debuggable project</H3>
 <p>Now that all the dependencies are set up, you can create a debuggable project. Still in the TestPackage directory, type
-<pre>
+<pre><code class="bash">
 bam -p
-</pre>
+</code></pre>
 The output will be similar to
 <pre>
 Successfully created debug project for package 'TestPackage'
@@ -427,7 +430,7 @@ The generated project can be opened in VisualStudio or Xamarin Studio.</p>
 <p>To continue this example, open up TestPackage.cs from within the TestPackage package in the solution explorer.</p>
 <H3>A simple program</H3>
 <p>In the script file created, define a module called MyProgram, which is a C (not C++) console application, compiling main.c in the package directory. We will revisit a C++ source file later.</p>
-<pre>
+<pre><code>
 namespace TestPackage
 {
   sealed class MyProgram :
@@ -447,7 +450,7 @@ namespace TestPackage
      }
   }
 }
-</pre>
+</code></pre>
 <H4>Explanation</H4>
 <ul>
 <li>The namespace of the module is the name of the package it resides in, <code>TestPackage</code>.</li>
@@ -460,13 +463,13 @@ namespace TestPackage
 <li>The call to <code>LinkAgainst</code> is a generic function on the C.ConsoleApplication class, and required for building on Windows using the VisualC toolchain, because the import libraries for system DLLs can only be found in the WindowsSDK. Without this, there is a linker error that kernel32.lib cannot be found. By calling this function, the Bam core requires that an instance of the module specified as the type argument exists, and is a non-build requirement of the program. The predicate does infer a compile time dependency on the VisualCCommon package, so this code is only required when your package needs to build on Windows. Note that there is no explicit dependency on the WindowsSDK package that we specified above. It comes implicitly from the VisualC package.</li>
 </ul>
 Now try to build the package
-<pre>
+<pre><code class="bash">
 bam -b=Native
-</pre>
+</code></pre>
 The result will be an executable in a subdirectory of the <em>build</em> directory of the package. The root directory where files are built is configurable with the <code>-o</code> command line argument.</p>
 <H3>Private patch</H3>
 <p>Private patches are applied solely to the build of the module they are applied to. In this example, a C preprocessor definition is added to the compilation of the source file.</p>
-<pre>
+<pre><code>
 namespace TestPackage
 {
   sealed class MyProgram :
@@ -491,7 +494,7 @@ namespace TestPackage
      }
   }
 }
-</pre>
+</code></pre>
 <H4>Explanation</H4>
 <ul>
 <li>The return value of CreateCSourceContainer is now stored in a local variable. This is a list of all modules representing the compilation of source files, i.e. object files. In this example, there is just one object file. Adding patches on the container affects <em>all</em> of the source files it contains.</li>
@@ -500,35 +503,35 @@ namespace TestPackage
 <li>The <code>C.ICommonCompilerSettings</code> interface contains a property, <code>PreprocessorDefines</code>, allowing the module writer to manage preprocessor definitions in the build.</li>
 </ul>
 Now try to build the package
-<pre>
+<pre><code class="bash">
 bam -b=Native
-</pre>
+</code></pre>
 At this point, no modules will be rebuilt. Bam does not inspect for changed build settings between invocations, so a clean build is required to take on the updated settings. This is somewhat over-the-top in many cases, as simply deleting the object file would suffice.
-<pre>
+<pre><code class="bash">
 bam -b=Native -c
-</pre>
+</code></pre>
 If you inspect the command line output, you will see that CUSTOM_DEFINE is now passed as a preprocessor definition.</p>
 <H3>Public patch</H3>
 <p>Public patches are applied both to the build of the module they are applied to, and any dependents. A common case for this kind of patch is for a C library (static or dynamic) that has headers, and must expose an include search path to any other module that uses the library.</p>
 <p>Here's an example of a static library, assuming library.c is present in the package directory and contains suitable code, and library.h is in an include folder in the package directory, e.g.</p>
-<pre>
+<pre><code>
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
 extern void printme(const char *string);
 
 #endif /* LIBRARY_H */
-</pre>
-<pre>
+</code></pre>
+<pre><code>
 #include &lt;stdio.h&gt;
 
 void printme(const char *string)
 {
     printf("%s", string);
 }
-</pre>
+</code></pre>
 <p>Here is the modified package script to include the build of the library, but not yet make the program depend on it.</p>
-<pre>
+<pre><code>
 namespace TestPackage
 {
   sealed class MyProgram :
@@ -557,7 +560,7 @@ namespace TestPackage
         }
     }</mark>
 }
-</pre>
+</code></pre>
 <H4>Explanation</H4>
 <ul>
 <li>The name of the new module is <code>MyStaticLibrary</code>. Similarly to the program above, the name of the library generated will use the module name.</li>
@@ -570,7 +573,7 @@ namespace TestPackage
 <p>Building the package now, requires no clean step, as a new module has been introduced. The output is the compilation and subsequent archiving of library.c into the static library. The program will not have changed.</p>
 <H3>Adding a dependency</H3>
 <p>Now change the program, so that it makes use of the library, e.g. change main.c to </p>
-<pre>
+<pre><code>
 #include &lt;stdio.h&gt;
 <mark>#include "library.h"</mark>
 
@@ -579,7 +582,7 @@ int main()
     <mark>printme("Hello world\n");</mark>
     return 0;
 }
-</pre>
+</code></pre>
 <p>Building the package now will result in a compilation failure. This is because Bam detects that the timestamp on the source file is now newer than it's corresponding object file and rebuilds it. The failure will be similar to this:</p>
 <pre>
 /private/tmp/TestPackage/main.c:2:10: fatal error: 'library.h' file not found
@@ -592,7 +595,7 @@ ERROR: (Bam.Core.Exception) Command failed: xcrun --sdk macosx10.10 clang -mmaco
 Command exit code: 1
 </pre>
 <p>These changes require the program to depend on the static library for both compilation (#include'ing the header) and for link (linking the function code). The <code>C.ConsoleApplication</code> module has a useful function to indicate how to do this.</p>
-<pre>
+<pre><code>
 namespace TestPackage
 {
     sealed class MyProgram :
@@ -625,7 +628,7 @@ namespace TestPackage
       ...
     }
 }
-</pre>
+</code></pre>
 <H4>Explanation</H4>
 <ul>
 <li><code>CompileAndLinkAgainst</code> is a generic function, that takes the dependent module type as the type argument, which Bam Core uses to set up module dependencies.</li>
@@ -640,37 +643,37 @@ namespace TestPackage
 <p>In the examples above, we have used the Native build mode to run command line builds of the package. Bam supports other types of build modes, some of which are specific to certain platforms. All the generated files are put into the build root, but each build mode will write to the console where the files can be found.</p>
 <H4>Windows</H4>
 <p>Generate a VisualStudio solution by running</p>
-<pre>
+<pre><code class="bash">
 bam -b=VSSolution
-</pre>
+</code></pre>
 <H4>Linux (and OSX)</H4>
 <p>Generate a MakeFile by running</p>
-<pre>
+<pre><code class="bash">
 bam -b=MakeFile
-</pre>
+</code></pre>
 <p>The Makefile generated uses GNU make syntax, and not NMake that VisualStudio supports.</p>
 <H4>OSX</H4>
 <p>Generate an Xcode workspace by running</p>
-<pre>
+<pre><code class="bash">
 bam -b=Xcode
-</pre>
+</code></pre>
 <H3>C++ code</H3>
 <p>The examples above all build C code. However, the C package understands more derivatives of the C language than just this. It understands C++, ObjectiveC and ObjectiveC++. Bam uses the type of the module to determine which language it is using, and thus apply different tools and settings. For example, as shown above, a C program uses the base type
-<pre>
+<pre><code>
 C.ConsoleApplication
-</pre>
+</code></pre>
 For a program that links C++ code, and thus requires the C++ linker, this would be
-<pre>
+<pre><code>
 C.Cxx.ConsoleApplication
-</pre>
+</code></pre>
 Similarly, for source code, instead of
-<pre>
+<pre><code>
 this.CreateCSourceContainer(paths)
-</pre>
+</code></pre>
 use
-<pre>
+<pre><code>
 this.CreateCxxSourceContainer(paths)
-</pre>
+</code></pre>
 in order to use the C++ compiler for the toolchain.</p>
 <p>It is also possible, and sometimes required, to create multiple source containers, from different languages. There is no restriction on how many times you call one of the create container functions. Ensure that you always link with the correct module type in order to use the right linker for your code.</p>
 <a name="distributing"></a><H2>Distributing your software</H2>
@@ -694,7 +697,7 @@ in order to use the C++ compiler for the toolchain.</p>
 </ol>
 Collation works on the principle that there is a built file that is the main binary. This is placed in a directory structure, whether that be in the directory root, or, say, on OSX, placed in an application bundle structure, e.g. <code>product.app/Contents/MacOSX</code>. All subsequent files collated are then written relative to that main binary, by options to each file. There is no fixed structure imposed by Bam. This allows for files to be placed next to the main binary, or in subdirectories next to it, or even back up and into other folders, such as collating frameworks for OSX application bundles.</p>
 <p>An example of a full set of collation, debug symbols and stripped binaries can be seen below, taken from the bam-qt repository tests, where <code>Qt5Application</code> is the main program (and thus main binary for collation). On OSX, this creates an application bundle. On Windows, in non-debug configurations, the runtime libraries are included.</p>
-<pre>
+<pre><code>
 sealed class Qt5Test1Runtime :
     Publisher.Collation
 {
@@ -790,6 +793,7 @@ sealed class Qt5Test1Stripped :
         this.StripBinariesFrom<Qt5Test1Runtime, Qt5Test1DebugSymbols>();
     }
 }
+</code>
 </pre>
 <p>The result of executing these modules is three directories, with almost identical contents, representing a debuggable standalone distribution, all the debug symbols from the binaries, and a stripped standable distribution.</p>
 <p>If a stripped distribution needs to be debugging, the contents of the debug symbol directory can just be copied on top of it, and the stripped binaries will then work in a debugging (assuming source is available on disk).</p>
@@ -818,18 +822,20 @@ sealed class Qt5Test1Stripped :
 </p>
 <p>All methods take all the files from the collated module (whichever one you chose) and place the contents into the respective installer. A tar ball from the example above, using the stripped binary collation as the source for the installer, would be</p>
 <pre>
-    sealed class TarBallInstaller :
-        Installer.TarBall
+<code>
+sealed class TarBallInstaller :
+    Installer.TarBall
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
     {
-        protected override void
-        Init(
-            Bam.Core.Module parent)
-        {
-            base.Init(parent);
+        base.Init(parent);
 
-            this.SourceFolder&lt;Qt5Test1Stripped&gt;(Publisher.StrippedBinaryCollation.Key);
-        }
+        this.SourceFolder&lt;Qt5Test1Stripped&gt;(Publisher.StrippedBinaryCollation.Key);
     }
+}
+</code>
 </pre>
 <p>Existing functionality provides the minimum requirement for generating usable installers. Future versions of Bam will include more configurability.</p>
 <!--
