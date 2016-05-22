@@ -107,7 +107,11 @@
           <p>Repos content</p>
         </div>
         <div class="tab-pane" id="contact">
-          <p>Contact content</p>
+          <script>
+          $(function(){
+            $("#contact").load("content/contact.html");
+          });
+          </script>
         </div>
       </div>
     </div>
