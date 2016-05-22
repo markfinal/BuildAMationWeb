@@ -93,7 +93,11 @@
           </script>
         </div>
         <div class="tab-pane" id="install">
-          <p>Install content</p>
+          <script>
+          $(function(){
+            $("#install").load("content/install.html");
+          });
+          </script>
         </div>
         <div class="tab-pane" id="using">
           <p>Using content</p>
