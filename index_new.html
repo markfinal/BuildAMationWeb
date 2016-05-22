@@ -85,7 +85,11 @@
           </script>
         </div>
         <div class="tab-pane" id="where">
-          <p>Where content</p>
+          <script>
+          $(function(){
+            $("#where").load("content/where.html");
+          });
+          </script>
         </div>
         <div class="tab-pane" id="what">
           <p>What content</p>
