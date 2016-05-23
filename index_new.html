@@ -75,7 +75,13 @@
             <li><a data-toggle="tab" href="#running">Running BAM</a></li>
           </ul>
         </li>
-        <li><a data-toggle="tab" href="#examples">Examples</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Examples
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a data-toggle="tab" href="#simpleexample">Simple example</a></li>
+          </ul>
+        </li>
         <li><a data-toggle="tab" href="#repos">Repositories</a></li>
         <li><a data-toggle="tab" href="#contact">Contact</a></li>
       </ul>
@@ -144,8 +150,12 @@
           });
           </script>
         </div>
-        <div class="tab-pane" id="examples">
-          <p>Examples content</p>
+        <div class="tab-pane" id="simpleexample">
+          <script>
+          $(function(){
+            $("#simpleexample").load("content/examples/simple.html");
+          });
+          </script>
         </div>
         <div class="tab-pane" id="repos">
           <p>Repos content</p>
