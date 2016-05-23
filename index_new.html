@@ -166,7 +166,11 @@
           </script>
         </div>
         <div class="tab-pane" id="repos">
-          <p>Repos content</p>
+          <script>
+          $(function(){
+            $("#repos").load("content/repositories.html");
+          });
+          </script>
         </div>
         <div class="tab-pane" id="contact">
           <script>
