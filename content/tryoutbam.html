@@ -1,0 +1,11 @@
+<ul class="breadcrumb">
+    <li>Using</li>
+    <li class="active">Trying BAM out</li>
+</ul>
+<p>The quickest way to try out Bam without having to write any scripts is to build the test cases. There is a test harness provided that uses <a href="https://www.python.org/downloads/">Python</a> 2 (2.7 assumed). Change to the tests folder and type
+<pre><code class="bash">python runtests.py -c debug</code></pre>
+which will build all applicable tests on your platform using the Native build mode. Pass <code>--help</code> to that Python script to see more options.</p>
+<p>Alternatively, change to one of the individual test package directories, and type the full Bam command line
+<pre><code class="bash">bam -b=Native</code></pre>
+Some tests have particular requirements, but most will build out of the box.</p>
+<p>Running tests will give you a high level overview of how Bam works, but to get to the interesting details, you need to have some hands on experience. Below, is a <a href="#writing">guided example</a> to follow.</p>

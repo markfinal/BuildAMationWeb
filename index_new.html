@@ -69,9 +69,9 @@
           <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a data-toggle="tab" href="#setupenv">Setting up your environment</a></li>
+            <li><a data-toggle="tab" href="#tryoutbam">Trying out BAM</a></li>
           </ul>
         </li>
-        <li><a data-toggle="tab" href="#using">Using</a></li>
         <li><a data-toggle="tab" href="#examples">Examples</a></li>
         <li><a data-toggle="tab" href="#repos">Repositories</a></li>
         <li><a data-toggle="tab" href="#contact">Contact</a></li>
@@ -113,8 +113,12 @@
           });
           </script>
         </div>
-        <div class="tab-pane" id="using">
-          <p>Using content</p>
+        <div class="tab-pane" id="tryoutbam">
+          <script>
+          $(function(){
+            $("#tryoutbam").load("content/tryoutbam.html");
+          });
+          </script>
         </div>
         <div class="tab-pane" id="examples">
           <p>Examples content</p>
