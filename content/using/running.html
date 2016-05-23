@@ -1,0 +1,17 @@
+<ul class="breadcrumb">
+    <li>Using</li>
+    <li class="active">Running BAM</li>
+</ul>
+<p>Change the current directory to the package to be built (the master package).</p>
+<H3>To create a debuggable project</H3>
+<pre><code class="bash">bam --createdebugproject</code></pre>
+or
+<pre><code class="bash">bam -p</code></pre>
+<H3>Build using a particular mode</H3>
+<pre><code class="bash">bam -b=mode</code></pre>
+where mode is <code>Native</code>, <code>MakeFile</code>, <code>VSSolution</code> or <code>Xcode</code>.
+<H3>More help</H3>
+<p>There is built-in help in the Core assembly, as well as in packages offering command line options. The following command can be run in a package directory (in which case the packages used are inspected for additional options), or from any other directory (in which case only the Core options are shown)</p>
+<pre><code class="bash">bam --help</code></pre>
+or
+<pre><code class="bash">bam -h</code></pre>
