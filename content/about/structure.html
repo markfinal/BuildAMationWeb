@@ -1,0 +1,12 @@
+<ul class="breadcrumb">
+    <li>About</li>
+    <li class="active">Structure of a package</li>
+</ul>
+<p>A package can be any folder on disk, but usually containing source code. Identifying a Bam package is through inspection of files in specific locations within that folder. This allows Bam to integrate into most existing projects. The visual steps to identify a Bam package are:
+<ol>
+<li><p>Package directory contains a subdirectory called <code>bam</code>.</p></li>
+<li><p>A single <code>.xml</code> file exists in the bam folder, and follows the Bam schema.</p></li>
+<li><p>A <code>Scripts</code> folder exists in the bam folder, and contains one or more <code>.cs</code> files, containing module scripts.</p></li>
+<li><p>Optional: Sibling folders to Scripts, named after the build modes supported, which contain the <code>.cs</code> files implementing execution policies for each supported build mode.</p></li>
+</ol>
+<p>See any of the packages in the Bam distribution as examples.</p>
