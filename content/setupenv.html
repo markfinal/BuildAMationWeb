@@ -1,0 +1,15 @@
+<ul class="breadcrumb">
+    <li>Using</li>
+    <li class="active">Setting up your environment</li>
+</ul>
+<p>From a binary distribution, open a terminal to the extracted files, and on Linux or OSX (or Windows msys), run
+<pre><code class="bash">source env.sh</code></pre>
+or on a Windows cmd prompt, run
+<pre><code class="bash">env.bat</code></pre>
+This will install Bam onto your PATH, and will show the details of the version of Bam on the console, for example:</p>
+<pre>
+BuildAMation (Bam) v1.0.2 (c) Mark Final, 2010-2016. Licensed under BSD 3-clause. See License.md.
+Parts of this software are licensed under the Microsoft Limited Public License (MS-PL). See MS-PL.md.
+Using C# compiler v4.0 with assemblies in /Users/mark/Downloads/BuildAMation-1.0.2/bin/Release
+</pre>
+<p>From source, you can compile Bam using the provided solution file, and run the tool through the IDE. This is useful if the core assembly needs to be updated. However, the general approach to using Bam is identical to that in the binary distribution. Note if you have compiled a debug version of the Core, then pass 'Debug' as an argument to the shell scripts mentioned above - the default is to use a 'Release' configuration.</p>
