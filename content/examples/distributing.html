@@ -4,7 +4,7 @@
 </ul>
 <p>As much as building software is important, it is perhaps moreso to be able to distribute this to users in a binary form. This has a number of caveats, for example:</p>
 <ul>
-<li>Collating all of your build output so that they are located in a single directory.</li>
+<li>Collating all of your build output so that they are located in a single directory hierarchy.</li>
 <li>All thirdparty dependent runtime libraries must be published with your software, as you cannot guarantee what the end user has on their system.</li>
 <li>Windows end users may not have a development environment, so non-debug runtime libraries must be linked against.</li>
 <li>OSX binary install names need to be adjusted so that the distributable is standalone.</li>
@@ -12,16 +12,16 @@
 <li>Debug symbols may need to be stripped from binaries. You may also wish to hive off debug symbols, so you can later debug crash reports from end users.</li>
 <li>You may wish to provide an installer for your software.</li>
 </ul>
-<p>Bam tries to resolve much of this for you by way of the <em>Publisher</em> and <em>Installer</em> packages, in the default repository.</p>
+<p>Bam tries to resolve much of this for you by way of the <code>Publisher</code> and <code>Installer</code> packages, in the default repository.</p>
 <H2>Publishing</H2>
 <p>The Publisher package has three main components:
 <ol>
-<li><em>Collation</em> This is the process of taking specific parts of the build (and external files) and placing them in a define hierarchy under a single folder. This creates a standalone distributable, but contains all the artifacts of the build, e.g. debug symbols. This means that collation is useful for developers, as it makes a runnable software setup. This works for both command line builds and project builds, although note that project builds are constructed to be useful for development, not for distribution.</li>
+<li><em>Collation</em> This is the process of taking specific parts of the build (and external files) and placing them in a specified hierarchy under a single folder. This creates a standalone distributable, but contains all the artifacts of the build, e.g. debug symbols. This means that collation is useful for developers, as it makes a runnable/debuggable software setup. This works for both command line builds and project builds, although note that project builds are constructed to be useful for development and debugging, not for distribution.</li>
 <li><em>DebugSymbolCollation</em> This runs after Collation, and captures all the debug symbols from the collated files, and writes them to a mirrored directory structure. On Windows, this copies .pdb files from VisualC, or runs objcopy for Mingw. On Linux, this runs objcopy. On OSX, this runs dsymutil.</li>
 <li><em>StrippedBinaryCollation</em> This runs after both Collation and DebugSymbolCollation, and strips all the binaries of their debug sections, and writes them to a mirrored directory structure. For files without debug information, they are cloned. On Windows, files built with VisualC are cloned. Those built with Mingw are stripped, and a debug link configured with objcopy on the stripped binary. On Linux, built files are stripped, and a debug link configured with objcopy on the stripped binary. On OSX, built files are stripped.</li>
 </ol>
-Collation works on the principle that there is a built file that is the main binary. This is placed in a directory structure, whether that be in the directory root, or, say, on OSX, placed in an application bundle structure, e.g. <code>product.app/Contents/MacOSX</code>. All subsequent files collated are then written relative to that main binary, by options to each file. There is no fixed structure imposed by Bam. This allows for files to be placed next to the main binary, or in subdirectories next to it, or even back up and into other folders, such as collating frameworks for OSX application bundles.</p>
-<p>An example of a full set of collation, debug symbols and stripped binaries can be seen below, taken from the bam-qt repository tests, where <code>Qt5Application</code> is the main program (and thus main binary for collation). On OSX, this creates an application bundle. On Windows, in non-debug configurations, the runtime libraries are included.</p>
+Collation works on the principle that there is a built file that is the main binary. This is placed in a directory structure, whether that be in the directory root, or, say, on OSX, placed in an application bundle structure, e.g. <code>product.app/Contents/MacOSX</code>. All subsequent files collated are then written <em>relative to that main binary</em>, by specifying options on each file. There is no fixed structure imposed by Bam. This allows for files to be placed next to the main binary, or in subdirectories next to it, or even back up and into other folders, such as collating frameworks for OSX application bundles.</p>
+<p>An example of a full set of collation, debug symbols and stripped binaries can be seen below, taken from the <a data-toggle="tab" href="#repos">bam-qt repository</a> tests, where <code>Qt5Application</code> is the main program (and thus main binary for collation). On OSX, this creates an application bundle. On Windows, in non-debug configurations, the runtime libraries are included.</p>
 <pre><code>sealed class Qt5Test1Runtime :
     Publisher.Collation
 {
@@ -31,44 +31,44 @@ Collation works on the principle that there is a built file that is the main bin
     {
         base.Init(parent);
 
-        var app = this.Include<Qt5Application>(C.ConsoleApplication.Key, EPublishingType.WindowedApplication);
+        var app = this.Include&lt;Qt5Application&gt;(C.ConsoleApplication.Key, EPublishingType.WindowedApplication);
         if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.OSX))
         {
             var qtPackage = Bam.Core.Graph.Instance.Packages.Where(item => item.Name == "Qt").First();
             var qtVersionSplit = qtPackage.Version.Split('.');
             var updateInstallName = (System.Convert.ToInt32(qtVersionSplit[1]) < 5); // < Qt5.5 requires install name updates
 
-            this.IncludeFramework<Qt.CoreFramework>("../Frameworks", app, updateInstallName: updateInstallName);
-            this.IncludeFramework<Qt.WidgetsFramework>("../Frameworks", app, updateInstallName: updateInstallName);
-            this.IncludeFramework<Qt.GuiFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+            this.IncludeFramework&lt;Qt.CoreFramework&gt;("../Frameworks", app, updateInstallName: updateInstallName);
+            this.IncludeFramework&lt;Qt.WidgetsFramework&gt;("../Frameworks", app, updateInstallName: updateInstallName);
+            this.IncludeFramework&lt;Qt.GuiFramework&gt;("../Frameworks", app, updateInstallName: updateInstallName);
 
             // required by the platform plugin
-            this.IncludeFramework<Qt.PrintSupportFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+            this.IncludeFramework&lt;Qt.PrintSupportFramework&gt;("../Frameworks", app, updateInstallName: updateInstallName);
 #if D_PACKAGE_QT_5_5_1 || D_PACKAGE_QT_5_6_0
-            this.IncludeFramework<Qt.DBusFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+            this.IncludeFramework&lt;Qt.DBusFramework&gt;("../Frameworks", app, updateInstallName: updateInstallName);
 #endif
 
-            this.Include<Qt.PlatformPlugin>(C.Plugin.Key, "../Plugins/qtplugins/platforms", app);
+            this.Include&lt;Qt.PlatformPlugin&gt;(C.Plugin.Key, "../Plugins/qtplugins/platforms", app);
             this.IncludeFile(this.CreateTokenizedString("$(packagedir)/resources/osx/qt.conf"), "../Resources", app);
         }
         else
         {
-            this.Include<Qt.Core>(C.DynamicLibrary.Key, ".", app);
-            this.Include<Qt.Widgets>(C.DynamicLibrary.Key, ".", app);
-            this.Include<Qt.Gui>(C.DynamicLibrary.Key, ".", app);
-            this.Include<QtCommon.ICUIN>(C.DynamicLibrary.Key, ".", app);
-            this.Include<QtCommon.ICUUC>(C.DynamicLibrary.Key, ".", app);
-            this.Include<QtCommon.ICUDT>(C.DynamicLibrary.Key, ".", app);
+            this.Include&lt;Qt.Core&gt;(C.DynamicLibrary.Key, ".", app);
+            this.Include&lt;Qt.Widgets&gt;(C.DynamicLibrary.Key, ".", app);
+            this.Include&lt;Qt.Gui&gt;(C.DynamicLibrary.Key, ".", app);
+            this.Include&lt;QtCommon.ICUIN&gt;(C.DynamicLibrary.Key, ".", app);
+            this.Include&lt;QtCommon.ICUUC&gt;(C.DynamicLibrary.Key, ".", app);
+            this.Include&lt;QtCommon.ICUDT&gt;(C.DynamicLibrary.Key, ".", app);
 
             this.IncludeFile(this.CreateTokenizedString("$(packagedir)/resources/qt.conf"), ".", app);
-            var platformPlugin = this.Include<Qt.PlatformPlugin>(C.Plugin.Key, "qtplugins/platforms", app);
+            var platformPlugin = this.Include&lt;Qt.PlatformPlugin&gt;(C.Plugin.Key, "qtplugins/platforms", app);
             if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.Linux))
             {
                 this.ChangeRPath(platformPlugin, "$ORIGIN/../..");
-                this.Include<Qt.DBus>(C.DynamicLibrary.Key, ".", app); // for qxcb plugin
+                this.Include&lt;Qt.DBus&gt;(C.DynamicLibrary.Key, ".", app); // for qxcb plugin
 
 #if D_PACKAGE_QT_5_5_1 || D_PACKAGE_QT_5_6_0
-                this.Include<Qt.XcbQpa>(C.DynamicLibrary.Key, ".", app);
+                this.Include&lt;Qt.XcbQpa&gt;(C.DynamicLibrary.Key, ".", app);
 #endif
             }
 
@@ -76,7 +76,7 @@ Collation works on the principle that there is a built file that is the main bin
                 this.BuildEnvironment.Configuration != EConfiguration.Debug &&
                 (app.SourceModule as Qt5Application).Linker is VisualCCommon.LinkerBase)
             {
-                var visualCRuntimeLibrary = Bam.Core.Graph.Instance.PackageMetaData<VisualCCommon.IRuntimeLibraryPathMeta>("VisualC");
+                var visualCRuntimeLibrary = Bam.Core.Graph.Instance.PackageMetaData&lt;VisualCCommon.IRuntimeLibraryPathMeta&gt;("VisualC");
                 foreach (var libpath in visualCRuntimeLibrary.CRuntimePaths((app.SourceModule as C.CModule).BitDepth))
                 {
                     this.IncludeFile(libpath, ".", app);
@@ -100,7 +100,7 @@ sealed class Qt5Test1DebugSymbols :
     {
         base.Init(parent);
 
-        this.CreateSymbolsFrom<Qt5Test1Runtime>();
+        this.CreateSymbolsFrom&lt;Qt5Test1Runtime&gt;();
     }
 }
 
@@ -114,26 +114,25 @@ sealed class Qt5Test1Stripped :
     {
         base.Init(parent);
 
-        this.StripBinariesFrom<Qt5Test1Runtime, Qt5Test1DebugSymbols>();
+        this.StripBinariesFrom&lt;Qt5Test1Runtime, Qt5Test1DebugSymbols&gt;();
     }
 }
-</code>
-</pre>
-<p>The result of executing these modules is three directories, with almost identical contents, representing a debuggable standalone distribution, all the debug symbols from the binaries, and a stripped standable distribution.</p>
-<p>If a stripped distribution needs to be debugging, the contents of the debug symbol directory can just be copied on top of it, and the stripped binaries will then work in a debugging (assuming source is available on disk).</p>
+</code></pre>
+<p>The result of executing these modules is three directories, with almost identical contents, representing a debuggable standalone distribution, all the debug symbols from the binaries, and a stripped standalone distribution.</p>
+<p>If a stripped distribution needs to be debugged, the contents of the debug symbol directory can just be copied on top of it, and the stripped binaries will then work in a debugger (assuming source is available on disk). This is a process that can be repeated post-release, assuming that the exact source state can be reconstructed.</p>
 <H2>Installers</H2>
-<p>Generating an installer from your standalone distributable is one of the last steps in software development. Bam provides a number of mechanisms on each platform to create an installer. Note that installer generation is only available in Native build mode at this time. It is possible to create an installer from any of the Publishing steps, although most likely you will be interested in the stripped collation primarily, and the debug symbols will be useful to be archived.</p>
+<p>Generating an installer from your standalone distributable is one of the last steps in software development before releasing the software to your users. Bam provides a number of mechanisms on each platform to create an installer. Note that installer generation is only available in Native build mode at this time. It is possible to create an installer from any of the Publishing steps, although most likely you will be interested in the stripped collation primarily, and the debug symbols will be useful to be archived.</p>
 <p>Installers supported:
 <ul>
 <li>Windows
 <ul>
-<li>InnoSetup 5 (v5.5.5 tested)</li>
-<li>NSIS (v2.46 tested)</li>
+<li><a href="http://www.jrsoftware.org/isinfo.php">InnoSetup</a> 5 (v5.5.5 tested)</li>
+<li><a href="http://nsis.sourceforge.net/Main_Page">NSIS</a> (v2.46 tested)</li>
 </ul>
 </li>
 <li>OSX
 <ul>
-<li>Disk images (.dmg)</li>
+<li><a href="https://en.wikipedia.org/wiki/Apple_Disk_Image">Disk images</a> (.dmg)</li>
 <li>Tar balls (compressed or uncompressed)</li>
 </ul>
 </li>
