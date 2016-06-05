@@ -155,8 +155,8 @@ The result will be an executable in a subdirectory of the <em>build</em> directo
 <ul>
 <li>The return value of CreateCSourceContainer is now stored in a local variable. This is a list of all modules representing the compilation of source files, i.e. object files. In this example, there is just one object file. Adding patches on the container affects <em>all</em> of the source files it contains.</li>
 <li>A private patch accepts a lambda expression with a single argument, which is the settings object for the module on which it's applied.</li>
-<li>Settings can then be cast into the interfaces which make up the module's settings class (i.e. those settings associated with the Tool used to build the module). For a private patch, as you know the module type it is applied to, you can almost always guarantee which interfaces can be used. The exceptions occur when a tool/OS specific interface is not applicable to all cases, e.g. Gcc specific settings but you are building on Windows, so you may have check whether the interface is valid. This is easily achieved by comparing the result of the cast against <code>null</code>.</li>
-<li>The <code>C.ICommonCompilerSettings</code> interface contains a property, <code>PreprocessorDefines</code>, allowing the module writer to manage preprocessor definitions in the build.</li>
+<li>Settings can then be cast into the interfaces which make up the module's settings class (i.e. those settings associated with the Tool used to build the module). For a private patch, as you know the module type it is applied to, you can almost always guarantee which interfaces can be used. The exception to this general rule occurs when a tool/OS specific interface is not applicable to all cases, e.g. Gcc specific settings but you are building on Windows, so you may have check whether the interface is valid. This is easily achieved by comparing the result of the cast against <code>null</code>.</li>
+<li>The <code>C.ICommonCompilerSettings</code> interface defines a property, <code>PreprocessorDefines</code>, allowing the module writer to manage preprocessor definitions in the build.</li>
 </ul>
 Now try to build the package
 <pre><code class="bash">bam -b=Native
@@ -166,7 +166,7 @@ At this point, no modules will be rebuilt. Bam does not inspect for changed buil
 </code></pre>
 If you inspect the command line output, you will see that CUSTOM_DEFINE is now passed as a preprocessor definition.</p>
 <H2>Public patch</H2>
-<p>Public patches are applied both to the build of the module they are applied to, and any dependents. A common case for this kind of patch is for a C library (static or dynamic) that has headers, and must expose an include search path to any other module that uses the library.</p>
+<p>Public patches are applied both to the build of the module they are applied to, and any packages that depend on it. A common case for this kind of patch is for a C library (static or dynamic) that has headers, and must expose an include search path to any other module that uses the library.</p>
 <p>Here's an example of a static library, assuming library.c is present in the package directory and contains suitable code, and library.h is in an include folder in the package directory, e.g.</p>
 <pre><code>#ifndef LIBRARY_H
 #define LIBRARY_H
@@ -182,7 +182,7 @@ void printme(const char *string)
     printf("%s", string);
 }
 </code></pre>
-<p>Here is the modified package script to include the build of the library, but not yet make the program depend on it.</p>
+<p>Here is the modified package script to include the build of the library. The program does not yet depend on it.</p>
 <pre><code>namespace TestPackage
 {
   sealed class MyProgram :
