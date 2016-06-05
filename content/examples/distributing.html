@@ -22,8 +22,7 @@
 </ol>
 Collation works on the principle that there is a built file that is the main binary. This is placed in a directory structure, whether that be in the directory root, or, say, on OSX, placed in an application bundle structure, e.g. <code>product.app/Contents/MacOSX</code>. All subsequent files collated are then written relative to that main binary, by options to each file. There is no fixed structure imposed by Bam. This allows for files to be placed next to the main binary, or in subdirectories next to it, or even back up and into other folders, such as collating frameworks for OSX application bundles.</p>
 <p>An example of a full set of collation, debug symbols and stripped binaries can be seen below, taken from the bam-qt repository tests, where <code>Qt5Application</code> is the main program (and thus main binary for collation). On OSX, this creates an application bundle. On Windows, in non-debug configurations, the runtime libraries are included.</p>
-<pre><code>
-sealed class Qt5Test1Runtime :
+<pre><code>sealed class Qt5Test1Runtime :
     Publisher.Collation
 {
     protected override void
@@ -146,9 +145,7 @@ sealed class Qt5Test1Stripped :
 </ul>
 </p>
 <p>All methods take all the files from the collated module (whichever one you chose) and place the contents into the respective installer. A tar ball from the example above, using the stripped binary collation as the source for the installer, would be</p>
-<pre>
-<code>
-sealed class TarBallInstaller :
+<pre><code>sealed class TarBallInstaller :
     Installer.TarBall
 {
     protected override void
@@ -160,6 +157,5 @@ sealed class TarBallInstaller :
         this.SourceFolder&lt;Qt5Test1Stripped&gt;(Publisher.StrippedBinaryCollation.Key);
     }
 }
-</code>
-</pre>
+</code></pre>
 <p>Existing functionality provides the minimum requirement for generating usable installers. Future versions of Bam will include more configurability.</p>
