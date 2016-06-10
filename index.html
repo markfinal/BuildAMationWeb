@@ -315,6 +315,9 @@ runs the <code>valid</code> function to determine if its expression is a valid T
 <p>Note that any TokenizedStrings created during dependency graph execution, will need to be manually parsed, using the <code>Parse()</code> method.</p>
 <a href="#Top1"><img src="TOP.png" alt="Top of Page" align=right></a>
 <a name="running"></a><H2>Running Bam</H2>
+<div class="alert alert-info">
+  <p>If you use git for Windows 2.x with a bash shell, it is advised to run the bam command through <code>winpty</code>, in order for bam to use console features such as progress updates.</p>
+</div>
 <p>Change the current directory to the package to be built (the master package).</p>
 <H3>To create a debuggable project</H3>
 <pre><code class="bash">bam --createdebugproject</code></pre>
