@@ -1,0 +1,881 @@
+<html itemscope itemtype="http://schema.org/Product">
+<head>
+<title>BuildAMation - build system and project generator</title>
+<link rel="shortcut icon" type="image/x-icon" href="bam-logo.ico" />
+<meta name="description" content="BuildAMation is a build system and project generator for C and C++ desktop applications, with an extensible architecture. It is written in C#, and works on Windows, Linux and Apple OSX. Build modes supported are a multithreaded native command line build, VisualStudio solution generation, Xcode workspace generation, and MakeFile generation. Packages extend the core infrastructure, and packages can be logically grouped into package repositories.">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- for LinkedIn, https://help.linkedin.com/app/answers/detail/a_id/46687/kw/images -->
+<meta prefix="og: http://ogp.me/ns#" property='og:title' content='BuildAMation' />
+<meta prefix="og: http://ogp.me/ns#" property='og:image' content='http://buildamation.com/BAM.png' />
+<meta prefix="og: http://ogp.me/ns#" property='og:type' content='website' />
+<meta prefix="og: http://ogp.me/ns#" property='og:url' content='http://buildamation.com' />
+<!-- markup suggested by https://developers.google.com/+/web/snippet/ -->
+<meta itemprop="name" content="BuildAMation">
+<meta itemprop="description" content="BuildAMation: build system and project generator">
+<meta itemprop="image" content="buildamation.com/BAM.png">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/agate.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<style>
+    body {background-color: #006600;}
+ h1{
+     font-family: 'Droid Serif', Georgia, Times, serif; 
+     font-size: 16pt;
+ }
+ h2 {
+     font-family: 'Droid Serif', Georgia, Times, serif;
+     font-size: 14pt;
+ }
+ h3{
+     font-family: 'Droid Serif', Georgia, Times, serif;
+     font-size: 13pt;
+ }
+ h4{
+     font-family: 'Droid Serif', Georgia, Times, serif;
+     font-size: 12pt;
+ }
+ p{
+     font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+     font-size: 12pt;
+ }
+ ul{
+     font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+     font-size: 12pt;
+ }
+ li{
+     font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+     font-size: 12pt;
+ }
+ div{
+     font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+     font-size: 12pt;
+ }
+ #bootstrap-overrides 
+ p{
+     font-size:inherit;
+ }
+ #bootstrap-overrides 
+ ul{
+     font-size:inherit;
+ }
+  #bootstrap-overrides 
+ li{
+     font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+     font-size:10pt;
+ }
+ </style>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<script src="https://apis.google.com/js/platform.js" async defer>
+  {lang: 'en-GB'}
+</script>
+</head>
+<body>
+
+  <!-- github fork ribbon -->
+<a href="https://github.com/markfinal/BuildAMation"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
+
+ <div class="container">
+       <div class="jumbotron" id="bootstrap-overrides">
+    <!-- note the absolute position, to stop the image moving the title away from centre -->
+    <a name="Top1"><img src="BAM.png" alt="BAM" align=right style="width:100px;height:100px;position:absolute;right:10%;top:5%"></a>
+    <h1 align="center">BuildAMation</h1>
+    
+    <div style="text-align: center; vertical-align: middle">
+
+    <!-- twitter -->
+    <a href="https://twitter.com/BuildAMation" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @BuildAMation</a>
+
+    <!-- Google+ -->
+    <!-- note, will report a 400 error on a local server -->
+    <div class="g-follow" data-annotation="none" data-height="24" data-href="//plus.google.com/u/0/110680750888322740859" data-rel="publisher"></div>
+
+    </div>
+
+    <div align="center">
+Writing <em>multi-platform desktop software?</em><br>
+Want to use the <em>best development tools and IDEs</em> for each platform?<br>
+Want 'a single truth' of <em>how</em> to build your software?<br>
+Want a <em>fast, debuggable, extensible</em> build system?<br>
+Look no further... <b>BAM!</b><br>
+    </div>
+
+    <div>
+            <a href="#where">Where to get BuildAMation?</a><BR>
+            <a href="#whatis">What is BuildAMation?</a><BR>
+            <a href="#installation">Installation</a><BR>
+            <a href="#keydefs">Key Definitions</a><BR>
+            <a href="#running">Running Bam</a><BR>
+            <a href="#structure">Structure of Package</a><BR>
+            <a href="#writing">Writing a Module</a><BR>
+            <a href="#distributing">Distributing your software</a><BR>
+            <!--<a href="#advanced">Advanced</a><BR><BR>-->
+            <a href="#otherrepos">Additional package repositories</a><BR>
+            <a href="#contact">Contact</a><BR>
+    </div>
+
+<a name="where"></a><H2>Where to get BuildAMation?</H2>
+<p>BuildAMation is open source software, using the <a href="https://github.com/markfinal/BuildAMation/blob/master/License.md">BSD 3-clause license</a>, available from <a href="https://github.com/markfinal/BuildAMation">github</a>. You are free to fork the code to modify and build it yourself, or download prebuilt releases. The binaries provided in the prebuilt releases should be compatible on all applicable platforms, satisfying the requirements below.</p>
+<H3>Current releases</H3>
+<p>The latest <b>stable</b> release is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0.2">v1.0.2</a>, published on 18th May 2016.</p>
+<p>The latest <b>beta</b> release is <a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0.3b1">v1.0.3 beta 1</a>, published on 9th June 2016.</p>
+<H3>Past stable releases</H3>
+<ul>
+  <li><a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0.1">v1.0.1</a>, published on 5th April 2016.</li>
+  <li><a href="https://github.com/markfinal/BuildAMation/releases/tag/v1.0.0">v1.0.0</a>, published on 28th December 2015.</li>
+</ul>
+<H3>Discussion forum</H3>
+<p>Please join in the discussion and watch for announcements in the <a href="https://groups.google.com/forum/#!forum/buildamation-dev">BuildAMation Google Group</a>.</p>
+<a name="whatis"></a><H2>What is BuildAMation?</H2>
+<p>BuildAMation (Bam) is a <em>build system</em> and <em>project generator</em> written in C#, requiring at least .NET framework 4.0 (requires support for <a href="https://msdn.microsoft.com/en-us/library/vstudio/bb397926.aspx">LINQ</a> and <a href="https://msdn.microsoft.com/en-gb/library/bb397687.aspx">lambda expressions</a>). Some familiarity with the <a href="https://msdn.microsoft.com/en-us/library/vstudio/a72418yk.aspx">C# language</a> is assumed in this documentation and for using Bam.</p>
+<p>Bam can be used on Microsoft Windows, Apple OSX, and some Linux distributions. OSX and Linux support for C# is provided through <a href="http://www.mono-project.com/">Mono</a> currently.</p>
+<p>Bam consists of a core assembly (Bam.Core.dll) that implements data agnostic algorithms for dependency evaluation. The specifics of compiling and linking code for programming languages, such as C and C++, toolchains (VisualC, Clang, Gcc, etc) are provided in packages that build upon the core infrastructure using a domain specific syntax that is declarative in nature.</p>
+<p>Bam packages contain declarative propositions called <b>modules</b>, in the form of C# classes. Evaluation of the modules is out of order, following dependencies set up between them; thus package scripts are not imperatively evaluated. Packages can either provide new abstract data structures and algorithms to extend Bam into new areas, or can implement concrete modules that, when evaluated, actually build code. Every package requires a <b>definition file</b> (in XML) which defines all of its dependencies. Collections of packages can be grouped together logically into <b>repositories</b>.</p>
+<p>Examples of the data structures provided by packages are <code>C.DynamicLibrary</code> and <code>C.StaticLibrary</code>, which are the base classes used to build a dynamic or static library in the C programming language. The namespace of the classes defines the package in which they belong.</p>
+<p>Examples of algorithms provided by packages are the build modes. The default package repository in Bam provides four modes: Native (command line), MakeFile, VSSolution, and Xcode.</p>
+<p>Bam benefits from the strongly typed nature of C#. In a declarative scripting language, where concrete instances of modules do not exist in user space, a dependency on a module is made by the type of the module, as a generic type parameter. Many utility functions exist that accept a module type as a generic argument. Interfaces are used to abstract away build settings that would otherwise require the user to be fluent in how to invoke many different tools to achieve the same desired effect. For example, each compiler flag is abstracted in a suitably named C# property in an interface, and each compiler implementation (in different packages) understands how to translate the value of that property, either as a command line switch, or as some field in a project script.</p>
+<p>A command line tool, bam.exe, is provided to execute packages (a shell script is provided to wrap this on OSX and Linux). To build a package, run bam in that package's directory. That package is known as the <em>master package</em>. bam also contains support to create a project for both VisualStudio or Xamarin Studio to edit scripts or debug package builds.</p>
+<H3>What BuildAMation <em>is not</em></H3>
+<p>Bam can perform many tasks to build code, but does not do the following:</p>
+<ul>
+  <li>Does <b>not</b> provide any <a href="http://www.gnu.org/software/autoconf/manual/autoconf.html">autoconf</a> mechanism out of the box, to build different variants based on what files are on the development box, but modules can be written to achieve something similar.</li>
+  <li>Will <b>not</b> detect changes to build settings between runs (c.f. default SCons behaviour). To rebuild with new settings, you will need to change source code, or delete/clean already built files.</li>
+  <li>Does <b>not</b> provide named settings for <em>all</em> compiler, linker and librarian options available. However, most Settings classes do implement the <code>C.IAdditionalSettings</code> interface, which allows arbitrary switches to be passed to tools.</li>
+  <li>Does <b>not</b> provide packages for all versions of all toolchains. I've chosen what I think is a reasonable set of C and C++ compilers on each platform to test against to build modern software. If you want to use a different toolchain, a package can be made for it.</li>
+</ul>
+<H3>Competition</H3>
+<p>The competitors to Bam that I know of are:</p>
+<ul>
+<li><a href="http://www.cmake.org/">CMake</li>
+<li><a href="https://waf.io/">Waf</li>
+<li><a href="http://mesonbuild.com">Meson</li>
+<li><a href="https://premake.github.io/">premake</li>
+</ul>
+<a name="installation"></a><H2>Installation</H2>
+<H3>Prerequisites</H3>
+<p>These are the systems that have been used during testing, with <em>*</em> indicating the current development configuration of the author.</p>
+  <div class="row" id="bootstrap-overrides">
+    <div class="col-sm-4" id="bootstrap-overrides">
+      <h3>Windows</h3>
+          <ul>
+            <li>Windows 7</li>
+            <li>Windows 8</li>
+            <li>Windows 8.1 <em>*</em></li>
+            <li>Windows 10</li>
+            <li>.NET framework 4 (includes C# compiler)</li>
+            <li>VisualStudio 2015 (Community Edition)</li>
+            <li>VisualStudio 2013 (Express Edition) <em>*</em></li>
+            <li>VisualStudio 2012 (Express Edition)</li>
+            <li>VisualStudio 2010 (Express Edition) <em>Only 32-bit compiler, no redistributable, no solution folders</em></li>
+        </ul>
+    </div>
+    <div class="col-sm-4">
+      <h3>Apple OSX</h3>
+            <li>OSX 10.8 (Mountain Lion)</li>
+            <li>OSX 10.9 (Mavericks)</li>
+            <li>OSX 10.10 (Yosemite) <em>*</em></li>
+            <li>OSX 10.11 (El Capitan)</li>
+            <li>Mono 4.0+</li>
+            <li>Xamarin Studio 5.8+ <em>Requires 10.9 or above for latest version; locked to 5.8.3 for 10.8 and below.</em></li>
+            <li>Xcode 7</li>
+            <li>Xcode 6 <em>*</em></li>
+            <li>Xcode 5</li>
+            <li>Xcode 4</li>
+    </div>
+    <div class="col-sm-4">
+      <h3>Linux</h3>
+            <li>Ubuntu 14 <em>*</em></li>
+            <li>CentOS 6</li>
+            <li>CentOS 7</li>
+            <li>Mono 4.0+</li>
+            <li>Xamarin Studio 5.8+</li>
+            <li>gcc/g++ 4.8 <em>*</em></li>
+    </div>
+  </div>
+<H4>Useful links</H4>
+<H5>Windows Development environment</H5>
+<p>Install <a href="https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx">VisualStudio 2015 Community</a>, from Microsoft.</p>
+<p>Install <a href="http://www.microsoft.com/en-us/download/details.aspx?id=48131">VisualStudio 2013 Express, Update 5</a>, from Microsoft.</p>
+<p>Install <a href="https://www.microsoft.com/en-gb/download/details.aspx?id=34673">VisualStudio 2012 Express</a>, from Microsoft.</p>
+<p>Install <a href="http://download.microsoft.com/download/1/E/5/1E5F1C0A-0D5B-426A-A603-1798B951DDAE/VS2010Express1.iso">VisualStudio 2010 Express<a>, and <a href="https://www.microsoft.com/en-gb/download/details.aspx?id=23691">service pack 1</a>, from Microsoft.</p>
+<H5>Linux or OSX Mono</H5>
+<p>Install Mono for <a href="http://www.mono-project.com/download/#download-mac">OSX</a> or <a href="http://www.mono-project.com/download/#download-lin">Linux</a> (Xamarin packages recommended).</p>
+<p>Install Xamarin Studio from the <a href="http://www.monodevelop.com/download/">MonoDevelop</a> site. (MonoDevelop was the previous name for Xamarin Studio.)</p>
+<H5>GCC on Linux</H5>
+<p>To install GCC 4.8 on CentOS 6, search the web for <b>testing-devtools-2-centos-6</b>.</p>
+<H3>Setting up your environment</H3>
+<p>From a binary distribution, open a terminal to the extracted files, and on Linux or OSX (or Windows msys), run
+<pre><code class="bash">source env.sh</code></pre>
+or on a Windows cmd prompt, run
+<pre><code class="bash">env.bat</code></pre>
+This will install Bam onto your PATH, and will show the details of the version of Bam on the console, for example:</p>
+<pre>
+BuildAMation (Bam) v1.0.1 (c) Mark Final, 2010-2016. Licensed under BSD 3-clause. See License.md.
+Parts of this software are licensed under the Microsoft Limited Public License (MS-PL). See MS-PL.md.
+Using C# compiler v4.0 with assemblies in /Users/mark/Downloads/BuildAMation-1.0.1/bin/Release
+</pre>
+<p>From source, you can compile Bam using the provided solution file, and run the tool through the IDE. This is useful if the core assembly needs to be updated. However, the general approach to using Bam is identical to that in the binary distribution. Note if you have compiled a debug version of the Core, then pass 'Debug' as an argument to the shell scripts mentioned above - the default is to use a 'Release' configuration.</p>
+<H3>Trying Bam out</H3>
+<p>The quickest way to try out Bam is to build the test cases. There is a test harness provided that uses <a href="https://www.python.org/downloads/">Python</a> 2 (2.7 assumed). Change to the tests folder and type
+<pre><code class="bash">python runtests.py -c debug</code></pre>
+which will build all applicable tests on your platform using the Native build mode. Pass <code>--help</code> to that Python script to see more options.</p>
+<p>Alternatively, change to one of the individual test package directories, and type the full Bam command line
+<pre><code class="bash">bam -b=Native</code></pre>
+Some tests have particular requirements, but most will build out of the box.</p>
+<p>Running tests will give you a high level overview of how Bam works, but to get to the interesting details, you need to have some hands on experience. Below, is a <a href="#writing">guided example</a> to follow.</p>
+
+ <a href="#Top1"><img src="TOP.png" alt="Top of Page" align=right></a>
+<a name="keydefs"></a><H2>Key definitions</H2>
+<H3>Package</H3>
+<p>A package is a folder on disk, identified by a 'bam' subdirectory, an <code>.xml</code> file under 'bam', and containing one or more <code>.cs</code> files in a Script subfolder. A package can be thought of to define classes and functions which implement modules.</p>
+<H3>Package repository</H3>
+<p>Bam defines a collection of packages to be a package repository. There is a default package repository provided with the Bam binary distribution, and also in the source on github. Any number of repositories can be downloaded and use together to concatenate the set of packages required to build your software. A package repository consists of a <b>packages</b> folder, and optionally a <b>tests</b> folder, each containing Bam packages.</p>
+<H3>Package definition file</H3>
+<p>A package definition file is an XML file, implementing the schema provided with Bam, defining
+<ul>
+<li>the package's name (and optionally version),</li>
+<li>the dependent packages required in a build,</li>
+<li>package repositories to search,</li>
+<li>Bam assemblies to reference (including a minimum version),</<strong></strong>li>
+<li>any additional .NET packages,</li>
+<li>and other compilation options.</li>
+</ul>
+The first package definition file read is from the <b>master package</b>, and is allowed to define 'default' packages which can be used to resolve packages that have multiple versions specified (usually toolchain packages).</p>
+<p>For example, suppose VisualC packages with versions 14.0 and 13.0 have been specified in package definition files. Without any <em>default</em> specification, Bam will issue an error that it cannot solve the package version ambiguity. With a <em>default</em> specification on the version of the VisualC package you wish to use, no error will be issued. If you want to override the default specification on the command line, pass <code>--VisualC.version=13.0</code>, say, to use version 13.0. This works for all packages, with a command line syntax of <code>--packagename.version=someversion</code>.
+<H3>Module</H3>
+<p>Modules are the first class citizens of what Bam uses to build software. They are classes (sealed to be buildable, abstract/unsealed to define functionality) defined in package scripts, but there is no explicit instantiation of these classes in those scripts. The Bam core assembly deals with instantiating and ordering modules. Modules have methods that evaluate whether the code they reference is out of date. Modules also define policies, dependent on the build mode, of how to execute when they do require building.</p>
+<p>The C# scripts define classes within a namespace, and the namespace is the package name. Bam uses this convention to search for modules within a specific package.</p>
+<p>Almost everything is a module in the Bam world. So almost everything is buildable.</p>
+<p>Dependencies are stated at the module level in package scripts. The basic module class is only aware of two axiomatic principles:
+<ol>
+<li>I depend on a module to be built before me, or</li>
+<li>I require this module to be present and up-to-date, but do not need it to build.</li>
+</ol>
+Packages add semantic meaning atop of the axioms by way of providing specific methods on their modules, e.g. a C program must compile and link against a C static library, is coded in terms of the axioms, and is called <code>CompileAndLinkAgainst</code>.</p>
+<H3>Tool</H3>
+<p>Tools are a type of module, but can be referenced in when executing build mode policies of other modules. This means that tools can be procedurally generated as part of a build. Equally, prebuilt tools, such as C/C++ compilers, appear in the same guise - Bam just requires them to exist on disk already.</p>
+<H3>Configuration</H3>
+<p>There are three build configurations in the Bam core assembly:
+<ol>
+<li>Debug</li>
+<li>Optimized</li>
+<li>Profile</li>
+</ol>
+The meaning of each configuration depends on how packages define their default settings, but which can equally be overridden by the user. Out of the box, C code builds will be debug symbols and no optimizations for debug; no debug symbols and full optimizations for optimized; and debug symbols and full optimizations for profile. Bam builds can operate in one or more of these. Thus, if the package scripts build a C executable; if Bam is executed in two configurations, there will be two different versions of that executable at the end of a successful Native build. Equally, if one of the project generation build modes is chosen, a project will be generated with two configurations.</p>
+<p>To build in just debug, specify <code>--config=debug</code> on the command line, or specify no configuration options.<p>
+<p>To build in both debug and profile, specify <code>--config=debug --config=profile</code> on the command line. In a project generation build mode, projects with multiple configurations will be generated where possible.</p>
+<H3>Settings</H3>
+<p>Settings are classes closely associated with tools, which implement one or more <b>settings interface</b>, which just define properties. Each tool is associated with a Settings class. Each Settings class concatenates interfaces (through inheritence) to create a unique collection of properties. Each module has an instance of the settings for its tool, so that the execution of the tool can be tailored for that module.</p>
+<p>Settings have defaults, but each module can override any default by applying a <b>patch</b>. Additionally, the defaults can be modified prior to patching via a <b>site policy</b>, e.g. say your software must build against the C++11 standard, while the default Bam compilation mode is C++98, the site policy allows this to be changed for your software in one place.</p>
+<p>A patch is implemented in terms of a lambda function. Bam defines two types of patches, public and private. Private, as the name suggests, is applied just to the build of the module. Public patches get applied both to the build of the module, and any module that has defined a dependency on it.</p>
+<H3>Build mode</H3>
+<p>The Bam build mode is the name of the policy to execute packages against. The core infrastructure does not have any dependency on specific build modes. Instead, implementations are discovered dynamically through reflection in the packages that are included in a build. Those build modes available are:</p>
+<ul>
+<li>Native - a command line build, that can use all available cores, and has implicit dependency checking for C compilation (i.e. can detect changes in #include'd headers)</li>
+<li>MakeFile - generate a MakeFile for the build</li>
+<li>VSSolution - generate VisualStudio projects and a solution for the build</li>
+<li>Xcode - generate Xcode projects and a workspace for the build</li>
+</ul>
+<H3>Macros</H3>
+<p>Modules have a dictionary of named macros. The key to the dictionary is a string. The value associated with each key is a TokenizedString, described below.</p>
+<H3>Tokenized String</H3>
+<p>Bam defines strings with markup as TokenizedStrings. These use specical syntax to identify tokens in the strings, so that parameterization is possible. The tokens are evaluated from macros from multiple sources:
+<ul>
+<li>the main dependency graph (for global macros),</li>
+<li>the module the string is associated with,</li>
+<li>a list of other TokenizedStrings,</li>
+<li>the local environment variables, and</li>
+<li>custom macros.</li>
+</ul>
+</p>
+<p>A simple example of a TokenizedString is
+<pre>
+$(buildroot)
+</pre>
+which will look for the macro named <em>buildroot</em> in its sources, and if found, replaces the token with its value.</p>
+<p>Simple TokenizedStrings, with no markup, just literal text, are known as verbatim. Some TokenizedStrings can be inlined into others (useful for modules and tools that refer to each others macros).</p>
+<p>After macro replacement is complete, simple functions can be applied, e.g. get the basename of a file. This allows for a more powerful construction syntax. For example:
+<pre>
+@basename(~/mark/dev/foobar.txt)
+</pre>
+will return <code>foobar</code>, while
+<pre>
+@dir(~/mark/dev/foobar.txt)
+</pre>
+will return <code>~/mark/dev</code>.
+</p>
+<p>There is also support for functions to run prior to macro replacement. For example:
+<pre>
+$(MajorVersion).$(MinorVersion)#valid(.$(PatchVersion))
+</pre>
+runs the <code>valid</code> function to determine if its expression is a valid TokenizedString; if not, the whole function call is removed; if it is, only the expression remains.</p>
+<p>All TokenizedStrings are parsed just prior to the dependency graph execution. This allows dynamic strings to be constructed, but altered as package scripts are executed. The parameterized source is terse, and references to macros offer an additional level of semantics.</p>
+<p>Note that any TokenizedStrings created during dependency graph execution, will need to be manually parsed, using the <code>Parse()</code> method.</p>
+<a href="#Top1"><img src="TOP.png" alt="Top of Page" align=right></a>
+<a name="running"></a><H2>Running Bam</H2>
+<div class="alert alert-info">
+  <p>If you use git for Windows 2.x with a bash shell, it is advised to run the bam command through <code>winpty</code>, in order for bam to use console features such as progress updates.</p>
+</div>
+<p>Change the current directory to the package to be built (the master package).</p>
+<H3>To create a debuggable project</H3>
+<pre><code class="bash">bam --createdebugproject</code></pre>
+or
+<pre><code class="bash">bam -p</code></pre>
+<H3>Build using a particular mode</H3>
+<pre><code class="bash">bam -b=mode</code></pre>
+where mode is Native, MakeFile, VSSolution or Xcode.
+<H3>More help</H3>
+<p>There is built-in help in the Core assembly, as well as in packages offering command line options. The following command can be run in a package directory (in which case the packages used are inspected for additional options), or from any other directory (in which case only the Core options are shown)</p>
+<pre><code class="bash">bam --help</code></pre>
+or
+<pre><code class="bash">bam -h</code></pre>
+<a name="structure"></a><H2>Structure of a package</H2>
+<p>A package can be any folder on disk, but usually containing source code. Identifying a Bam package is through inspection of files in specific locations within that folder. This allows Bam to integrate into most existing projects. The visual steps to identify a Bam package are:
+<ol>
+<li><p>Package directory contains a subdirectory called 'bam'.</p></li>
+<li><p>A single .xml file exists in the bam folder, and follows the Bam schema.</p></li>
+<li><p>A Scripts folder exists in the bam folder, and contains one or more .cs files, containing module scripts.</p></li>
+<li><p>Optional: Sibling folders to Scripts, named after the build modes supported.</p></li>
+</ol>
+<p>See any of the packages in the Bam distribution as examples.</p>
+ <a href="#Top1"><img src="TOP.png" alt="Top of Page" align=right></a>
+<a name="writing"></a><H2>Writing a module</H2>
+<p>Let's consider an example package called TestPackage. Suppose we have a directory 'TestPackage' containing a single source file main.c to build. We will assume that main.c contains some sensible C code to make an executable program, e.g. at least a main function. Note that for the benefit of this example, it's important to be C code, not C++, for example:</p>
+<pre><code>
+#include &lt;stdio.h&gt;
+
+int main()
+{
+    printf("Hello world\n");
+    return 0;
+}
+</code></pre>
+<H3>Make a package</H3>
+<p>Making a package is the first step to using Bam. Change into the TestPackage directory, and type
+<pre><code class="bash">
+bam --makepackage --pkgname=TestPackage
+</code></pre>
+This will create the bam folder, the package definition file, and a script file that just contains the TestPackage namespace.</p>
+<H3>Add dependencies</H3>
+<p>We intend to build some C code, so we need to pull in package dependencies that provide this support. Still in the TestPackage directory, type
+<pre><code class="bash">
+bam --adddependent --pkgname=C
+bam --adddependent --pkgname=NativeBuilder
+bam --adddependent --pkgname=VSSolutionBuilder
+bam --adddependent --pkgname=MakeFileBuilder
+bam --adddependent --pkgname=XcodeBuilder
+bam --adddependent --pkgname=VisualC --pkgversion=12.0
+bam --adddependent --pkgname=Gcc --pkgversion=4.8
+bam --adddependent --pkgname=Clang --pkgversion=Xcode6
+</code></pre>
+These commands have modified the package definition file. To view what it contains, run this command
+<pre><code class="bash">
+bam --showdefinition
+</code></pre>
+Here is what you should see from running this command:
+<pre>
+Definition of package 'TestPackage'
+-----------------------------------
+Description: A new package called TestPackage
+
+Supported on: Windows Linux OSX
+
+BuildAMation assemblies:
+	Bam.Core (requires version 1.0.1)
+
+DotNet assemblies:
+	System (version 4.0.30319)
+	System.Xml (version 4.0.30319)
+	System.Core (version 4.0.30319)
+
+#defines:
+	D_PACKAGE_TESTPACKAGE
+
+Dependent packages (* = default version):
+Package Name                                                      From Repository
+    C                                            /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        CommandLineProcessor                     /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    Clang-Xcode6                                 /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        ClangCommon                              /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        XcodeBuilder                             /Users/mark/Downloads/BuildAMation-1.0.1/packages
+            XcodeProjectProcessor                /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    Gcc-4.8                                      /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        GccCommon                                /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    MakeFileBuilder                              /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    NativeBuilder                                /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        CommandLineProcessor                     /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    VisualC-12.0                                 /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        VisualCCommon                            /Users/mark/Downloads/BuildAMation-1.0.1/packages
+            VisualStudioProcessor                /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        WindowsSDK-8.1                           /Users/mark/Downloads/BuildAMation-1.0.1/packages
+    VSSolutionBuilder                            /Users/mark/Downloads/BuildAMation-1.0.1/packages
+        VisualStudioProcessor                    /Users/mark/Downloads/BuildAMation-1.0.1/packages
+</pre>
+<p>Note that you may see other packages listed in the output that you didn't include. This is because package definitions are evaluated recursively, and depending on package A will bring in all of A's dependents. For example, the VisualC-12.0 package is dependent upon both VisualCCommon and the WindowsSDK-8.1, neither of which were specified on the command line while setting up the test package.</p>
+<H3>Create a debuggable project</H3>
+<p>Now that all the dependencies are set up, you can create a debuggable project. Still in the TestPackage directory, type
+<pre><code class="bash">
+bam -p
+</code></pre>
+The output will be similar to
+<pre>
+Successfully created debug project for package 'TestPackage'
+	/private/tmp/TestPackage/PackageDebug/TestPackage-bam.csproj
+</pre>
+The generated project can be opened in VisualStudio or Xamarin Studio.</p>
+<ul>
+<li>Open VisualStudio, press Ctrl+Shift+O, and paste the path to the .csproj in the Open Project dialog.</li>
+<li>On OSX, on a terminal, type <code>open -a 'xamarin studio' <.csproj path></code> to open the project in Xamarin Studio. (The quotes are important.)</li>
+<li>On Linux Gnome window manager, on a terminal, type <code>gnome-open <.csproj path></code> to open the project in Xamarin Studio.</li>
+</ul>
+<p>Once opened, you can browse the dependent packages, and their respective sources, using the IDE. Debugging this project will also run Bam - the entry point is in the main.cs file in the project.</p>
+<p>To continue this example, open up TestPackage.cs from within the TestPackage package in the solution explorer.</p>
+<H3>A simple program</H3>
+<p>In the script file created, define a module called MyProgram, which is a C (not C++) console application, compiling main.c in the package directory. We will revisit a C++ source file later.</p>
+<pre><code>
+namespace TestPackage
+{
+  sealed class MyProgram :
+    C.ConsoleApplication
+  {
+     protected override void
+     Init(
+       Bam.Core.Module parent)
+     {
+        base.Init(parent);
+        this.CreateCSourceContainer("$(packagedir)/main.c");
+
+        if (this.Linker is VisualCCommon.LinkerBase)
+        {
+            this.LinkAgainst&lt;WindowsSDK.WindowsSDK&gt;();
+        }
+     }
+  }
+}
+</code></pre>
+<H4>Explanation</H4>
+<ul>
+<li>The namespace of the module is the name of the package it resides in, <code>TestPackage</code>.</li>
+<li>The name of the module is <code>MyProgram</code>, which is the name of the class. The executable generated will use the module name. This can be overridden.</li>
+<li>The class is sealed, which is an indication to Bam that you want to build this.</li>
+<li>MyProgram derives from <code>C.ConsoleApplication</code>. This is a class from the C package (using the convention of package name as namespace), which defines the necessary infrastructure for compiling and linking a C console application.</li>
+<li>The <code>Init</code> function is overridden from the base class. Init is used to define the properties of the module. This is used instead of the module constructor, as there are restrictions before an object is constructed in C#.</li>
+<li>The Init function of the parent class is called first. Chaining the hierarchy in this way ensures that modules are configured consistently.</li>
+<li>A method of the base class, <code>CreateCSourceContainer</code>, is invoked, passing a string which is internally converted to a <em>TokenizedString</em>. This function's implementation expands the parameterized string into file paths, and creates additional <em>source file</em> modules for each, and configures dependencies. Wildcards can be used in the path to evaluate to more than one file. In this case, there is only one, the file main.c in the package directory.</li>
+<li>The call to <code>LinkAgainst</code> is a generic function on the C.ConsoleApplication class, and required for building on Windows using the VisualC toolchain, because the import libraries for system DLLs can only be found in the WindowsSDK. Without this, there is a linker error that kernel32.lib cannot be found. By calling this function, the Bam core requires that an instance of the module specified as the type argument exists, and is a non-build requirement of the program. The predicate does infer a compile time dependency on the VisualCCommon package, so this code is only required when your package needs to build on Windows. Note that there is no explicit dependency on the WindowsSDK package that we specified above. It comes implicitly from the VisualC package.</li>
+</ul>
+Now try to build the package
+<pre><code class="bash">
+bam -b=Native
+</code></pre>
+The result will be an executable in a subdirectory of the <em>build</em> directory of the package. The root directory where files are built is configurable with the <code>-o</code> command line argument.</p>
+<H3>Private patch</H3>
+<p>Private patches are applied solely to the build of the module they are applied to. In this example, a C preprocessor definition is added to the compilation of the source file.</p>
+<pre><code>
+namespace TestPackage
+{
+  sealed class MyProgram :
+    C.ConsoleApplication
+  {
+     protected override void
+     Init(
+       Bam.Core.Module parent)
+     {
+        base.Init(parent);
+        <mark>var sources =</mark> this.CreateCSourceContainer("$(packagedir)/main.c");
+        <mark>sources.PrivatePatch(settings =>
+          {
+             var compiler = settings as C.ICommonCompilerSettings;
+             compiler.PreprocessorDefines.Add("CUSTOM_DEFINE");
+          });</mark>
+
+        if (this.Linker is VisualCCommon.LinkerBase)
+        {
+            this.LinkAgainst&lt;WindowsSDK.WindowsSDK&gt;();
+        }
+     }
+  }
+}
+</code></pre>
+<H4>Explanation</H4>
+<ul>
+<li>The return value of CreateCSourceContainer is now stored in a local variable. This is a list of all modules representing the compilation of source files, i.e. object files. In this example, there is just one object file. Adding patches on the container affects <em>all</em> of the source files it contains.</li>
+<li>A private patch accepts a lambda expression with a single argument, which is the settings object for the module on which it's applied.</li>
+<li>Settings can then be cast into the interfaces which make up the module's settings class (i.e. those settings associated with the Tool used to build the module). For a private patch, as you know the module type it is applied to, you can almost always guarantee which interfaces can be used. The exceptions occur when a tool/OS specific interface is not applicable to all cases, e.g. Gcc specific settings but you are building on Windows, so you may have check whether the interface is valid. This is easily achieved by comparing the result of the cast against <code>null</code>.</li>
+<li>The <code>C.ICommonCompilerSettings</code> interface contains a property, <code>PreprocessorDefines</code>, allowing the module writer to manage preprocessor definitions in the build.</li>
+</ul>
+Now try to build the package
+<pre><code class="bash">
+bam -b=Native
+</code></pre>
+At this point, no modules will be rebuilt. Bam does not inspect for changed build settings between invocations, so a clean build is required to take on the updated settings. This is somewhat over-the-top in many cases, as simply deleting the object file would suffice.
+<pre><code class="bash">
+bam -b=Native -c
+</code></pre>
+If you inspect the command line output, you will see that CUSTOM_DEFINE is now passed as a preprocessor definition.</p>
+<H3>Public patch</H3>
+<p>Public patches are applied both to the build of the module they are applied to, and any dependents. A common case for this kind of patch is for a C library (static or dynamic) that has headers, and must expose an include search path to any other module that uses the library.</p>
+<p>Here's an example of a static library, assuming library.c is present in the package directory and contains suitable code, and library.h is in an include folder in the package directory, e.g.</p>
+<pre><code>
+#ifndef LIBRARY_H
+#define LIBRARY_H
+
+extern void printme(const char *string);
+
+#endif /* LIBRARY_H */
+</code></pre>
+<pre><code>
+#include &lt;stdio.h&gt;
+
+void printme(const char *string)
+{
+    printf("%s", string);
+}
+</code></pre>
+<p>Here is the modified package script to include the build of the library, but not yet make the program depend on it.</p>
+<pre><code>
+namespace TestPackage
+{
+  sealed class MyProgram :
+    C.ConsoleApplication
+  {
+     ...
+  }
+
+  <mark>sealed class MyStaticLibrary :
+      C.StaticLibrary
+    {
+        protected override void
+        Init(
+            Bam.Core.Module parent)
+        {
+            base.Init(parent);
+            this.CreateCSourceContainer("$(packagedir)/library.c");
+            this.PublicPatch((settings, appliedTo) =>
+                {
+                    var compiler = settings as C.ICommonCompilerSettings;
+                    if (null != compiler)
+                    {
+                        compiler.IncludePaths.AddUnique(this.CreateTokenizedString("$(packagedir)/include"));
+                    }
+                });
+        }
+    }</mark>
+}
+</code></pre>
+<H4>Explanation</H4>
+<ul>
+<li>The name of the new module is <code>MyStaticLibrary</code>. Similarly to the program above, the name of the library generated will use the module name.</li>
+<li>The base class of this new module is <code>C.StaticLibrary</code> to indicate that the module will be a static library.</li>
+<li><code>PublicPatch</code> is the function called. But note that the function is now applied on <code>this</code> (the module to be built), rather then sources. The reason for this is that any dependency is written in terms of the module MyStaticLibrary, rather than on any source contained within it. Although the <em>public</em> patch is applied to <code>this</code>, because the C source container is <em>encapsulated</em> within MyStaticLibrary, the patch is applied to the source automatically.</li>
+<li>Note also that PublicPatch lambdas take two arguments; <code>settings</code> as before, and now also <code>appliedTo</code>. The latter is the module on which the patch is being applied to. For some public patches, it may be useful to know the module on which the patch is being applied. However, as in the example, <code>this</code> is usually the more useful module reference, to get the package directory of the source package, as opposed to using <code>appliedTo</code> which would get a different package directory.</li>
+<li>Note the conditional on the cast of the settings. Public patches are applied to all modules using this module as a dependent, and to a module's hierarchy of <em>child modules</em>, so can be applied equally to a link or compilation step. The cast is necessary to avoid runtime null reference exceptions.</li>
+<li>The use of the <em>Module</em> utility member function <code>CreateTokenizedString</code>, creates a <em>TokenizedString</em> that is tied to that module's macros for expansion. In this case, the TokenizedString function <code>$(packagedir)</code> will evaluate to the package directory of the module MyStaticLibrary.</li>
+</ul>
+<p>Building the package now, requires no clean step, as a new module has been introduced. The output is the compilation and subsequent archiving of library.c into the static library. The program will not have changed.</p>
+<H3>Adding a dependency</H3>
+<p>Now change the program, so that it makes use of the library, e.g. change main.c to </p>
+<pre><code>
+#include &lt;stdio.h&gt;
+<mark>#include "library.h"</mark>
+
+int main()
+{
+    <mark>printme("Hello world\n");</mark>
+    return 0;
+}
+</code></pre>
+<p>Building the package now will result in a compilation failure. This is because Bam detects that the timestamp on the source file is now newer than it's corresponding object file and rebuilds it. The failure will be similar to this:</p>
+<pre>
+/private/tmp/TestPackage/main.c:2:10: fatal error: 'library.h' file not found
+#include "library.h"
+         ^
+1 error generated.
+
+ERROR: (Bam.Core.Exception) Error during non-threaded build
+ERROR: (Bam.Core.Exception) Command failed: xcrun --sdk macosx10.10 clang -mmacosx-version-min=10.10 -std=c89 -arch x86_64 -g -fno-omit-frame-pointer -O0 -DD_BAM_CONFIGURATION_DEBUG -DD_BAM_PLATFORM_OSX -DD_BAM_PLATFORM_BITS=32 -DD_BAM_PLATFORM_LITTLEENDIAN -D_CONSOLE -DCUSTOM_DEFINE -x c -Werror -c -o /private/tmp/TestPackage/build/TestPackage/MyProgram/Debug/main.o -fvisibility=hidden /private/tmp/TestPackage/main.c
+Command exit code: 1
+</pre>
+<p>These changes require the program to depend on the static library for both compilation (#include'ing the header) and for link (linking the function code). The <code>C.ConsoleApplication</code> module has a useful function to indicate how to do this.</p>
+<pre><code>
+namespace TestPackage
+{
+    sealed class MyProgram :
+      C.ConsoleApplication
+    {
+        protected override void
+        Init(
+            Bam.Core.Module parent)
+        {
+            base.Init(parent);
+            var sources = this.CreateCSourceContainer("$(packagedir)/main.c");
+            sources.PrivatePatch(settings =>
+            {
+                var compiler = settings as C.ICommonCompilerSettings;
+                compiler.PreprocessorDefines.Add("CUSTOM_DEFINE");
+            });
+
+            if (this.Linker is VisualCCommon.LinkerBase)
+            {
+                this.LinkAgainst&lt;WindowsSDK.WindowsSDK&gt;();
+            }
+
+            <mark>this.CompileAndLinkAgainst&lt;MyStaticLibrary&gt;(sources);</mark>
+        }
+    }
+
+    sealed class MyStaticLibrary :
+      C.StaticLibrary
+    {
+      ...
+    }
+}
+</code></pre>
+<H4>Explanation</H4>
+<ul>
+<li><code>CompileAndLinkAgainst</code> is a generic function, that takes the dependent module type as the type argument, which Bam Core uses to set up module dependencies.</li>
+<li>As CompileAndLinkAgainst is called on <code>this</code>, and <code>this</code> is a program, a link dependency is set up. Bam Core is not aware of the mean of a link dependency, but it does know that the program depends on the static library to be up to date before the program can be up to date. However the C package does know that a link dependency means the static library needs to be passed as an argument to the linker for the program, once it is up-to-date.</li>
+<li>Also, CompileAndLinkAgainst takes (one or more) arguments, which are the modules which compile (i.e. object files) that have a requirement on the dependent module, as the function name suggests. A module dependency in the Bam sense is not actually required for compilation. However, any public patches from the dependent must be applied in order to use the public patch from the static library containing the include search path.</li>
+<li>There are similar functions exposed on the C module base classes, such as <code>LinkAgainst</code> seen earlier, or compilation only (for header only libraries).</li>
+<li>Do note that this is an example of Bam building out of order. MyStaticLibrary is listed <em>after</em> MyProgram in the package source, and yet, MyStaticLibrary needs to be up-to-date first, for MyProgram to link.</li>
+</ul>
+<p>Build the package once again, and you should see in the compiler console output that include paths are now included on both the program source and the library source, and the program links and will run.</p>
+<p>Run a clean build to satisfy yourself that the static library is compiled and archived first.</p>
+<H3>Trying other build modes</H3>
+<p>In the examples above, we have used the Native build mode to run command line builds of the package. Bam supports other types of build modes, some of which are specific to certain platforms. All the generated files are put into the build root, but each build mode will write to the console where the files can be found.</p>
+<H4>Windows</H4>
+<p>Generate a VisualStudio solution by running</p>
+<pre><code class="bash">
+bam -b=VSSolution
+</code></pre>
+<H4>Linux (and OSX)</H4>
+<p>Generate a MakeFile by running</p>
+<pre><code class="bash">
+bam -b=MakeFile
+</code></pre>
+<p>The Makefile generated uses GNU make syntax, and not NMake that VisualStudio supports.</p>
+<H4>OSX</H4>
+<p>Generate an Xcode workspace by running</p>
+<pre><code class="bash">
+bam -b=Xcode
+</code></pre>
+<H3>C++ code</H3>
+<p>The examples above all build C code. However, the C package understands more derivatives of the C language than just this. It understands C++, ObjectiveC and ObjectiveC++. Bam uses the type of the module to determine which language it is using, and thus apply different tools and settings. For example, as shown above, a C program uses the base type
+<pre><code>
+C.ConsoleApplication
+</code></pre>
+For a program that links C++ code, and thus requires the C++ linker, this would be
+<pre><code>
+C.Cxx.ConsoleApplication
+</code></pre>
+Similarly, for source code, instead of
+<pre><code>
+this.CreateCSourceContainer(paths)
+</code></pre>
+use
+<pre><code>
+this.CreateCxxSourceContainer(paths)
+</code></pre>
+in order to use the C++ compiler for the toolchain.</p>
+<p>It is also possible, and sometimes required, to create multiple source containers, from different languages. There is no restriction on how many times you call one of the create container functions. Ensure that you always link with the correct module type in order to use the right linker for your code.</p>
+<a name="distributing"></a><H2>Distributing your software</H2>
+<p>As much as building software is important, it is perhaps moreso to be able to distribute this to users in a binary form. This has a number of caveats, for example:</p>
+<ul>
+<li>Collating all of your build output so that they are located in a single directory.</li>
+<li>All thirdparty dependent runtime libraries must be published with your software, as you cannot guarantee what the end user has on their system.</li>
+<li>Windows end users may not have a development environment, so non-debug runtime libraries must be linked against.</li>
+<li>OSX binary install names need to be adjusted so that the distributable is standalone.</li>
+<li>Linux binary RPaths need to be set or adjusted so that the distributable is standalone.</li>
+<li>Debug symbols may need to be stripped from binaries. You may also wish to hive off debug symbols, so you can later debug crash reports from end users.</li>
+<li>You may wish to provide an installer for your software.</li>
+</ul>
+<p>Bam tries to resolve much of this for you by way of the <em>Publisher</em> and <em>Installer</em> packages, in the default repository.</p>
+<H3>Publishing</H3>
+<p>The Publisher package has three main components:
+<ol>
+<li><em>Collation</em> This is the process of taking specific parts of the build (and external files) and placing them in a define hierarchy under a single folder. This creates a standalone distributable, but contains all the artifacts of the build, e.g. debug symbols. This means that collation is useful for developers, as it makes a runnable software setup. This works for both command line builds and project builds, although note that project builds are constructed to be useful for development, not for distribution.</li>
+<li><em>DebugSymbolCollation</em> This runs after Collation, and captures all the debug symbols from the collated files, and writes them to a mirrored directory structure. On Windows, this copies .pdb files from VisualC, or runs objcopy for Mingw. On Linux, this runs objcopy. On OSX, this runs dsymutil.</li>
+<li><em>StrippedBinaryCollation</em> This runs after both Collation and DebugSymbolCollation, and strips all the binaries of their debug sections, and writes them to a mirrored directory structure. For files without debug information, they are cloned. On Windows, files built with VisualC are cloned. Those built with Mingw are stripped, and a debug link configured with objcopy on the stripped binary. On Linux, built files are stripped, and a debug link configured with objcopy on the stripped binary. On OSX, built files are stripped.</li>
+</ol>
+Collation works on the principle that there is a built file that is the main binary. This is placed in a directory structure, whether that be in the directory root, or, say, on OSX, placed in an application bundle structure, e.g. <code>product.app/Contents/MacOSX</code>. All subsequent files collated are then written relative to that main binary, by options to each file. There is no fixed structure imposed by Bam. This allows for files to be placed next to the main binary, or in subdirectories next to it, or even back up and into other folders, such as collating frameworks for OSX application bundles.</p>
+<p>An example of a full set of collation, debug symbols and stripped binaries can be seen below, taken from the bam-qt repository tests, where <code>Qt5Application</code> is the main program (and thus main binary for collation). On OSX, this creates an application bundle. On Windows, in non-debug configurations, the runtime libraries are included.</p>
+<pre><code>
+sealed class Qt5Test1Runtime :
+    Publisher.Collation
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
+    {
+        base.Init(parent);
+
+        var app = this.Include<Qt5Application>(C.ConsoleApplication.Key, EPublishingType.WindowedApplication);
+        if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.OSX))
+        {
+            var qtPackage = Bam.Core.Graph.Instance.Packages.Where(item => item.Name == "Qt").First();
+            var qtVersionSplit = qtPackage.Version.Split('.');
+            var updateInstallName = (System.Convert.ToInt32(qtVersionSplit[1]) < 5); // < Qt5.5 requires install name updates
+
+            this.IncludeFramework<Qt.CoreFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+            this.IncludeFramework<Qt.WidgetsFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+            this.IncludeFramework<Qt.GuiFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+
+            // required by the platform plugin
+            this.IncludeFramework<Qt.PrintSupportFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+#if D_PACKAGE_QT_5_5_1 || D_PACKAGE_QT_5_6_0
+            this.IncludeFramework<Qt.DBusFramework>("../Frameworks", app, updateInstallName: updateInstallName);
+#endif
+
+            this.Include<Qt.PlatformPlugin>(C.Plugin.Key, "../Plugins/qtplugins/platforms", app);
+            this.IncludeFile(this.CreateTokenizedString("$(packagedir)/resources/osx/qt.conf"), "../Resources", app);
+        }
+        else
+        {
+            this.Include<Qt.Core>(C.DynamicLibrary.Key, ".", app);
+            this.Include<Qt.Widgets>(C.DynamicLibrary.Key, ".", app);
+            this.Include<Qt.Gui>(C.DynamicLibrary.Key, ".", app);
+            this.Include<QtCommon.ICUIN>(C.DynamicLibrary.Key, ".", app);
+            this.Include<QtCommon.ICUUC>(C.DynamicLibrary.Key, ".", app);
+            this.Include<QtCommon.ICUDT>(C.DynamicLibrary.Key, ".", app);
+
+            this.IncludeFile(this.CreateTokenizedString("$(packagedir)/resources/qt.conf"), ".", app);
+            var platformPlugin = this.Include<Qt.PlatformPlugin>(C.Plugin.Key, "qtplugins/platforms", app);
+            if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.Linux))
+            {
+                this.ChangeRPath(platformPlugin, "$ORIGIN/../..");
+                this.Include<Qt.DBus>(C.DynamicLibrary.Key, ".", app); // for qxcb plugin
+
+#if D_PACKAGE_QT_5_5_1 || D_PACKAGE_QT_5_6_0
+                this.Include<Qt.XcbQpa>(C.DynamicLibrary.Key, ".", app);
+#endif
+            }
+
+            if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.Windows) &&
+                this.BuildEnvironment.Configuration != EConfiguration.Debug &&
+                (app.SourceModule as Qt5Application).Linker is VisualCCommon.LinkerBase)
+            {
+                var visualCRuntimeLibrary = Bam.Core.Graph.Instance.PackageMetaData<VisualCCommon.IRuntimeLibraryPathMeta>("VisualC");
+                foreach (var libpath in visualCRuntimeLibrary.CRuntimePaths((app.SourceModule as C.CModule).BitDepth))
+                {
+                    this.IncludeFile(libpath, ".", app);
+                }
+                foreach (var libpath in visualCRuntimeLibrary.CxxRuntimePaths((app.SourceModule as C.CModule).BitDepth))
+                {
+                    this.IncludeFile(libpath, ".", app);
+                }
+            }
+        }
+    }
+}
+
+[Bam.Core.ConfigurationFilter(Bam.Core.EConfiguration.NotDebug)]
+sealed class Qt5Test1DebugSymbols :
+    Publisher.DebugSymbolCollation
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
+    {
+        base.Init(parent);
+
+        this.CreateSymbolsFrom<Qt5Test1Runtime>();
+    }
+}
+
+[Bam.Core.ConfigurationFilter(Bam.Core.EConfiguration.NotDebug)]
+sealed class Qt5Test1Stripped :
+    Publisher.StrippedBinaryCollation
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
+    {
+        base.Init(parent);
+
+        this.StripBinariesFrom<Qt5Test1Runtime, Qt5Test1DebugSymbols>();
+    }
+}
+</code>
+</pre>
+<p>The result of executing these modules is three directories, with almost identical contents, representing a debuggable standalone distribution, all the debug symbols from the binaries, and a stripped standable distribution.</p>
+<p>If a stripped distribution needs to be debugging, the contents of the debug symbol directory can just be copied on top of it, and the stripped binaries will then work in a debugging (assuming source is available on disk).</p>
+<H3>Installers</H3>
+<p>Generating an installer from your standalone distributable is one of the last steps in software development. Bam provides a number of mechanisms on each platform to create an installer. Note that installer generation is only available in Native build mode at this time. It is possible to create an installer from any of the Publishing steps, although most likely you will be interested in the stripped collation primarily, and the debug symbols will be useful to be archived.</p>
+<p>Installers supported:
+<ul>
+<li>Windows
+<ul>
+<li>InnoSetup 5 (v5.5.5 tested)</li>
+<li>NSIS (v2.46 tested)</li>
+</ul>
+</li>
+<li>OSX
+<ul>
+<li>Disk images (.dmg)</li>
+<li>Tar balls (compressed or uncompressed)</li>
+</ul>
+</li>
+<li>Linux
+<ul>
+<li>Tar balls (compressed or uncompressed)</li>
+</ul>
+</li>
+</ul>
+</p>
+<p>All methods take all the files from the collated module (whichever one you chose) and place the contents into the respective installer. A tar ball from the example above, using the stripped binary collation as the source for the installer, would be</p>
+<pre>
+<code>
+sealed class TarBallInstaller :
+    Installer.TarBall
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
+    {
+        base.Init(parent);
+
+        this.SourceFolder&lt;Qt5Test1Stripped&gt;(Publisher.StrippedBinaryCollation.Key);
+    }
+}
+</code>
+</pre>
+<p>Existing functionality provides the minimum requirement for generating usable installers. Future versions of Bam will include more configurability.</p>
+<!--
+<a name="advanced"></a><H2>Advanced</H2>
+<p>TODO
+Referenced modules (could these be sealed?)
+Structure of graph</p>
+<H3>Writing a build mode extension</H3>
+<p>TODO</p>
+-->
+<a name="otherrepos"></a><H2>Additional Package Repositories</H2>
+<p>Although Bam has a default package repository with functionality to get you started, there are other software packages and tools that exist that would benefit from being included as a Bam package. Some additional package repositories exist, that offer the Bam build scripts for you to include in your own software builds.<p>
+<ul>
+<li><a href="https://github.com/markfinal/bam-boost">bam-boost</a> - Boost 1.60.0 scripts for building Boost dynamic libraries.</li>
+<li><a href="https://github.com/markfinal/bam-compress">bam-compress</a> - zlib 1.2.8 dynamic library build script.</li>
+<li><a href="https://github.com/markfinal/bam-graphicssdk">bam-graphicssdk</a> - Direct3D, OpenGL, GLEW</li>
+<li><a href="https://github.com/markfinal/bam-imageformats">bam-imageformats</a> - libtiff 3.9.7 dynamic library build script.</li>
+<li><a href="https://github.com/markfinal/bam-parser">bam-parser</a> - build scripts allowing flex and bison to be invoked, and a test case.</li>
+<li><a href="https://github.com/markfinal/bam-python">bam-python</a> - Python 3.5.1 library, extension modules, shell, and test cases.</li>
+<li><a href="https://github.com/markfinal/bam-qt">bam-qt</a> - Qt 4.8.5, 5.3.2, 5.5.1, and 5.6.0, including the moc tool, and test cases.</li>
+<li><a href="https://github.com/markfinal/bam-xml">bam-xml</a> - TinyXML2 library build</li>
+<li><a href="https://github.com/markfinal/bam-zeromq">bam-zeromq</a> - ZeroMQ library build, and test</li>
+</ul>
+<p>It is encouraged that anyone can provide and publish a package repository for anyone to use.</p>
+<BR>
+<a name="contact"></a><H2>Contact</H2>
+<p>Please join in the discussion at the <a href="https://groups.google.com/forum/#!forum/buildamation-dev">BuildAMation Google Group</a>.</p>
+<p>If you would prefer to contact me directly about BuildAMation, please email me on the address below. I am happy to provide advice to developers using Bam to build open source or personal projects, where my time allows.</p>
+<p>You are free to use Bam for any commercial projects. For support/consultancy enquiries, please contact me to discuss.</p>
+<p>Contact details:
+<ul>
+<li><a href=mailto:markfinal@hotmail.com>markfinal@hotmail.com</a></li>
+<li><a href="https://uk.linkedin.com/pub/mark-final/1/ab0/603" style="text-decoration:none;"><span style="font: 80% Arial,sans-serif; color:#0783B6;"><img src="https://static.licdn.com/scds/common/u/img/webpromo/btn_in_20x15.png" width="20" height="15" alt="View Mark Final's LinkedIn profile" style="vertical-align:middle;" border="0">&nbsp;View Mark Final's profile</span></a></p></li>
+</ul>
+     <a href="#Top1"><img src="TOP.png" alt="Top of Page" align=right></a>
+</div>
+</div>
+</body>
+</html>
