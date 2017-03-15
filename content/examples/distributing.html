@@ -7,7 +7,7 @@
 <li>Collating all of your build output so that they are located in a single directory hierarchy.</li>
 <li>All thirdparty dependent runtime libraries must be published with your software, as you cannot guarantee what the end user has on their system.</li>
 <li>Windows end users may not have a development environment, so non-debug runtime libraries must be linked against.</li>
-<li>OSX binary install names need to be adjusted so that the distributable is standalone.</li>
+<li>macOS binary install names need to be adjusted so that the distributable is standalone.</li>
 <li>Linux binary RPaths need to be set or adjusted so that the distributable is standalone.</li>
 <li>Debug symbols may need to be stripped from binaries. You may also wish to hive off debug symbols, so you can later debug crash reports from end users.</li>
 <li>You may wish to provide an installer for your software.</li>
@@ -17,11 +17,11 @@
 <p>The Publisher package has three main components:
 <ol>
 <li><em>Collation</em> This is the process of taking specific parts of the build (and external files) and placing them in a specified hierarchy under a single folder. This creates a standalone distributable, but contains all the artifacts of the build, e.g. debug symbols. This means that collation is useful for developers, as it makes a runnable/debuggable software setup. This works for both command line builds and project builds, although note that project builds are constructed to be useful for development and debugging, not for distribution.</li>
-<li><em>DebugSymbolCollation</em> This runs after Collation, and captures all the debug symbols from the collated files, and writes them to a mirrored directory structure. On Windows, this copies .pdb files from VisualC, or runs objcopy for Mingw. On Linux, this runs objcopy. On OSX, this runs dsymutil.</li>
-<li><em>StrippedBinaryCollation</em> This runs after both Collation and DebugSymbolCollation, and strips all the binaries of their debug sections, and writes them to a mirrored directory structure. For files without debug information, they are cloned. On Windows, files built with VisualC are cloned. Those built with Mingw are stripped, and a debug link configured with objcopy on the stripped binary. On Linux, built files are stripped, and a debug link configured with objcopy on the stripped binary. On OSX, built files are stripped.</li>
+<li><em>DebugSymbolCollation</em> This runs after Collation, and captures all the debug symbols from the collated files, and writes them to a mirrored directory structure. On Windows, this copies .pdb files from VisualC, or runs objcopy for Mingw. On Linux, this runs objcopy. On macOS, this runs dsymutil.</li>
+<li><em>StrippedBinaryCollation</em> This runs after both Collation and DebugSymbolCollation, and strips all the binaries of their debug sections, and writes them to a mirrored directory structure. For files without debug information, they are cloned. On Windows, files built with VisualC are cloned. Those built with Mingw are stripped, and a debug link configured with objcopy on the stripped binary. On Linux, built files are stripped, and a debug link configured with objcopy on the stripped binary. On macOS, built files are stripped.</li>
 </ol>
-Collation works on the principle that there is a built file that is the main binary. This is placed in a directory structure, whether that be in the directory root, or, say, on OSX, placed in an application bundle structure, e.g. <code>product.app/Contents/MacOSX</code>. All subsequent files collated are then written <em>relative to that main binary</em>, by specifying options on each file. There is no fixed structure imposed by Bam. This allows for files to be placed next to the main binary, or in subdirectories next to it, or even back up and into other folders, such as collating frameworks for OSX application bundles.</p>
-<p>An example of a full set of collation, debug symbols and stripped binaries can be seen below, taken from the <a data-toggle="tab" href="#repos">bam-qt repository</a> tests, where <code>Qt5Application</code> is the main program (and thus main binary for collation). On OSX, this creates an application bundle. On Windows, in non-debug configurations, the runtime libraries are included.</p>
+Collation works on the principle that there is a built file that is the main binary. This is placed in a directory structure, whether that be in the directory root, or, say, on macOS, placed in an application bundle structure, e.g. <code>product.app/Contents/MacOSX</code>. All subsequent files collated are then written <em>relative to that main binary</em>, by specifying options on each file. There is no fixed structure imposed by Bam. This allows for files to be placed next to the main binary, or in subdirectories next to it, or even back up and into other folders, such as collating frameworks for macOS application bundles.</p>
+<p>An example of a full set of collation, debug symbols and stripped binaries can be seen below, taken from the <a data-toggle="tab" href="#repos">bam-qt repository</a> tests, where <code>Qt5Application</code> is the main program (and thus main binary for collation). On macOS, this creates an application bundle. On Windows, in non-debug configurations, the runtime libraries are included.</p>
 <pre><code>sealed class Qt5Test1Runtime :
     Publisher.Collation
 {
@@ -130,7 +130,7 @@ sealed class Qt5Test1Stripped :
 <li><a href="http://nsis.sourceforge.net/Main_Page">NSIS</a> (v2.46 tested)</li>
 </ul>
 </li>
-<li>OSX
+<li>macOS
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Apple_Disk_Image">Disk images</a> (.dmg)</li>
 <li>Tar balls (compressed or uncompressed)</li>

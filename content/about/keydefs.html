@@ -30,7 +30,7 @@ The first package definition file read is from the <b>master package</b>, and is
 Packages add semantic meaning atop of the axioms by way of providing specific methods on their modules, e.g. a C program must compile and link against a C static library, is coded in terms of the axioms, and is called <code>CompileAndLinkAgainst</code>.</p>
 <H2>Tool</H2>
 <p>Tools are a type of module, but can be referenced in when executing build mode policies of other modules. This means that tools can be procedurally generated as part of a build. Equally, prebuilt tools, such as C/C++ compilers, appear in the same guise - Bam just requires them to exist on disk already.</p>
-<H2>Configuration</H2>
+<H2>Build configurations</H2>
 <p>There are three build configurations in the Bam core assembly:
 <ol>
 <li>Debug</li>
@@ -87,3 +87,12 @@ $(MajorVersion).$(MinorVersion)#valid(.$(PatchVersion))
 runs the <code>valid</code> function to determine if its expression is a valid TokenizedString; if not, the whole function call is removed; if it is, only the expression remains.</p>
 <p>All TokenizedStrings are parsed just prior to the dependency graph execution. This allows dynamic strings to be constructed, but altered as package scripts are executed. The parameterized source is terse, and references to macros offer an additional level of semantics.</p>
 <p>Note that any TokenizedStrings created during dependency graph execution, will need to be manually parsed, using the <code>Parse()</code> method.</p>
+<H2>Module configuration</H2>
+<p>Modules can declare an interface that exposes configuration options for how to build that module. Compiling a package against a version of Bam that implements Module configuration will also include the <code>BAM_FEATURE_MODULE_CONFIGURATION</code> preprocessor definition.</p>
+<p>Several interfaces are required to be implemented:</p>
+<H3>Bam.Core.IHasModuleConfiguration</H3>
+<p>Modules that expose a configuration interface must implement this interface.</p>
+<H3>Bam.Core.IModuleConfiguration</H3>
+<p>The interface that a module declares as it's configuration must inherit this interface. The interface must only declare read-only properties. This is to be used in patches within the module. In additional to an interface, a class implementing this interface must also be provided, with the configuration defaults in its constructor, and public setters on the interface properties.</p>
+<H3>Bam.Core.IOverrideModuleConfiguration</H3>
+<p>This is intended for the top-level user. A non-abstract class must implement this interface, in order to get access to the class allowing modification to a Module's configuration.</p>
