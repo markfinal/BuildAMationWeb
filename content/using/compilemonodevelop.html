@@ -1,0 +1,152 @@
+<ul class="breadcrumb">
+    <li>Using</li>
+    <li class="active">Compiling MonoDevelop</li>
+</ul>
+
+<H2>Compiling MonoDevelop</H2>
+<p>These instructions are for compiling MonoDevelop on Linux using the Mono 5 repositories. This may be the case for some distributions which do not support flatpak.</p>
+
+<ul>
+<li><a href="#ubuntu14">Ubuntu 14</a></li>
+<li><a href="#ubuntu16">Ubuntu 16</a></li>
+<li><a href="#centso6">CentOS 6</a></li>
+<li><a href="#centso7">CentOS 7</a></li>
+</uL>
+
+<H2 id="ubuntu14">Ubuntu 14</H2>
+
+<H3>Deleting pre-Mono 5 packages</H3>
+<p>If you already have a previous installation of Mono (pre 5), and want to change to the v5 repositories, I recommend deleting all previously installed Mono packages.</p>
+<p>First of all, install the <code>ppa-purge</code> tool.</p>
+<code>
+sudo apt-get install ppa-purge
+</code>
+<p>Then run this command:</p>
+<code>
+sudo ppa-purge -s http://download.mono-project.com  -p wheezy_main repo_debian_dists
+</code>
+<p>There should be no sign of mono left on your system following this.</p>
+
+<H3>Install mono</H3>
+<p>Follow the <a href="http://www.mono-project.com/download/#download-lin">Linux instructions</a> for installing the latest Mono (v5+) repositories. Ensure that you get the <code>mono-complete</code> package in order to compile MonoDevelop.</p>
+
+<H3>Get dependencies</H3>
+<p>Run this command to get all the dependencies requires to compile MonoDevelop:</p>
+<code>
+sudo apt-get install git automake autoconf mono-complete fsharp libgtk2.0-cil-dev libglade2.0-cil-dev cmake libssh2-1-dev
+</code>
+
+<H3>Get the MonoDevelop source</H3>
+<p>Get the git repository:</p>
+<code>
+git clone https://github.com/mono/monodevelop.git
+</code>
+<p>Last known good git tag is: <code>monodevelop-7.0.1.24</code></p>
+<!--<p>Last known good git revision is: <code>82a46827fd72523c7598708d63fe988c64bdcc3b</code></p>-->
+
+<H3>Configure the build</H3>
+<code>
+cd monodevelop
+</code>
+<p>Change the prefix to use a different install location</p>
+<code>
+./configure --prefix=/opt/monodevelop
+</code>
+<p>Assuming a default profile does not exist, select the main packages to include in the default. Press ENTER.</p>
+<p>There should be no errors resulting from the configure output.</p>
+<p>Build the code. I did not have much luck with multithreaded builds.</p>
+<code>
+make
+</code>
+<p>Finally, install monodevelop to the prefix defined in the configure step:</p>
+<code>
+sudo make install
+</code>
+<p>Note that Monodevelop does not add itself to the Window manager icons, so you must start it from a console, or add a suitable PATH or alias to your bash startup scripts:</p>
+<code>
+/opt/monodevelop/bin/monodevelop
+</code>
+
+<H2 id="ubuntu16">Ubuntu 16</H2>
+<p>Following the instructions on <a href="http://www.monodevelop.com/download/linux/">Monodevelop</a>, install <a href="http://flatpak.org/getting.html">FlatPak</a> for Ubuntu 16.</p>
+<p><code>
+sudo add-apt-repository ppa:alexlarsson/flatpak
+</code></p>
+<p><code>
+sudo apt update
+</code></p>
+<p><code>
+sudo apt install flatpak
+</code></p>
+<p>Install Monodevelop's flatpak using:</p>
+<code>
+flatpak install --user --from https://download.mono-project.com/repo/monodevelop.flatpakref
+</code>
+<p>Accept configuring and installing required remotes during this process.<p>
+<p>Run the installed monodevelop using:<p>
+<code>
+flatpak run com.xamarin.MonoDevelop
+</code>
+<p>Note that first run seems to take a long time. Suggest also adding the run line as an alias.</p>
+
+<H2 id="centso6">CentOS 6</H2>
+<p>I am unaware of any way to install or compile MonoDevelop for CentOS6. Sorry. Note that MSBuild with mono will compile a VisualStudio solution on the command line though.</p>
+
+<H2 id="centso7">CentOS 7</H2>
+<p>Flatpak appears to only be available on a <em>testing</em> version of CentOS 7, so I recommend a source build of Monodevelop until that changes.</p>
+
+<p><b>WARNING</b> your mileage may vary on this. I am getting msbuild not found errors: <a href="https://bugzilla.xamarin.com/show_bug.cgi?id=57024">bug logged</a>.<p>
+
+<H3>Deleting pre-Mono 5 packages</H3>
+<p>If you already have a previous installation of Mono (pre 5), and want to change to the v5 repositories, I recommend deleting all previously installed Mono packages.</p>
+<p>Run this command to uninstall all existing mono packages:</p>
+<code>
+sudo rpm -e --nodeps `yum list installed | grep download.mono-project.com_repo_centos_ | awk '{ print $1 }'`
+</code>
+<p>There should be no sign of mono left on your system following this.</p>
+<p>Finally delete the old repo:</p>
+<code>
+sudo rm /etc/yum.repos.d/download.mono-project.com_repo_centos_.repo
+</code>
+
+<H3>Install mono</H3>
+<p>Follow the <a href="http://www.mono-project.com/download/#download-lin">Linux instructions</a> for installing the latest Mono (v5+) repositories. Ensure that you get the <code>mono-complete</code> package in order to compile MonoDevelop.</p>
+
+<H3>Get dependencies</H3>
+<p>Run this command to get all the dependencies requires to compile MonoDevelop:</p>
+<code>
+yum install git autoconf automake mono-complete fsharp gtk-sharp2-devel cmake libssh2-devel
+
+sudo apt-get install git automake autoconf mono-complete fsharp libgtk2.0-cil-dev libglade2.0-cil-dev cmake libssh2-1-dev
+</code>
+
+<H3>Get the MonoDevelop source</H3>
+<p>Get the git repository:</p>
+<code>
+git clone https://github.com/mono/monodevelop.git
+</code>
+<p>Last known good git tag is: <code>monodevelop-7.0.1.24</code></p>
+
+<H3>Configure the build</H3>
+<code>
+cd monodevelop
+</code>
+<p>Change the prefix to use a different install location</p>
+<code>
+./configure --prefix=/opt/monodevelop
+</code>
+<p>Assuming a default profile does not exist, select the main packages to include in the default. Press ENTER.</p>
+<p>There should be no errors resulting from the configure output.</p>
+<p>Build the code. I did not have much luck with multithreaded builds.</p>
+<code>
+make
+</code>
+
+<p>Finally, install monodevelop to the prefix defined in the configure step:</p>
+<code>
+sudo make install
+</code>
+<p>Note that Monodevelop does not add itself to the Window manager icons, so you must start it from a console, or add a suitable PATH or alias to your bash startup scripts:</p>
+<code>
+/opt/monodevelop/bin/monodevelop
+</code>
