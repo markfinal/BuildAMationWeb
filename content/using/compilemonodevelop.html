@@ -28,12 +28,12 @@ sudo ppa-purge -s http://download.mono-project.com  -p wheezy_main repo_debian_d
 <p>There should be no sign of mono left on your system following this.</p>
 
 <H3>Install mono</H3>
-<p>Follow the <a href="http://www.mono-project.com/download/#download-lin">Linux instructions</a> for installing the latest Mono (v5+) repositories. Ensure that you get the <code>mono-complete</code> package in order to compile MonoDevelop.</p>
+<p>Follow the <a href="http://www.mono-project.com/download/#download-lin">Linux instructions</a> for installing the latest Mono (v5+) repositories. Ensure that you get the <code>mono-complete</code> and <code>msbuild</code> packages in order to compile MonoDevelop.</p>
 
 <H3>Get dependencies</H3>
 <p>Run this command to get all the dependencies requires to compile MonoDevelop:</p>
 <code>
-sudo apt-get install git automake autoconf mono-complete fsharp libgtk2.0-cil-dev libglade2.0-cil-dev cmake libssh2-1-dev
+sudo apt-get install git automake autoconf mono-complete msbuild fsharp libgtk2.0-cil-dev libglade2.0-cil-dev cmake libssh2-1-dev
 </code>
 
 <H3>Get the MonoDevelop source</H3>
@@ -95,8 +95,6 @@ flatpak run com.xamarin.MonoDevelop
 <H2 id="centso7">CentOS 7</H2>
 <p>Flatpak appears to only be available on a <em>testing</em> version of CentOS 7, so I recommend a source build of Monodevelop until that changes.</p>
 
-<p><b>WARNING</b> your mileage may vary on this. I am getting msbuild not found errors: <a href="https://bugzilla.xamarin.com/show_bug.cgi?id=57024">bug logged</a>.<p>
-
 <H3>Deleting pre-Mono 5 packages</H3>
 <p>If you already have a previous installation of Mono (pre 5), and want to change to the v5 repositories, I recommend deleting all previously installed Mono packages.</p>
 <p>Run this command to uninstall all existing mono packages:</p>
@@ -110,14 +108,12 @@ sudo rm /etc/yum.repos.d/download.mono-project.com_repo_centos_.repo
 </code>
 
 <H3>Install mono</H3>
-<p>Follow the <a href="http://www.mono-project.com/download/#download-lin">Linux instructions</a> for installing the latest Mono (v5+) repositories. Ensure that you get the <code>mono-complete</code> package in order to compile MonoDevelop.</p>
+<p>Follow the <a href="http://www.mono-project.com/download/#download-lin">Linux instructions</a> for installing the latest Mono (v5+) repositories. Ensure that you get the <code>mono-complete</code> and <code>msbuild</code> packages in order to compile MonoDevelop.</p>
 
 <H3>Get dependencies</H3>
 <p>Run this command to get all the dependencies requires to compile MonoDevelop:</p>
 <code>
-yum install git autoconf automake mono-complete fsharp gtk-sharp2-devel cmake libssh2-devel
-
-sudo apt-get install git automake autoconf mono-complete fsharp libgtk2.0-cil-dev libglade2.0-cil-dev cmake libssh2-1-dev
+yum install git autoconf automake mono-complete msbuild fsharp gtk-sharp2-devel cmake libssh2-devel
 </code>
 
 <H3>Get the MonoDevelop source</H3>
