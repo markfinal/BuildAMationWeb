@@ -66,9 +66,17 @@ make
 <code>
 sudo make install
 </code>
-<p>Note that Monodevelop does not add itself to the Window manager icons, so you must start it from a console, or add a suitable PATH or alias to your bash startup scripts:</p>
+<p>Note that Monodevelop does not add itself to the Window manager icons, so you must start it from a console with</p>
 <code>
 /opt/monodevelop/bin/monodevelop
+</code>
+<p>or add a suitable PATH in your bash startup scripts:</p>
+<code>
+export PATH=/opt/monodevelop/bin:$PATH
+</code>
+<p>or alias in bashrc:</p>
+<code>
+alias monodevelop='/opt/monodevelop/bin/monodevelop'
 </code>
 
 <H2 id="ubuntu16">Ubuntu 16</H2>
@@ -92,7 +100,10 @@ flatpak install --user --from https://download.mono-project.com/repo/monodevelop
 <code>
 flatpak run com.xamarin.MonoDevelop
 </code>
-<p>Note that first run seems to take a long time. Suggest also adding the run line as an alias.</p>
+<p>Note that first run seems to take a long time. Suggest also adding the run line as an alias in .bashrc</p>
+<code>
+alias monodevelop='flatpak run com.xamarin.MonoDevelop'
+</code>
 
 <H2 id="centso6">CentOS 6</H2>
 <p>I am unaware of any way to install or compile MonoDevelop for CentOS6. Sorry. Note that MSBuild with mono will compile a VisualStudio solution on the command line though.</p>
