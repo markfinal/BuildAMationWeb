@@ -87,6 +87,7 @@ sudo apt install flatpak
 flatpak install --user --from https://download.mono-project.com/repo/monodevelop.flatpakref
 </code>
 <p>Accept configuring and installing required remotes during this process.<p>
+<p>If you encounter issues with <em>Temporary failure in name resolution</em>, modify <code>/etc/resolv.conf</code> by replacing the 127.0.0.1 nameserver with 8.8.8.8, and then issue <code>sudo service network-manager restart</code>, and try flatpak again. This nameserver will hold until you reboot.</p>
 <p>Run the installed monodevelop using:<p>
 <code>
 flatpak run com.xamarin.MonoDevelop
