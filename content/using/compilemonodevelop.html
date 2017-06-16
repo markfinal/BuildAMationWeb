@@ -26,6 +26,10 @@ sudo apt-get install ppa-purge
 sudo ppa-purge -s download.mono-project.com  -p wheezy_main repo_debian_dists
 </code>
 <p>There should be no sign of mono left on your system following this.</p>
+<p>Finally delete the old Mono PPA:</p>
+<code>
+sudo rm /etc/apt/sources.list.d/mono-xamarin.list
+</code>
 
 <H3>Install mono</H3>
 <p>Follow the <a href="http://www.mono-project.com/download/#download-lin">Linux instructions</a> for installing the latest Mono (v5+) repositories. Ensure that you get the <code>mono-complete</code> and <code>msbuild</code> packages in order to compile MonoDevelop.</p>
