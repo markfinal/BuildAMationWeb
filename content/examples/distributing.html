@@ -7,8 +7,8 @@
 <li>Collating all of your build output so that they are located in a single directory hierarchy.</li>
 <li>All thirdparty dependent runtime libraries must be published with your software, as you cannot guarantee what the end user has on their system.</li>
 <li>Windows end users may not have a development environment, so non-debug runtime libraries must be linked against.</li>
-<li>macOS binary install names need to be adjusted so that the distributable is standalone.</li>
-<li>Linux binary RPaths need to be set or adjusted so that the distributable is standalone.</li>
+<li>macOS binary install names may need to be adjusted so that the distributable is standalone.</li>
+<li>Linux binary RPaths may need to be set or adjusted so that the distributable is standalone.</li>
 <li>Debug symbols may need to be stripped from binaries. You may also wish to hive off debug symbols, so you can later debug crash reports from end users.</li>
 <li>You may wish to provide an installer for your software.</li>
 </ul>
@@ -20,6 +20,101 @@
 <li><em>DebugSymbolCollation</em> This runs after Collation, and captures all the debug symbols from the collated files, and writes them to a mirrored directory structure. On Windows, this copies .pdb files from VisualC, or runs objcopy for Mingw. On Linux, this runs objcopy. On macOS, this runs dsymutil.</li>
 <li><em>StrippedBinaryCollation</em> This runs after both Collation and DebugSymbolCollation, and strips all the binaries of their debug sections, and writes them to a mirrored directory structure. For files without debug information, they are cloned. On Windows, files built with VisualC are cloned. Those built with Mingw are stripped, and a debug link configured with objcopy on the stripped binary. On Linux, built files are stripped, and a debug link configured with objcopy on the stripped binary. On macOS, built files are stripped.</li>
 </ol>
+<H3>Collation in BAM v1.2.0 and newer</H3>
+<p>In BAM v1.2.0, the Publisher package was rewritten in order to avoid a lot of duplication that existing in the previous version. In particular, all the runtime dependencies had to be specified both in the build scripts <em>and</em> the publishing scripts.</p>
+<p>From BAM v1.2.0, collation only requires the top-most module to be included, and the scripts will walk its build dependency hierarchy to determine all of its runtime dependents to be included.<p>
+<p>Additionally, Publisher now has the concept of a layout, for where modules of particular types (e.g. executables, dynamic libraries, plugins etc) reside by default. There are defaults, but the user is allowed to use their own instead.</p>
+<p>The example from the <a data-toggle="tab" href="#repos">bam-qt repository</a> tests is shown below for BAM v1.2.0 scripts. Compare this with the older script below to see the improved semantics and reduced duplication:</p>
+<pre><code>sealed class Qt5Test1Runtime :
+    Publisher.Collation
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
+    {
+        base.Init(parent);
+
+        this.SetDefaultMacrosAndMappings(EPublishingType.WindowedApplication);
+        var appAnchor = this.Include&lt;Qt5Application&gt;(C.Cxx.GUIApplication.Key);
+
+        var qtPlatformPlugin = this.Find&lt;QtCommon.PlatformPlugin&gt;().First();
+        (qtPlatformPlugin as Publisher.CollatedObject).SetPublishingDirectory("$(0)/platforms", this.PluginDir);
+
+        if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.OSX))
+        {
+            var collatedQtFrameworks = this.Find&lt;QtCommon.CommonFramework&gt;();
+            collatedQtFrameworks.ToList().ForEach(collatedFramework =&gt;
+                // must be a public patch in order for the stripping mode to inherit the settings
+                (collatedFramework as Publisher.CollatedObject).PublicPatch((settings, appliedTo) =&gt;
+                    {
+                        var rsyncSettings = settings as Publisher.IRsyncSettings;
+                        rsyncSettings.Exclusions = (collatedFramework.SourceModule as QtCommon.CommonFramework).PublishingExclusions;
+                    }));
+
+            this.IncludeFiles(
+                this.CreateTokenizedString("$(packagedir)/resources/osx/qt.conf"),
+                this.Macros["macOSAppBundleResourcesDir"],
+                appAnchor);
+        }
+        else if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.Linux))
+        {
+            this.IncludeFiles(
+                this.CreateTokenizedString("$(packagedir)/resources/linux/qt.conf"),
+                this.ExecutableDir,
+                appAnchor);
+        }
+        else if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.Windows))
+        {
+            this.IncludeFiles(
+                this.CreateTokenizedString("$(packagedir)/resources/windows/qt.conf"),
+                this.ExecutableDir,
+                appAnchor);
+
+            var app = appAnchor.SourceModule as Qt5Application;
+            if (this.BuildEnvironment.Configuration != EConfiguration.Debug &&
+                app.Linker is VisualCCommon.LinkerBase)
+            {
+                var runtimeLibrary = Bam.Core.Graph.Instance.PackageMetaData&lt;VisualCCommon.IRuntimeLibraryPathMeta&gt;("VisualC");
+                this.IncludeFiles(runtimeLibrary.CRuntimePaths(app.BitDepth), this.ExecutableDir, appAnchor);
+                this.IncludeFiles(runtimeLibrary.CxxRuntimePaths(app.BitDepth), this.ExecutableDir, appAnchor);
+            }
+        }
+        else
+        {
+            throw new Bam.Core.Exception("Unknown platform");
+        }
+    }
+}
+
+[Bam.Core.ConfigurationFilter(Bam.Core.EConfiguration.NotDebug)]
+sealed class Qt5Test1DebugSymbols :
+    Publisher.DebugSymbolCollation
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
+    {
+        base.Init(parent);
+
+        this.CreateSymbolsFrom&lt;Qt5Test1Runtime&gt;();
+    }
+}
+
+[Bam.Core.ConfigurationFilter(Bam.Core.EConfiguration.NotDebug)]
+sealed class Qt5Test1Stripped :
+    Publisher.StrippedBinaryCollation
+{
+    protected override void
+    Init(
+        Bam.Core.Module parent)
+    {
+        base.Init(parent);
+
+        this.StripBinariesFrom&lt;Qt5Test1Runtime, Qt5Test1DebugSymbols&gt;();
+    }
+}
+</code></pre>
+<H3>Collation in BAM older than v1.2.0</H3>
 Collation works on the principle that there is a built file that is the main binary. This is placed in a directory structure, whether that be in the directory root, or, say, on macOS, placed in an application bundle structure, e.g. <code>product.app/Contents/MacOSX</code>. All subsequent files collated are then written <em>relative to that main binary</em>, by specifying options on each file. There is no fixed structure imposed by Bam. This allows for files to be placed next to the main binary, or in subdirectories next to it, or even back up and into other folders, such as collating frameworks for macOS application bundles.</p>
 <p>An example of a full set of collation, debug symbols and stripped binaries can be seen below, taken from the <a data-toggle="tab" href="#repos">bam-qt repository</a> tests, where <code>Qt5Application</code> is the main program (and thus main binary for collation). On macOS, this creates an application bundle. On Windows, in non-debug configurations, the runtime libraries are included.</p>
 <pre><code>sealed class Qt5Test1Runtime :
@@ -34,9 +129,9 @@ Collation works on the principle that there is a built file that is the main bin
         var app = this.Include&lt;Qt5Application&gt;(C.ConsoleApplication.Key, EPublishingType.WindowedApplication);
         if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.OSX))
         {
-            var qtPackage = Bam.Core.Graph.Instance.Packages.Where(item => item.Name == "Qt").First();
+            var qtPackage = Bam.Core.Graph.Instance.Packages.First(item =&gt; item.Name == "Qt");
             var qtVersionSplit = qtPackage.Version.Split('.');
-            var updateInstallName = (System.Convert.ToInt32(qtVersionSplit[1]) < 5); // < Qt5.5 requires install name updates
+            var updateInstallName = (System.Convert.ToInt32(qtVersionSplit[1]) &lt; 5); // &lt; Qt5.5 requires install name updates
 
             this.IncludeFramework&lt;Qt.CoreFramework&gt;("../Frameworks", app, updateInstallName: updateInstallName);
             this.IncludeFramework&lt;Qt.WidgetsFramework&gt;("../Frameworks", app, updateInstallName: updateInstallName);
