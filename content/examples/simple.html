@@ -2,7 +2,7 @@
     <li>Examples</li>
     <li class="active">Simple example</li>
 </ul>
-<p>Let's consider an example package called TestPackage. Suppose we have a directory <code>TestPackage</code> containing a single source file <code>main.c</code> to build. We will assume that <code>main.c</code> contains some sensible C code to make an executable program, e.g. at least a main function. Note that for the benefit of this example, it's important to be C code, not C++, for example:</p>
+<p>Let's consider an example package called TestPackage. Suppose we have a directory <code>TestPackage</code> containing a single source file <code>main.c</code> to build. We will assume that <code>main.c</code> contains some sensible C code to make an executable program, e.g. at least a main function. Note that for the benefit of this demonstration, it's important to be C code, not C++; for example:</p>
 <pre><code>#include &lt;stdio.h&gt;
 
 int main()
@@ -23,15 +23,16 @@ bam --adddependent --pkgname=NativeBuilder
 bam --adddependent --pkgname=VSSolutionBuilder
 bam --adddependent --pkgname=MakeFileBuilder
 bam --adddependent --pkgname=XcodeBuilder
-bam --adddependent --pkgname=VisualC --pkgversion=12.0
+bam --adddependent --pkgname=VisualC --pkgversion=15.0
 bam --adddependent --pkgname=Gcc --pkgversion=4.8
-bam --adddependent --pkgname=Clang --pkgversion=Xcode6
+bam --adddependent --pkgname=Clang --pkgversion=Xcode9
 </code></pre>
 These commands have modified the package definition file, and add support not only to build C code, but also build in all default build modes, and all supported platforms. To view the changes that have been made to the package definition file, run this command
 <pre><code class="bash">bam --showdefinition
 </code></pre>
 Here is what you should see from running this command:
 <pre>
+Querying package repositories...
 Definition of package 'TestPackage'
 -----------------------------------
 Description: A new package called TestPackage
@@ -39,45 +40,49 @@ Description: A new package called TestPackage
 Supported on: Windows Linux OSX
 
 BuildAMation assemblies:
-	Bam.Core (requires version 1.0.2)
+        Bam.Core (requires version 1.2)
 
 DotNet assemblies:
-	System (version 4.0.30319)
-	System.Xml (version 4.0.30319)
-	System.Core (version 4.0.30319)
+        System (version 4.0.30319)
+        System.Xml (version 4.0.30319)
+        System.Core (version 4.0.30319)
 
 #defines:
-	D_PACKAGE_TESTPACKAGE
+        D_PACKAGE_TESTPACKAGE
+
+Package repositories to search:
+        'C:\Users\mark\AppData\Local\Temp'      (absolute path 'C:\Users\mark\AppData\Local\Temp')
 
 Dependent packages (* = default version):
 Package Name                                                      From Repository
-    C                                            /Users/mark/Downloads/BuildAMation-1.0.2/packages
-        CommandLineProcessor                     /Users/mark/Downloads/BuildAMation-1.0.2/packages
-    Clang-Xcode6                                 /Users/mark/Downloads/BuildAMation-1.0.2/packages
-        ClangCommon                              /Users/mark/Downloads/BuildAMation-1.0.2/packages
-        XcodeBuilder                             /Users/mark/Downloads/BuildAMation-1.0.2/packages
-            XcodeProjectProcessor                /Users/mark/Downloads/BuildAMation-1.0.2/packages
-    Gcc-4.8                                      /Users/mark/Downloads/BuildAMation-1.0.2/packages
-        GccCommon                                /Users/mark/Downloads/BuildAMation-1.0.2/packages
-    MakeFileBuilder                              /Users/mark/Downloads/BuildAMation-1.0.2/packages
-    NativeBuilder                                /Users/mark/Downloads/BuildAMation-1.0.2/packages
-        CommandLineProcessor                     /Users/mark/Downloads/BuildAMation-1.0.2/packages
-    VisualC-12.0                                 /Users/mark/Downloads/BuildAMation-1.0.2/packages
-        VisualCCommon                            /Users/mark/Downloads/BuildAMation-1.0.2/packages
-            VisualStudioProcessor                /Users/mark/Downloads/BuildAMation-1.0.2/packages
-        WindowsSDK-8.1                           /Users/mark/Downloads/BuildAMation-1.0.2/packages
-    VSSolutionBuilder                            /Users/mark/Downloads/BuildAMation-1.0.2/packages
-        VisualStudioProcessor                    /Users/mark/Downloads/BuildAMation-1.0.2/packages
+    C                                            C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+        CommandLineProcessor                     C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+    Clang-Xcode9                                 C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+        ClangCommon                              C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+        XcodeBuilder                             C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+            XcodeProjectProcessor                C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+    Gcc-4.8                                      C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+        GccCommon                                C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+    MakeFileBuilder                              C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+    NativeBuilder                                C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+        CommandLineProcessor                     C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+    VisualC-15.0                                 C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+        VisualCCommon                            C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+            VisualStudioProcessor                C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+        WindowsSDK-10                            C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+            VSSolutionBuilder                    C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+                VisualStudioProcessor            C:\Users\mark\Documents\BuildAMation-1.2.0\packages
 </pre>
-<p>You will have noticed that there are packages listed in the output that you didn't specify on the command line. This is because package definitions are evaluated recursively, such that depending on package A will bring in all of A's dependents. For example, the VisualC-12.0 package is dependent upon both VisualCCommon and the WindowsSDK-8.1, neither of which needed to be specified on the command line while setting up the test package.</p>
+<p>You will have noticed that there are packages listed in the output that you didn't specify on the command line. This is because package definitions are evaluated recursively, such that depending on package A will bring in all of A's dependents. For example, the VisualC-15.0 package is dependent upon both VisualCCommon and the WindowsSDK-10, neither of which needed to be specified on the command line while setting up the test package.</p>
 <H2>Create a project for your package</H2>
 <p>Now that all the dependencies are configured, you can create a project to edit and run from your preferred IDE. Still in the TestPackage directory, type
 <pre><code class="bash">bam -p
 </code></pre>
 The output will be similar to
 <pre>
+Querying package repositories...
 Successfully created debug project for package 'TestPackage'
-	/private/tmp/TestPackage/PackageDebug/TestPackage-bam.csproj
+        C:\Users\mark\AppData\Local\Temp\TestPackage\PackageDebug\TestPackage-bam.csproj
 </pre>
 The generated project can be opened in VisualStudio on Windows, VisualStudio for Mac on macos, or MonoDevelop on Linux.</p>
 <ul>
@@ -85,6 +90,7 @@ The generated project can be opened in VisualStudio on Windows, VisualStudio for
 <li>On macOS, on a terminal, type <code>open -a 'visual studio' <.csproj path></code> to open the project in VisualStudio for Mac. (The quotes are important.)</li>
 <li>On Linux Gnome window manager, on a terminal, type <code>gnome-open <.csproj path></code> to open the project in MonoDevelop.</li>
 </ul>
+<p>(You may want to set up aliases in your shells for these.)</p>
 <p>Once opened, you can browse through the source for the dependent package. Debugging this project will also invoke Bam - the entry point is in the main.cs file in the project, and automatically generated by the earlier command. The code in this file can be modified but be aware that if the project generation command is executed again, this file is overwritten.</p>
 <p>To continue this example, open the TestPackage.cs file from within the TestPackage package in the IDE.</p>
 <H2>A simple program</H2>
@@ -108,7 +114,7 @@ The generated project can be opened in VisualStudio on Windows, VisualStudio for
 <ul>
 <li>The namespace of the module is the name of the package it resides in, <code>TestPackage</code>.</li>
 <li>The name of the module is <code>MyProgram</code>, which is the name of the class. The executable generated will use the module name. This can be overridden.</li>
-<li>The class is <code>sealed</code>, which is an indication to Bam that you want to build this.</li>
+<li>The class is <code>sealed</code>, which is an indication to Bam that all dependencies of this module will need to be evaluated.</li>
 <li>MyProgram derives from <code>C.ConsoleApplication</code>. This is a class from the C package (using the convention of package name as namespace), which defines the necessary infrastructure for compiling and linking a C console application.</li>
 <li>The <code>Init</code> function is overridden from the base class. Init is used to define the properties of the module. This is used instead of the module constructor, as there are restrictions before an object is constructed in C#.</li>
 <li>The Init function of the parent class is called first. Chaining the hierarchy in this way ensures that modules are configured consistently.</li>
@@ -224,14 +230,11 @@ int main()
 </code></pre>
 <p>Building the package now will result in a compilation failure. This is because Bam detects that the timestamp on the source file is now newer than it's corresponding object file and rebuilds it. The failure will be similar to this:</p>
 <pre>
-/private/tmp/TestPackage/main.c:2:10: fatal error: 'library.h' file not found
-#include "library.h"
-         ^
-1 error generated.
+C:\Users\mark\AppData\Local\Temp\TestPackage\main.c(2): fatal error C1083: Cannot open include file: 'library.h': No such file or directory
 
 ERROR: (Bam.Core.Exception) Error during non-threaded build
-ERROR: (Bam.Core.Exception) Command failed: xcrun --sdk macosx10.10 clang -mmacosx-version-min=10.10 -std=c89 -arch x86_64 -g -fno-omit-frame-pointer -O0 -DD_BAM_CONFIGURATION_DEBUG -DD_BAM_PLATFORM_OSX -DD_BAM_PLATFORM_BITS=32 -DD_BAM_PLATFORM_LITTLEENDIAN -D_CONSOLE -DCUSTOM_DEFINE -x c -Werror -c -o /private/tmp/TestPackage/build/TestPackage/MyProgram/Debug/main.o -fvisibility=hidden /private/tmp/TestPackage/main.c
-Command exit code: 1
+ERROR: (Bam.Core.Exception) Command failed: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\Hostx64\x64\cl.exe -nologo -MD -W1 -Z7 -Od -Oy- -DD_BAM_CONFIGURATION_DEBUG -DD_BAM_PLATFORM_WINDOWS -DD_BAM_PLATFORM_BITS=64 -DD_BAM_PLATFORM_LITTLEENDIAN -D_CONSOLE -DCUSTOM_DEFINE -TC -WX -c -FoC:\Users\mark\AppData\Local\Temp\TestPackage\build\TestPackage\MyProgram\Debug\obj\main.obj C:\Users\mark\AppData\Local\Temp\TestPackage\main.c
+Command exit code: 2
 </pre>
 <p>These changes require the program to depend on the static library for both compilation (#include'ing the header) and for link (linking the function code). The <code>C.ConsoleApplication</code> module has a useful function to indicate how to do this.</p>
 <pre><code>namespace TestPackage
@@ -255,7 +258,7 @@ Command exit code: 1
         }
     }
 
-    sealed class MyStaticLibrary :
+    class MyStaticLibrary :
       C.StaticLibrary
     {
       ...
@@ -268,7 +271,7 @@ Command exit code: 1
 <li>As CompileAndLinkAgainst is called on <code>this</code>, and <code>this</code> is a program, a link dependency is set up. Bam Core is not aware of the mean of a link dependency, but it does know that the program depends on the static library to be up to date before the program can be up to date. However the C package does know that a link dependency means the static library needs to be passed as an argument to the linker for the program, once it is up-to-date.</li>
 <li>Also, CompileAndLinkAgainst takes (one or more) arguments, which are the modules which compile (i.e. object files) that have a requirement on the dependent module, as the function name suggests. A module dependency in the Bam sense is not actually required for compilation. However, any public patches from the dependent must be applied in order to use the public patch from the static library containing the include search path.</li>
 <li>There are similar functions exposed on the C module base classes, such as <code>LinkAgainst</code> seen earlier, or compilation only (for header only libraries).</li>
-<li>Do note that this is an example of Bam building out of order. MyStaticLibrary is listed <em>after</em> MyProgram in the package source, and yet, MyStaticLibrary needs to be up-to-date first, for MyProgram to link.</li>
+<li>Do note that this is an example of Bam building out of order. MyStaticLibrary is listed <em>after</em> MyProgram in the package source, and yet, MyStaticLibrary needs to be up-to-date first, for MyProgram to link. Note that MyStaticLibrary is no longer sealed too.</li>
 </ul>
 <p>Build the package once again, and you should see in the compiler console output that include paths are now included on both the program source and the library source, and the program links and will run.</p>
 <p>Run a clean build to satisfy yourself that the static library is compiled and archived first.</p>
