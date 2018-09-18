@@ -8,10 +8,10 @@
     <div class="col-sm-4" id="bootstrap-overrides">
       <h3>Windows</h3>
           <ul>
+            <li>.NET Core 2.1 SDK (includes C# Roslyn compiler)</li>
             <li>Windows 7</li>
             <li>Windows 8.1 <em>*</em></li>
             <li>Windows 10</li>
-            <li>.NET framework 4 (includes C# compiler)</li>
             <li>VisualStudio 2017 (Community Edition) <b>from BAM v1.1.0</b></li>
             <li>VisualStudio 2015 (Community Edition) <em>*</em></li>
             <li>VisualStudio 2013 (Community Edition, preferred over Express <b>from BAM v1.2.0+</b>)</li>
@@ -21,14 +21,10 @@
     </div>
     <div class="col-sm-4">
       <h3>macOS</h3>
-            <li>macOS 10.8 (Mountain Lion)</li>
-            <li>macOS 10.9 (Mavericks)</li>
-            <li>macOS 10.10 (Yosemite)</li>
-            <li>macOS 10.11 (El Capitan)</li>
+            <li>.NET Core 2.1 SDK (includes C# Roslyn compiler)</li>
             <li>macOS 10.12 (Sierra)</li>
             <li>macOS 10.13 (High Sierra) <em>*</em></li>
-            <li>Mono 4.0+ (5 is preferred)</li>
-            <li>Visual Studio for Mac 7.0+</li>
+            <li>Visual Studio for Mac 7.6.5+</li>
             <li>Xcode 9 <b>from BAM v1.1.4</b> <em>*</em></li>
             <li>Xcode 8 <b>from BAM v1.1.0</b></li>
             <li>Xcode 7</li>
@@ -38,31 +34,24 @@
     </div>
     <div class="col-sm-4">
       <h3>Linux</h3>
+            <li>.NET Core 2.1 SDK (includes C# Roslyn compiler)</li>
             <li>Ubuntu 16</li>
             <li>Ubuntu 14 <em>*</em></li>
-            <li>CentOS 6</li>
             <li>CentOS 7</li>
-            <li>Mono 4.0+ (5 is preferred)</li>
-            <li>MonoDevelop 5.10+ (7+ is preferred with Mono 5)</li>
+            <li>MonoDevelop 7.5+</li>
             <li>gcc/g++ 5.4 <b>from BAM v1.1.0</b></li>
             <li>gcc/g++ 4.8 <em>*</em></li>
     </div>
   </div>
 <H2>Useful links</H2>
+<p>Install <a href="https://www.microsoft.com/net/learn/get-started-with-dotnet-tutorial">.NET core SDK</a>.</p>
 <H3>Windows Development environment</H3>
 <p>Install <a href="https://www.visualstudio.com/downloads/">VisualStudio 2017 Community</a>, from Microsoft.</p>
 <p>Install <a href="https://www.visualstudio.com/vs/older-downloads/">VisualStudio 2015 Community, Update 3</a>, from Microsoft.</p>
 <p>Install <a href="https://www.visualstudio.com/vs/older-downloads/">VisualStudio 2013 Community, Update 5</a>, from Microsoft.</p>
 <p>Install <a href="https://www.visualstudio.com/vs/older-downloads/">VisualStudio 2012 Express, Update 5</a>, from Microsoft.</p>
 <p>Install <a href="https://www.visualstudio.com/vs/older-downloads/">VisualStudio 2010 Express Service Pack 1</a>, from Microsoft.</p>
-<H3>Linux or macOS Mono</H3>
-<p>Install Mono for <a href="http://www.mono-project.com/download/stable/#download-mac">macOS</a> or <a href="http://www.mono-project.com/download/stable/#download-lin">Linux</a> (Xamarin packages recommended).</p>
-<H4>Mono Version</H4>
-<p>Mono 4 is the baseline version for BAM. Mono 5 is the preferred version.</p>
-<H4>Mono IDE</H4>
+<H3>MacOSX IDE</H3>
 <p>On macOS, the mono IDE is called <a href="https://www.visualstudio.com/vs/visual-studio-mac/">Visual Studio for Mac</a>.</p>
+<H3>Linux IDE</H3>
 <p>On Linux, the mono IDE is called <a href="http://www.monodevelop.com/download/#download-lin">MonoDevelop</a> site.</p>
-<p>Historically, MonoDevelop came first, then Xamarin Studio, then Visual Studio for Mac.</p>
-<p>As of Mono v5, MonoDevelop on Linux can either be downloaded as a flatpak self contained archive, or will need to be compiled if flatpak is not supported on your distribution. More recently, package distributions have become available.</p>
-<H3>GCC on Linux</H3>
-<p>To install GCC 4.8 on CentOS 6, search the web for <b>testing-devtools-2-centos-6</b>.</p>

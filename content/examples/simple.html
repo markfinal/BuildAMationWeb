@@ -40,38 +40,40 @@ Description: A new package called TestPackage
 Supported on: Windows Linux OSX
 
 BuildAMation assemblies:
-        Bam.Core (requires version 1.2)
+	Bam.Core (requires version 2.0)
 
 DotNet assemblies:
-        System (version 4.0.30319)
-        System.Xml (version 4.0.30319)
-        System.Core (version 4.0.30319)
+	System (version 4.0.30319)
+	System.Xml (version 4.0.30319)
+	System.Core (version 4.0.30319)
 
 #defines:
-        D_PACKAGE_TESTPACKAGE
+	D_PACKAGE_TESTPACKAGE
 
 Package repositories to search:
-        'C:\Users\mark\AppData\Local\Temp'      (absolute path 'C:\Users\mark\AppData\Local\Temp')
+	'/private/'	(absolute path '/private/')
+	'/private/tmp'	(absolute path '/private/tmp')
 
 Dependent packages (* = default version):
 Package Name                                                      From Repository
-    C                                            C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-        CommandLineProcessor                     C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-    Clang-Xcode9                                 C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-        ClangCommon                              C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-        XcodeBuilder                             C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-            XcodeProjectProcessor                C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-    Gcc-4.8                                      C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-        GccCommon                                C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-    MakeFileBuilder                              C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-    NativeBuilder                                C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-        CommandLineProcessor                     C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-    VisualC-15.0                                 C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-        VisualCCommon                            C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-            VisualStudioProcessor                C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-        WindowsSDK-10                            C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-            VSSolutionBuilder                    C:\Users\mark\Documents\BuildAMation-1.2.0\packages
-                VisualStudioProcessor            C:\Users\mark\Documents\BuildAMation-1.2.0\packages
+    C                                            /Users/mark/dev/BuildAMation/packages
+        CommandLineProcessor                     /Users/mark/dev/BuildAMation/packages
+    Clang-Xcode9                                 /Users/mark/dev/BuildAMation/packages
+        ClangCommon                              /Users/mark/dev/BuildAMation/packages
+        XcodeBuilder                             /Users/mark/dev/BuildAMation/packages
+            XcodeProjectProcessor                /Users/mark/dev/BuildAMation/packages
+    Gcc-4.8                                      /Users/mark/dev/BuildAMation/packages
+        GccCommon                                /Users/mark/dev/BuildAMation/packages
+    MakeFileBuilder                              /Users/mark/dev/BuildAMation/packages
+    NativeBuilder                                /Users/mark/dev/BuildAMation/packages
+        CommandLineProcessor                     /Users/mark/dev/BuildAMation/packages
+    VisualC-15.0                                 /Users/mark/dev/BuildAMation/packages
+        VisualCCommon                            /Users/mark/dev/BuildAMation/packages
+            VisualStudioProcessor                /Users/mark/dev/BuildAMation/packages
+        WindowsSDK-10                            /Users/mark/dev/BuildAMation/packages
+            WindowsSDKCommon                     /Users/mark/dev/BuildAMation/packages
+                VSSolutionBuilder                /Users/mark/dev/BuildAMation/packages
+                    VisualStudioProcessor        /Users/mark/dev/BuildAMation/packages
 </pre>
 <p>You will have noticed that there are packages listed in the output that you didn't specify on the command line. This is because package definitions are evaluated recursively, such that depending on package A will bring in all of A's dependents. For example, the VisualC-15.0 package is dependent upon both VisualCCommon and the WindowsSDK-10, neither of which needed to be specified on the command line while setting up the test package.</p>
 <H2>Create a project for your package</H2>
