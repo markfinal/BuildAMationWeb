@@ -4,14 +4,13 @@
 </ul>
 
 <H2>Compiling MonoDevelop</H2>
-<p>There are some prebuilt packages available for some distributions from the <a href="https://www.monodevelop.com/download/#fndtn-download-lin" target="_">MonoDevelop website</a>. Your mileage may vary on these. At the very least, the CentOS6 package will not run due to <a href="https://github.com/mono/monodevelop/issues/4920">too old a version of GLIBC</a>.</p>
+<p>There are some prebuilt packages available for some distributions from the <a href="https://www.monodevelop.com/download/#fndtn-download-lin" target="_">MonoDevelop website</a>. Your mileage may vary on these.</p>
 
 <p>These instructions are for compiling MonoDevelop on Linux using the Mono 5 repositories. This may be the case for some distributions which do not support flatpak.</p>
 
 <ul>
 <li><a href="#ubuntu14">Ubuntu 14</a></li>
 <li><a href="#ubuntu16">Ubuntu 16</a></li>
-<li><a href="#centso6">CentOS 6</a></li>
 <li><a href="#centso7">CentOS 7</a></li>
 </uL>
 
@@ -47,7 +46,7 @@ sudo apt-get install git automake autoconf mono-complete msbuild fsharp libgtk2.
 <code>
 git clone https://github.com/mono/monodevelop.git
 </code>
-<p>Last known good git tag is: <code>monodevelop-7.0.1.24</code></p>
+<p>Last known good git tag is: <code>monodevelop-7.5.0.1254</code></p>
 <!--<p>Last known good git revision is: <code>82a46827fd72523c7598708d63fe988c64bdcc3b</code></p>-->
 
 <H3>Configure the build</H3>
@@ -107,9 +106,6 @@ flatpak run com.xamarin.MonoDevelop
 alias monodevelop='flatpak run com.xamarin.MonoDevelop'
 </code>
 
-<H2 id="centso6">CentOS 6</H2>
-<p>I am unaware of any way to install or compile MonoDevelop for CentOS6. Sorry. Note that MSBuild with mono will compile a VisualStudio solution on the command line though.</p>
-
 <H2 id="centso7">CentOS 7</H2>
 <p>Flatpak appears to only be available on a <em>testing</em> version of CentOS 7, so I recommend a source build of Monodevelop until that changes.</p>
 
@@ -139,7 +135,7 @@ yum install git autoconf automake mono-complete msbuild fsharp gtk-sharp2-devel 
 <code>
 git clone https://github.com/mono/monodevelop.git
 </code>
-<p>Last known good git tag is: <code>monodevelop-7.0.1.24</code></p>
+<p>Last known good git tag is: <code>monodevelop-7.5.0.1254</code></p>
 
 <H3>Configure the build</H3>
 <code>

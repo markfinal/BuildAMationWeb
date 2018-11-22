@@ -14,7 +14,8 @@
 <li>package repositories to search,</li>
 <li>Bam assemblies to reference (including a minimum version),</<strong></strong></li>
 <li>any additional .NET packages,</li>
-<li>any required <a href="https://www.nuget.org/">NuGet</a> packages (on a per-platform basis),</li>
+<li>any required <a href="https://www.nuget.org/">NuGet</a> packages (on a per-platform basis) [new in v2.0],</li>
+<li>any required archive URLs (.zip, .tar, .tgz) to download and extract for package source [new in v2.0],</li>
 <li>and package specific compilation options.</li>
 </ul>
 The first package definition file read is from the <b>master package</b>, and is allowed to define 'default' packages which can be used to resolve packages that have multiple versions specified (usually toolchain packages).</p>
@@ -56,7 +57,7 @@ The meaning of each configuration depends on how packages define their default s
 <H2>Macros</H2>
 <p>Modules have a dictionary of named macros. The key to the dictionary is a string. The value associated with each key is a TokenizedString, described below.</p>
 <H2>Tokenized String</H2>
-<p>Bam defines strings with markup as TokenizedStrings. These use specical syntax to identify tokens in the strings, so that parameterization is possible. The tokens are evaluated from macros from multiple sources:
+<p>Bam defines strings with markup as TokenizedStrings. These use special syntax to identify tokens in the strings, so that parameterization is possible. The tokens are evaluated from macros from multiple sources:
 <ul>
 <li>the main dependency graph (for global macros),</li>
 <li>the module the string is associated with,</li>
