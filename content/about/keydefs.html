@@ -23,7 +23,7 @@ The first package definition file read is from the <b>master package</b>, and is
 <H2>Module</H2>
 <p>Modules are the first class citizens of what Bam uses to build software. They are classes (sealed to be buildable, abstract/unsealed to define functionality) defined in package scripts, but there is no explicit instantiation of these classes in those scripts. The Bam core assembly deals with instantiating and ordering modules. Modules have methods that evaluate whether the code they reference is out of date. Modules also define policies, dependent on the build mode, of how to execute when they do require building.</p>
 <p>The C# scripts define classes within a namespace, and the namespace is the package name. Bam uses this convention to search for modules within a specific package.</p>
-<p>Almost everything is a module in the Bam universe. So almost everything is buildable.</p>
+<p>Almost everything is a module in the Bam package universe. So almost everything is buildable.</p>
 <p>Dependencies are stated at the module level in package scripts. The basic module class is only aware of two axiomatic principles:
 <ol>
 <li>I depend on a module to be built before me, or</li>

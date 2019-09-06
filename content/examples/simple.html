@@ -24,15 +24,14 @@ bam --adddependent --pkgname=VSSolutionBuilder
 bam --adddependent --pkgname=MakeFileBuilder
 bam --adddependent --pkgname=XcodeBuilder
 bam --adddependent --pkgname=VisualC --pkgversion=15.0
-bam --adddependent --pkgname=Gcc --pkgversion=4.8
-bam --adddependent --pkgname=Clang --pkgversion=Xcode9
+bam --adddependent --pkgname=Gcc --pkgversion=7
+bam --adddependent --pkgname=Clang --pkgversion=Xcode10
 </code></pre>
 These commands have modified the package definition file, and add support not only to build C code, but also build in all default build modes, and all supported platforms. To view the changes that have been made to the package definition file, run this command
 <pre><code class="bash">bam --showdefinition
 </code></pre>
 Here is what you should see from running this command:
 <pre>
-Querying package repositories...
 Definition of package 'TestPackage'
 -----------------------------------
 Description: A new package called TestPackage
@@ -50,30 +49,38 @@ DotNet assemblies:
 #defines:
 	D_PACKAGE_TESTPACKAGE
 
-Package repositories to search:
-	'/private/'	(absolute path '/private/')
-	'/private/tmp'	(absolute path '/private/tmp')
+Package repositories that the system is aware of (may be more than during builds):
+	0: /Users/mark/dev/BuildAMation	(Structured+Tests)
+	1: /private/tmp
 
 Dependent packages (* = default version):
-Package Name                                                      From Repository
-    C                                            /Users/mark/dev/BuildAMation/packages
-        CommandLineProcessor                     /Users/mark/dev/BuildAMation/packages
-    Clang-Xcode9                                 /Users/mark/dev/BuildAMation/packages
-        ClangCommon                              /Users/mark/dev/BuildAMation/packages
-        XcodeBuilder                             /Users/mark/dev/BuildAMation/packages
-            XcodeProjectProcessor                /Users/mark/dev/BuildAMation/packages
-    Gcc-4.8                                      /Users/mark/dev/BuildAMation/packages
-        GccCommon                                /Users/mark/dev/BuildAMation/packages
-    MakeFileBuilder                              /Users/mark/dev/BuildAMation/packages
-    NativeBuilder                                /Users/mark/dev/BuildAMation/packages
-        CommandLineProcessor                     /Users/mark/dev/BuildAMation/packages
-    VisualC-15.0                                 /Users/mark/dev/BuildAMation/packages
-        VisualCCommon                            /Users/mark/dev/BuildAMation/packages
-            VisualStudioProcessor                /Users/mark/dev/BuildAMation/packages
-        WindowsSDK-10                            /Users/mark/dev/BuildAMation/packages
-            WindowsSDKCommon                     /Users/mark/dev/BuildAMation/packages
-                VSSolutionBuilder                /Users/mark/dev/BuildAMation/packages
-                    VisualStudioProcessor        /Users/mark/dev/BuildAMation/packages
+Package Name                             Default Repository Index
+---------------------------------------- ------- ----------------
+TestPackage                                      1
+    C                                            0
+        CommandLineProcessor                     0
+    Clang-Xcode10                                0
+        XcodeBuilder                             0
+        ClangCommon                              0
+            C                                    0
+    Gcc-7                                        0
+        GccCommon                                0
+            C                                    0
+    MakeFileBuilder                              0
+    NativeBuilder                                0
+        CommandLineProcessor                     0
+    VisualC-15.0                                 0
+        VisualCCommon                            0
+            C                                    0
+            VisualStudioProcessor                0
+        WindowsSDK-10                            0
+            WindowsSDKCommon                     0
+                VSSolutionBuilder                0
+    VSSolutionBuilder                            0
+        VisualStudioProcessor                    0
+    XcodeBuilder                                 0
+        XcodeProjectProcessor                    0
+            XcodeBuilder                         0
 </pre>
 <p>You will have noticed that there are packages listed in the output that you didn't specify on the command line. This is because package definitions are evaluated recursively, such that depending on package A will bring in all of A's dependents. For example, the VisualC-15.0 package is dependent upon both VisualCCommon and the WindowsSDK-10, neither of which needed to be specified on the command line while setting up the test package.</p>
 <H2>Create a project for your package</H2>
@@ -82,9 +89,8 @@ Package Name                                                      From Repositor
 </code></pre>
 The output will be similar to
 <pre>
-Querying package repositories...
 Successfully created debug project for package 'TestPackage'
-        C:\Users\mark\AppData\Local\Temp\TestPackage\PackageDebug\TestPackage-bam.csproj
+	/private/tmp/TestPackage/PackageDebug/TestPackage-bam.csproj
 </pre>
 The generated project can be opened in VisualStudio on Windows, VisualStudio for Mac on macos, or MonoDevelop on Linux.</p>
 <ul>
@@ -99,17 +105,16 @@ The generated project can be opened in VisualStudio on Windows, VisualStudio for
 <p>In the script file, define a module called MyProgram, which is a C (not C++) console application, compiling main.c in the package directory. We will revisit a C++ source file later.</p>
 <pre><code>namespace TestPackage
 {
-  sealed class MyProgram :
-    C.ConsoleApplication
-  {
-     protected override void
-     Init(
-       Bam.Core.Module parent)
-     {
-        base.Init(parent);
-        this.CreateCSourceContainer("$(packagedir)/main.c");
-     }
-  }
+    sealed class MyProgram :
+        C.ConsoleApplication
+    {
+        protected override void
+        Init()
+        {
+            base.Init();
+            this.CreateCSourceCollection("$(packagedir)/main.c");
+        }
+    }
 }
 </code></pre>
 <H4>Explanation</H4>
@@ -120,7 +125,7 @@ The generated project can be opened in VisualStudio on Windows, VisualStudio for
 <li>MyProgram derives from <code>C.ConsoleApplication</code>. This is a class from the C package (using the convention of package name as namespace), which defines the necessary infrastructure for compiling and linking a C console application.</li>
 <li>The <code>Init</code> function is overridden from the base class. Init is used to define the properties of the module. This is used instead of the module constructor, as there are restrictions before an object is constructed in C#.</li>
 <li>The Init function of the parent class is called first. Chaining the hierarchy in this way ensures that modules are configured consistently.</li>
-<li>A method of the base class, <code>CreateCSourceContainer</code>, is invoked, passing a string which is internally converted to a <em>TokenizedString</em>. This function's implementation expands the parameterized string into file paths, and creates additional <em>source file</em> modules for each, and configures dependencies. Wildcards can be used in the path to evaluate to more than one file. In this case, there is only one, the file main.c in the package directory.</li>
+<li>A method of the base class, <code>CreateCSourceCollection</code>, is invoked, passing a string which is internally converted to a <em>TokenizedString</em>. This function's implementation expands the parameterized string into file paths, and creates additional <em>source file</em> modules for each, and configures dependencies. Wildcards can be used in the path to evaluate to more than one file. In this case, there is only one, the file main.c in the package directory.</li>
 </ul>
 Now try to build the package
 <pre><code class="bash">bam -b=Native
@@ -130,30 +135,29 @@ The result will be an executable in a subdirectory of the <em>build</em> directo
 <p>Private patches are applied solely to the build of the module they are applied to. In this example, a C preprocessor definition is added to the compilation of the source file.</p>
 <pre><code>namespace TestPackage
 {
-  sealed class MyProgram :
-    C.ConsoleApplication
-  {
-     protected override void
-     Init(
-       Bam.Core.Module parent)
-     {
-        base.Init(parent);
-        <mark>var sources =</mark> this.CreateCSourceContainer("$(packagedir)/main.c");
-        <mark>sources.PrivatePatch(settings =>
-          {
-             var compiler = settings as C.ICommonCompilerSettings;
-             compiler.PreprocessorDefines.Add("CUSTOM_DEFINE");
-          });</mark>
-     }
-  }
+    sealed class MyProgram :
+        C.ConsoleApplication
+    {
+        protected override void
+        Init()
+        {
+            base.Init();
+            <mark>var sources =</mark> this.CreateCSourceCollection("$(packagedir)/main.c");
+            <mark>sources.PrivatePatch(settings =>
+            {
+                var preprocessor = settings as C.ICommonPreprocessorSettings;
+                preprocessor.PreprocessorDefines.Add("CUSTOM_DEFINE");
+            });</mark>
+        }
+    }
 }
 </code></pre>
 <H4>Explanation</H4>
 <ul>
-<li>The return value of CreateCSourceContainer is now stored in a local variable. This is a list of all modules representing the compilation of source files, i.e. object files. In this example, there is just one object file. Adding patches on the container affects <em>all</em> of the source files it contains.</li>
+<li>The return value of CreateCSourceCollection is now stored in a local variable. This is a collection of all modules representing the compilation of source files, i.e. object files. In this example, there is just one object file. Adding patches on the collection affects <em>all</em> of the source files it contains.</li>
 <li>A private patch accepts a lambda expression with a single argument, which is the settings object for the module on which it's applied.</li>
-<li>Settings can then be cast into the interfaces which make up the module's settings class (i.e. those settings associated with the Tool used to build the module). For a private patch, as you know the module type it is applied to, you can almost always guarantee which interfaces can be used. The exception to this general rule occurs when a tool/OS specific interface is not applicable to all cases, e.g. Gcc specific settings but you are building on Windows, so you may have check whether the interface is valid. This is easily achieved by comparing the result of the cast against <code>null</code>.</li>
-<li>The <code>C.ICommonCompilerSettings</code> interface defines a property, <code>PreprocessorDefines</code>, allowing the module writer to manage preprocessor definitions in the build.</li>
+<li>Settings can then be cast into the interfaces which make up the module's settings class (i.e. those settings associated with the Tool used to build the module). For a private patch, as you know the module type it is applied to, you can almost always guarantee which interfaces can be used. The exception to this general rule occurs when a tool/OS specific interface is not applicable to all cases, e.g. Gcc specific settings but you are building on Windows, so you may have check whether the interface is valid. This is easily achieved by comparing the result of the cast against <code>null</code>, or using an <code>is</code> expression pattern.</li>
+<li>The <code>C.ICommonPreprocessorSettings</code> interface defines a property, <code>PreprocessorDefines</code>, allowing the module writer to manage preprocessor definitions in the build.</li>
 </ul>
 Now try to build the package
 <pre><code class="bash">bam -b=Native
@@ -183,28 +187,26 @@ void printme(const char *string)
 <pre><code>namespace TestPackage
 {
   sealed class MyProgram :
-    C.ConsoleApplication
+      C.ConsoleApplication
   {
      ...
   }
 
   <mark>sealed class MyStaticLibrary :
-      C.StaticLibrary
+        C.StaticLibrary
     {
         protected override void
-        Init(
-            Bam.Core.Module parent)
+        Init()
         {
-            base.Init(parent);
-            this.CreateCSourceContainer("$(packagedir)/library.c");
+            base.Init();
+            this.CreateCSourceCollection("$(packagedir)/library.c");
             this.PublicPatch((settings, appliedTo) =>
+            {
+                if (settings is C.ICommonPreprocessorSettings preprocessor)
                 {
-                    var compiler = settings as C.ICommonCompilerSettings;
-                    if (null != compiler)
-                    {
-                        compiler.IncludePaths.AddUnique(this.CreateTokenizedString("$(packagedir)/include"));
-                    }
-                });
+                    preprocessor.IncludePaths.AddUnique(this.CreateTokenizedString("$(packagedir)/include"));
+                }
+            });
         }
     }</mark>
 }
@@ -215,14 +217,13 @@ void printme(const char *string)
 <li>The base class of this new module is <code>C.StaticLibrary</code> to indicate that the module will be a static library.</li>
 <li><code>PublicPatch</code> is the function called. But note that the function is now applied on <code>this</code> (the module to be built), rather then sources. The reason for this is that any dependency is written in terms of the module MyStaticLibrary, rather than on any source contained within it. Although the <em>public</em> patch is applied to <code>this</code>, because the C source container is <em>encapsulated</em> within MyStaticLibrary, the patch is applied to the source automatically.</li>
 <li>Note also that PublicPatch lambdas take two arguments; <code>settings</code> as before, and now also <code>appliedTo</code>. The latter is the module on which the patch is being applied to. For some public patches, it may be useful to know the module on which the patch is being applied. However, as in the example, <code>this</code> is usually the more useful module reference, to get the package directory of the source package, as opposed to using <code>appliedTo</code> which would get a different package directory.</li>
-<li>Note the conditional on the cast of the settings. Public patches are applied to all modules using this module as a dependent, and to a module's hierarchy of <em>child modules</em>, so can be applied equally to a link or compilation step. The cast is necessary to avoid runtime null reference exceptions.</li>
+<li>Note the use of the <code>is</code> expression pattern on the settings. Public patches are applied to all modules using this module as a dependent, and to a module's hierarchy of <em>child modules</em>, so can be applied equally to a link or compilation step. The conditional is necessary to avoid runtime null reference exceptions.</li>
 <li>The use of the <em>Module</em> utility member function <code>CreateTokenizedString</code>, creates a <em>TokenizedString</em> that is tied to that module's macros for expansion. In this case, the TokenizedString function <code>$(packagedir)</code> will evaluate to the package directory of the module MyStaticLibrary.</li>
 </ul>
 <p>Building the package now, requires no clean step, as a new module has been introduced. The output is the compilation and subsequent archiving of library.c into the static library. The program will not have changed.</p>
 <H2>Adding a dependency</H2>
 <p>Now change the program, so that it makes use of the library, e.g. change main.c to </p>
-<pre><code>#include &lt;stdio.h&gt;
-<mark>#include "library.h"</mark>
+<pre><code><mark>#include "library.h"</mark>
 
 int main()
 {
@@ -232,17 +233,19 @@ int main()
 </code></pre>
 <p>Building the package now will result in a compilation failure. This is because Bam detects that the timestamp on the source file is now newer than it's corresponding object file and rebuilds it. The failure will be similar to this:</p>
 <pre>
-C:\Users\mark\AppData\Local\Temp\TestPackage\main.c(2): fatal error C1083: Cannot open include file: 'library.h': No such file or directory
+/private/tmp/TestPackage/main.c:1:10: fatal error: 'library.h' file not found
+#include "library.h"
+         ^~~~~~~~~~~
+1 error generated.
 
-ERROR: (Bam.Core.Exception) Error during non-threaded build
-ERROR: (Bam.Core.Exception) Command failed: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\bin\Hostx64\x64\cl.exe -nologo -MD -W1 -Z7 -Od -Oy- -DD_BAM_CONFIGURATION_DEBUG -DD_BAM_PLATFORM_WINDOWS -DD_BAM_PLATFORM_BITS=64 -DD_BAM_PLATFORM_LITTLEENDIAN -D_CONSOLE -DCUSTOM_DEFINE -TC -WX -c -FoC:\Users\mark\AppData\Local\Temp\TestPackage\build\TestPackage\MyProgram\Debug\obj\main.obj C:\Users\mark\AppData\Local\Temp\TestPackage\main.c
-Command exit code: 2
+(Bam.Core.Exception) Command failed: /usr/bin/xcrun --sdk macosx10.13 clang -Wno-all -Wno-extra -Wno-pedantic -fvisibility=hidden -fno-strict-aliasing -DD_BAM_CONFIGURATION_DEBUG -DD_BAM_PLATFORM_OSX -DD_BAM_PLATFORM_BITS=64 -DD_BAM_PLATFORM_LITTLEENDIAN -DCUSTOM_DEFINE -x c -arch x86_64 -g -Werror -O0 -fno-omit-frame-pointer -c -mmacosx-version-min=10.7 -std=c89 -o /private/tmp/TestPackage/build/TestPackage/MyProgram/Debug/obj/main.o /private/tmp/TestPackage/main.c
+Command exit code: 1
 </pre>
 <p>These changes require the program to depend on the static library for both compilation (#include'ing the header) and for link (linking the function code). The <code>C.ConsoleApplication</code> module has a useful function to indicate how to do this.</p>
 <pre><code>namespace TestPackage
 {
     sealed class MyProgram :
-      C.ConsoleApplication
+        C.ConsoleApplication
     {
         protected override void
         Init(
@@ -261,7 +264,7 @@ Command exit code: 2
     }
 
     class MyStaticLibrary :
-      C.StaticLibrary
+        C.StaticLibrary
     {
       ...
     }
@@ -283,11 +286,14 @@ Command exit code: 2
 <p>Generate a VisualStudio solution by running</p>
 <pre><code class="bash">bam -b=VSSolution
 </code></pre>
-<H4>Linux (and macOS)</H4>
+<H4>Windows, Linux, and macOS</H4>
 <p>Generate a MakeFile by running</p>
 <pre><code class="bash">bam -b=MakeFile
 </code></pre>
 <p>By default, the Makefile generated uses GNU make syntax.</p>
+<p>On Windows, to use the NMake format, use</p>
+<pre><code class="bash">bam -b=MakeFile --MakeFile.format=NMAKE
+</code></pre>
 <H4>macOS</H4>
 <p>Generate an Xcode workspace by running</p>
 <pre><code class="bash">bam -b=Xcode
@@ -300,10 +306,10 @@ For a program that links C++ code, and thus requires the C++ linker, this would 
 <pre><code>C.Cxx.ConsoleApplication
 </code></pre>
 Similarly, for source code, instead of
-<pre><code>this.CreateCSourceContainer(paths)
+<pre><code>this.CreateCSourceCollection(paths)
 </code></pre>
 use
-<pre><code>this.CreateCxxSourceContainer(paths)
+<pre><code>this.CreateCxxSourceCollection(paths)
 </code></pre>
 in order to use the C++ compiler for the toolchain.</p>
-<p>It is also possible, and sometimes required, to create multiple source containers, from different languages. There is no restriction on how many times you call one of the create container functions. Ensure that you always link with the correct module type in order to use the right linker for your code.</p>
+<p>It is also possible, and sometimes required, to create multiple source collection, from different languages. There is no restriction on how many times you call one of the create collection functions. Ensure that you always link with the correct module type in order to use the right linker for your code.</p>

@@ -29,13 +29,12 @@
     Publisher.Collation
 {
     protected override void
-    Init(
-        Bam.Core.Module parent)
+    Init()
     {
-        base.Init(parent);
+        base.Init();
 
         this.SetDefaultMacrosAndMappings(EPublishingType.WindowedApplication);
-        var appAnchor = this.Include&lt;Qt5Application&gt;(C.Cxx.GUIApplication.Key);
+        var appAnchor = this.Include&lt;Qt5Application&gt;(C.Cxx.GUIApplication.ExecutableKey);
 
         var qtPlatformPlugin = this.Find&lt;QtCommon.PlatformPlugin&gt;().First();
         (qtPlatformPlugin as Publisher.CollatedObject).SetPublishingDirectory("$(0)/platforms", this.PluginDir);
@@ -43,9 +42,9 @@
         if (this.BuildEnvironment.Platform.Includes(Bam.Core.EPlatform.OSX))
         {
             var collatedQtFrameworks = this.Find&lt;QtCommon.CommonFramework&gt;();
-            collatedQtFrameworks.ToList().ForEach(collatedFramework =&gt;
+            collatedQtFrameworks.ToList().ForEach(collatedFramework =>
                 // must be a public patch in order for the stripping mode to inherit the settings
-                (collatedFramework as Publisher.CollatedObject).PublicPatch((settings, appliedTo) =&gt;
+                (collatedFramework as Publisher.CollatedObject).PublicPatch((settings, appliedTo) =>
                     {
                         var rsyncSettings = settings as Publisher.IRsyncSettings;
                         rsyncSettings.Exclusions = (collatedFramework.SourceModule as QtCommon.CommonFramework).PublishingExclusions;
@@ -91,10 +90,9 @@ sealed class Qt5Test1DebugSymbols :
     Publisher.DebugSymbolCollation
 {
     protected override void
-    Init(
-        Bam.Core.Module parent)
+    Init()
     {
-        base.Init(parent);
+        base.Init();
 
         this.CreateSymbolsFrom&lt;Qt5Test1Runtime&gt;();
     }
@@ -105,10 +103,9 @@ sealed class Qt5Test1Stripped :
     Publisher.StrippedBinaryCollation
 {
     protected override void
-    Init(
-        Bam.Core.Module parent)
+    Init()
     {
-        base.Init(parent);
+        base.Init();
 
         this.StripBinariesFrom&lt;Qt5Test1Runtime, Qt5Test1DebugSymbols&gt;();
     }
@@ -221,8 +218,8 @@ sealed class Qt5Test1Stripped :
 <ul>
 <li>Windows
 <ul>
-<li><a href="http://www.jrsoftware.org/isinfo.php">InnoSetup</a> 5 (v5.5.5 tested)</li>
-<li><a href="http://nsis.sourceforge.net/Main_Page">NSIS</a> (v2.46 tested)</li>
+<li><a href="http://www.jrsoftware.org/isinfo.php">InnoSetup</a> 5 (v5.6.1 tested from the NuGet referenced in the Installer package)</li>
+<li><a href="http://nsis.sourceforge.net/Main_Page">NSIS</a> (v2.51.0 tested from the NuGet referenced in the Installer package)</li>
 </ul>
 </li>
 <li>macOS
@@ -243,10 +240,9 @@ sealed class Qt5Test1Stripped :
     Installer.TarBall
 {
     protected override void
-    Init(
-        Bam.Core.Module parent)
+    Init()
     {
-        base.Init(parent);
+        base.Init();
 
         this.SourceFolder&lt;Qt5Test1Stripped&gt;(Publisher.StrippedBinaryCollation.Key);
     }

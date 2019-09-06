@@ -9,10 +9,36 @@
 <p>These instructions are for compiling MonoDevelop on Linux using the Mono 5 repositories. This may be the case for some distributions which do not support flatpak.</p>
 
 <ul>
-<li><a href="#ubuntu14">Ubuntu 14</a></li>
 <li><a href="#ubuntu16">Ubuntu 16</a></li>
+<li><a href="#ubuntu14">Ubuntu 14</a></li>
 <li><a href="#centso7">CentOS 7</a></li>
 </uL>
+
+<H2 id="ubuntu16">Ubuntu 16</H2>
+<p>Following the instructions on <a href="http://www.monodevelop.com/download/linux/">Monodevelop</a>, install <a href="http://flatpak.org/getting.html">FlatPak</a> for Ubuntu 16.</p>
+<p><code>
+sudo add-apt-repository ppa:alexlarsson/flatpak
+</code></p>
+<p><code>
+sudo apt update
+</code></p>
+<p><code>
+sudo apt install flatpak
+</code></p>
+<p>Install Monodevelop's flatpak using:</p>
+<code>
+flatpak install --user --from https://download.mono-project.com/repo/monodevelop.flatpakref
+</code>
+<p>Accept configuring and installing required remotes during this process.<p>
+<p>If you encounter issues with <em>Temporary failure in name resolution</em>, modify <code>/etc/resolv.conf</code> by replacing the 127.0.0.1 nameserver with 8.8.8.8, and then issue <code>sudo service network-manager restart</code>, and try flatpak again. This nameserver will hold until you reboot.</p>
+<p>Run the installed monodevelop using:<p>
+<code>
+flatpak run com.xamarin.MonoDevelop
+</code>
+<p>Note that first run seems to take a long time. Suggest also adding the run line as an alias in .bashrc</p>
+<code>
+alias monodevelop='flatpak run com.xamarin.MonoDevelop'
+</code>
 
 <H2 id="ubuntu14">Ubuntu 14</H2>
 
@@ -80,31 +106,6 @@ export PATH=/opt/monodevelop/bin:$PATH
 alias monodevelop='/opt/monodevelop/bin/monodevelop'
 </code>
 
-<H2 id="ubuntu16">Ubuntu 16</H2>
-<p>Following the instructions on <a href="http://www.monodevelop.com/download/linux/">Monodevelop</a>, install <a href="http://flatpak.org/getting.html">FlatPak</a> for Ubuntu 16.</p>
-<p><code>
-sudo add-apt-repository ppa:alexlarsson/flatpak
-</code></p>
-<p><code>
-sudo apt update
-</code></p>
-<p><code>
-sudo apt install flatpak
-</code></p>
-<p>Install Monodevelop's flatpak using:</p>
-<code>
-flatpak install --user --from https://download.mono-project.com/repo/monodevelop.flatpakref
-</code>
-<p>Accept configuring and installing required remotes during this process.<p>
-<p>If you encounter issues with <em>Temporary failure in name resolution</em>, modify <code>/etc/resolv.conf</code> by replacing the 127.0.0.1 nameserver with 8.8.8.8, and then issue <code>sudo service network-manager restart</code>, and try flatpak again. This nameserver will hold until you reboot.</p>
-<p>Run the installed monodevelop using:<p>
-<code>
-flatpak run com.xamarin.MonoDevelop
-</code>
-<p>Note that first run seems to take a long time. Suggest also adding the run line as an alias in .bashrc</p>
-<code>
-alias monodevelop='flatpak run com.xamarin.MonoDevelop'
-</code>
 
 <H2 id="centso7">CentOS 7</H2>
 <p>Flatpak appears to only be available on a <em>testing</em> version of CentOS 7, so I recommend a source build of Monodevelop until that changes.</p>
